@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineer Regresyon Katsayılarının Matematiksel Türetilmesi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        h3 {
+            color: #2980b9;
+        }
+        .math-block {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .example {
+            background-color: #f0f7fb;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .note {
+            background-color: #fffacd;
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Lineer Regresyon Katsayılarının Matematiksel Türetilmesi</h1>
+
+    <p>Lineer regresyon modeli, bağımlı değişken \(y\) ile bağımsız değişken \(x\) arasında doğrusal bir ilişki kurarak veri setini en iyi şekilde temsil etmeye çalışır. Bu ilişki şu şekilde ifade edilir:</p>
+
+    <div class="math-block">
+        \[ y = \beta_0 + \beta_1 x \]
+    </div>
+
+    <p>Burada \(\beta_0\) kesişim noktasını (y-eksenini kestiği nokta) ve \(\beta_1\) eğimi temsil eder. Bu parametreleri bulmak için En Küçük Kareler yöntemi kullanılır.</p>
+
+    <h2>1. En Küçük Kareler Yönteminin Temeli: Hata Fonksiyonu</h2>
+
+    <p>Bu yöntem, gerçek \(y\) değerleri ile model tahminleri arasındaki farkların karelerinin toplamını minimize etmeyi amaçlar. Bu toplam, hata fonksiyonu (cost function) olarak adlandırılır:</p>
+
+    <div class="math-block">
+        \[ J(\beta_0, \beta_1) = \sum_{i=1}^{n} (y_i - (\beta_0 + \beta_1 x_i))^2 \]
+    </div>
+
+    <p>Burada:</p>
+    <ul>
+        <li>\(y_i\) : Gerçek \(y\) değerleri</li>
+        <li>\(x_i\) : Bağımsız değişken değerleri</li>
+        <li>\(n\) : Veri noktalarının sayısı</li>
+    </ul>
+
+    <h2>2. Minimum Noktayı Bulmak</h2>
+
+    <p>Hata fonksiyonunu minimize etmek için, \(\beta_0\) ve \(\beta_1\)'e göre kısmi türevlerini alıp sıfıra eşitleriz:</p>
+
+    <h3>β₀ için kısmi türev:</h3>
+    <div class="math-block">
+        \[ \frac{\partial J}{\partial \beta_0} = -2 \sum_{i=1}^{n} (y_i - \beta_0 - \beta_1 x_i) \]
+    </div>
+
+    <h3>β₁ için kısmi türev:</h3>
+    <div class="math-block">
+        \[ \frac{\partial J}{\partial \beta_1} = -2 \sum_{i=1}^{n} x_i(y_i - \beta_0 - \beta_1 x_i) \]
+    </div>
+
+    <h2>3. Türevleri Sıfıra Eşitleme</h2>
+
+    <p>Minimum noktada, bu türevler sıfır olmalıdır.</p>
+
+    <h3>β₀ için denklem:</h3>
+    <div class="math-block">
+        \[ \frac{\partial J}{\partial \beta_0} = 0 \Rightarrow \sum_{i=1}^{n} (y_i - \beta_0 - \beta_1 x_i) = 0 \]
+    </div>
+
+    <p>Bu denklemi düzenleyelim:</p>
+
+    <div class="math-block">
+        \[ \sum_{i=1}^{n} y_i - n\beta_0 - \beta_1 \sum_{i=1}^{n} x_i = 0 \]
+        \[ n\beta_0 = \sum_{i=1}^{n} y_i - \beta_1 \sum_{i=1}^{n} x_i \]
+        \[ \beta_0 = \frac{\sum_{i=1}^{n} y_i}{n} - \beta_1 \frac{\sum_{i=1}^{n} x_i}{n} \]
+    </div>
+
+    <p>Ortalama değerleri kullanarak:</p>
+    <div class="math-block">
+        \[ \beta_0 = \bar{y} - \beta_1 \bar{x} \]
+    </div>
+
+    <h3>β₁ için denklem:</h3>
+    <div class="math-block">
+        \[ \frac{\partial J}{\partial \beta_1} = 0 \Rightarrow \sum_{i=1}^{n} x_i(y_i - \beta_0 - \beta_1 x_i) = 0 \]
+    </div>
+
+    <p>Bu denklemi açarsak:</p>
+    <div class="math-block">
+        \[ \sum_{i=1}^{n} x_i y_i - \beta_0 \sum_{i=1}^{n} x_i - \beta_1 \sum_{i=1}^{n} x_i^2 = 0 \]
+    </div>
+
+    <h2>4. Denklem Sistemini Çözme</h2>
+
+    <p>Yukarıda \(\beta_0\) için bulduğumuz formülü \(\beta_1\) denkleminde yerine koyalım:</p>
+
+    <div class="math-block">
+        \[ \sum_{i=1}^{n} x_i y_i - (\bar{y} - \beta_1 \bar{x}) \sum_{i=1}^{n} x_i - \beta_1 \sum_{i=1}^{n} x_i^2 = 0 \]
+    </div>
+
+    <p>Düzenlemeye devam edelim:</p>
+
+    <div class="math-block">
+        \[ \sum_{i=1}^{n} x_i y_i - \bar{y} \sum_{i=1}^{n} x_i + \beta_1 \bar{x} \sum_{i=1}^{n} x_i - \beta_1 \sum_{i=1}^{n} x_i^2 = 0 \]
+        \[ \sum_{i=1}^{n} x_i y_i - \bar{y} \sum_{i=1}^{n} x_i = \beta_1 \sum_{i=1}^{n} x_i^2 - \beta_1 \bar{x} \sum_{i=1}^{n} x_i \]
+    </div>
+
+    <p>\(\sum_{i=1}^{n} x_i = n\bar{x}\) olduğunu kullanarak:</p>
+
+    <div class="math-block">
+        \[ \sum_{i=1}^{n} x_i y_i - n\bar{x}\bar{y} = \beta_1 \sum_{i=1}^{n} x_i^2 - \beta_1 n \bar{x}^2 \]
+    </div>
+
+    <p>Buradan \(\beta_1\)'i çekelim:</p>
+
+    <div class="math-block">
+        \[ \beta_1 = \frac{\sum_{i=1}^{n} x_i y_i - n\bar{x}\bar{y}}{\sum_{i=1}^{n} x_i^2 - n \bar{x}^2} \]
+    </div>
+
+    <h2>5. Daha Basit Bir Formülasyon Türetme</h2>
+
+    <p>Bu formülü daha anlaşılır bir şekle dönüştürelim. İlk olarak, pay kısmını düzenleyelim:</p>
+
+    <div class="math-block">
+        \begin{align}
+        \sum_{i=1}^{n} x_i y_i - n\bar{x}\bar{y} &= \sum_{i=1}^{n} x_i y_i - \bar{y}\sum_{i=1}^{n} x_i \\
+        &= \sum_{i=1}^{n} (x_i y_i - \bar{y}x_i) \\
+        &= \sum_{i=1}^{n} x_i(y_i - \bar{y})
+        \end{align}
+    </div>
+
+    <p>Benzer şekilde payda için:</p>
+
+    <div class="math-block">
+        \begin{align}
+        \sum_{i=1}^{n} x_i^2 - n \bar{x}^2 &= \sum_{i=1}^{n} x_i^2 - \bar{x}\sum_{i=1}^{n} x_i \\
+        &= \sum_{i=1}^{n} (x_i^2 - \bar{x}x_i) \\
+        &= \sum_{i=1}^{n} x_i(x_i - \bar{x})
+        \end{align}
+    </div>
+
+    <p>Bir adım daha ileri gidelim ve şunu fark edelim:</p>
+
+    <div class="math-block">
+        \begin{align}
+        \sum_{i=1}^{n} x_i(y_i - \bar{y}) &= \sum_{i=1}^{n} (x_i - \bar{x} + \bar{x})(y_i - \bar{y}) \\
+        &= \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y}) + \bar{x}\sum_{i=1}^{n}(y_i - \bar{y})
+        \end{align}
+    </div>
+
+    <p>Son terim sıfırdır çünkü \(\sum_{i=1}^{n}(y_i - \bar{y}) = 0\). Benzer şekilde paydadaki ifade de sadeleştirilir. Sonuç olarak:</p>
+
+    <div class="math-block">
+        \[ \beta_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2} = \frac{Cov(x,y)}{Var(x)} \]
+    </div>
+
+    <div class="note">
+        <p>Burada \(Cov(x,y)\) x ve y arasındaki kovaryansı, \(Var(x)\) ise x'in varyansını temsil eder.</p>
+    </div>
+
+    <h2>6. Son Formüller</h2>
+
+    <p>Böylece, en küçük kareler yöntemiyle lineer regresyon katsayıları için şu formülleri elde ederiz:</p>
+
+    <h3>Eğim (β₁):</h3>
+    <div class="math-block">
+        \[ \beta_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2} = \frac{Cov(x,y)}{Var(x)} \]
+    </div>
+
+    <h3>Kesişim (β₀):</h3>
+    <div class="math-block">
+        \[ \beta_0 = \bar{y} - \beta_1 \bar{x} \]
+    </div>
+
+    <h2>7. Örnek Üzerinde Hesaplama</h2>
+
+    <div class="example">
+        <p>Küçük bir veri seti üzerinde adım adım hesaplama yapalım:</p>
+        <ul>
+            <li>x = [1, 2, 3, 4, 5]</li>
+            <li>y = [2, 3.5, 5, 6.2, 8]</li>
+        </ul>
+
+        <h3>Adım 1: Ortalamaları hesapla</h3>
+        <p>\(\bar{x} = \frac{1+2+3+4+5}{5} = 3\)</p>
+        <p>\(\bar{y} = \frac{2+3.5+5+6.2+8}{5} = 4.94\)</p>
+
+        <h3>Adım 2: β₁ hesapla</h3>
+        <p>Önce pay kısmını:</p>
+        <p>\((1-3)(2-4.94) + (2-3)(3.5-4.94) + (3-3)(5-4.94) + (4-3)(6.2-4.94) + (5-3)(8-4.94)\)</p>
+        <p>\(= (-2)(-2.94) + (-1)(-1.44) + (0)(0.06) + (1)(1.26) + (2)(3.06)\)</p>
+        <p>\(= 5.88 + 1.44 + 0 + 1.26 + 6.12 = 14.7\)</p>
+
+        <p>Ardından payda kısmını:</p>
+        <p>\((1-3)^2 + (2-3)^2 + (3-3)^2 + (4-3)^2 + (5-3)^2\)</p>
+        <p>\(= 4 + 1 + 0 + 1 + 4 = 10\)</p>
+
+        <p>Sonuç olarak:</p>
+        <p>\(\beta_1 = \frac{14.7}{10} = 1.47\)</p>
+
+        <h3>Adım 3: β₀ hesapla</h3>
+        <p>\(\beta_0 = 4.94 - 1.47 \times 3 = 4.94 - 4.41 = 0.53\)</p>
+
+        <h3>Adım 4: Regresyon denklemini yaz</h3>
+        <p>\(y = 0.53 + 1.47x\)</p>
+
+        <p>Bu, bizim verilerimiz için en iyi uyan doğrusal modeldir. Her birim x artışında, y yaklaşık 1.47 birim artacaktır ve x=0 olduğunda y=0.53 olacaktır.</p>
+    </div>
+
+    <h2>Sonuç</h2>
+
+    <p>En Küçük Kareler yöntemi, lineer regresyon parametrelerini bulmak için kullanılan matematiksel bir tekniktir. Bu yöntem, hatanın karesini minimize etmeye çalışır ve sonuç olarak tahminlerimiz ile gerçek değerler arasındaki farkın en az olduğu bir doğru elde ederiz. Yukarıdaki türetme adımları, formüllerin nereden geldiğini açıkça göstermektedir.</p>
+
+    <p>Bu yöntem, istatistiksel modelleme ve veri analizinin temel yapı taşlarından biridir ve birçok modern makine öğrenmesi algoritmasının temelini oluşturur.</p>
+</body>
+</html>
