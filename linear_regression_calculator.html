@@ -3,161 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Linear Regression Calculator</title>
+    <title>Linear Regression Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #f5f5f5;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
         }
-        
+
+        body {
+            background: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+            max-width: 1200px;
+            margin: auto;
+        }
+
         h1 {
             color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            margin-bottom: 15px;
         }
-        
+
         .container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            margin-bottom: 20px;
+            justify-content: center;
         }
-        
+
         .panel {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: white;
             padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .data-panel {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             flex: 1;
             min-width: 300px;
         }
-        
-        .charts-panel {
-            flex: 2;
-            min-width: 600px;
-        }
-        
-        .chart-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .chart {
-            flex: 1;
-            min-width: 300px;
-            height: 350px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-            overflow: hidden;
-        }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 10px;
         }
-        
+
         th, td {
             padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background-color: #f2f2f2;
-        }
-        
-        input[type="number"] {
-            width: 80px;
-            padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 4px;
         }
-        
-        button {
-            background-color: #3498db;
+
+        th {
+            background: #3498db;
             color: white;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
             cursor: pointer;
-            margin-right: 10px;
-            transition: background-color 0.3s;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 14px;
         }
-        
-        button:hover {
-            background-color: #2980b9;
+
+        .add-btn { background: #2ecc71; color: white; }
+        .add-btn:hover { background: #27ae60; }
+
+        .delete-btn { background: #e74c3c; color: white; }
+        .delete-btn:hover { background: #c0392b; }
+
+        .clear-btn { background: #f39c12; color: white; }
+        .clear-btn:hover { background: #e67e22; }
+
+        .run-btn { background: #3498db; color: white; }
+        .run-btn:hover { background: #2980b9; }
+
+        .results {
+            text-align: left;
+            margin-top: 15px;
         }
-        
-        .delete-btn {
-            background-color: #e74c3c;
-        }
-        
-        .delete-btn:hover {
-            background-color: #c0392b;
-        }
-        
-        .clear-btn {
-            background-color: #e67e22;
-        }
-        
-        .clear-btn:hover {
-            background-color: #d35400;
-        }
-        
-        .results-panel {
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .result-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            border-left: 4px solid #3498db;
-        }
-        
+
         .formula {
-            font-family: "Courier New", monospace;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
             font-weight: bold;
-            margin: 10px 0;
-            font-size: 1.2em;
         }
-        
+
+        .chart-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+        }
+
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
-            }
-            
-            .charts-panel, .data-panel, .results-panel {
-                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+
     <h1>Interactive Linear Regression Calculator</h1>
-    
+
     <div class="container">
-        <!-- Data Input Panel -->
-        <div class="panel data-panel">
+        <div class="panel">
             <h2>Data Input</h2>
-            <table id="data-table">
+            <table>
                 <thead>
                     <tr>
                         <th>x (Independent)</th>
@@ -165,646 +130,136 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="data-body">
-                    <!-- Data rows will be added here by JavaScript -->
-                </tbody>
+                <tbody id="data-body"></tbody>
             </table>
-            
-            <div>
-                <button id="add-row-btn">Add Data Point</button>
-                <button id="clear-data-btn" class="clear-btn">Clear All Data</button>
-                <button id="run-btn">Run Regression</button>
-            </div>
+            <button class="add-btn" onclick="addRow()">Add Data Point</button>
+            <button class="clear-btn" onclick="clearData()">Clear All</button>
+            <button class="run-btn" onclick="runRegression()">Run Regression</button>
         </div>
-        
-        <!-- Charts Panel -->
-        <div class="panel charts-panel">
-            <h2>Visualizations</h2>
-            <div class="chart-container">
-                <div class="chart" id="regression-chart"></div>
-                <div class="chart" id="residual-chart"></div>
+
+        <div class="panel">
+            <h2>Regression Results</h2>
+            <p class="formula" id="equation">y = β₀ + β₁x</p>
+            <div class="results">
+                <p>Intercept (β₀): <strong id="beta0">-</strong></p>
+                <p>Slope (β₁): <strong id="beta1">-</strong></p>
             </div>
         </div>
     </div>
-    
-    <!-- Results Panel -->
-    <div class="panel results-panel">
-        <h2>Regression Results</h2>
-        <div class="result-item">
-            <h3>Regression Equation</h3>
-            <div class="formula" id="regression-equation">y = β₀ + β₁x</div>
-        </div>
-        
-        <div class="result-item">
-            <h3>Model Parameters</h3>
-            <p>Intercept (β₀): <span id="beta0">-</span></p>
-            <p>Slope (β₁): <span id="beta1">-</span></p>
-        </div>
-        
-        <div class="result-item">
-            <h3>Model Performance</h3>
-            <p>R² (Coefficient of Determination): <span id="rsquared">-</span></p>
-            <p>MSE (Mean Squared Error): <span id="mse">-</span></p>
-        </div>
+
+    <div class="chart-container">
+        <canvas id="regressionChart"></canvas>
     </div>
-    
+
     <script>
-        // Wait for the DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Default data
-            const defaultData = [
-                { x: 1, y: 2 },
-                { x: 2, y: 3.5 },
-                { x: 3, y: 5 },
-                { x: 4, y: 6.2 },
-                { x: 5, y: 8 }
-            ];
-            
-            // Current data
-            let currentData = [...defaultData];
-            
-            // DOM elements
-            const dataBody = document.getElementById('data-body');
-            const addRowBtn = document.getElementById('add-row-btn');
-            const clearDataBtn = document.getElementById('clear-data-btn');
-            const runBtn = document.getElementById('run-btn');
-            const regressionChart = document.getElementById('regression-chart');
-            const residualChart = document.getElementById('residual-chart');
-            const regressionEquation = document.getElementById('regression-equation');
-            const beta0Element = document.getElementById('beta0');
-            const beta1Element = document.getElementById('beta1');
-            const rSquaredElement = document.getElementById('rsquared');
-            const mseElement = document.getElementById('mse');
-            
-            // Function to render the data table
-            function renderDataTable() {
-                dataBody.innerHTML = '';
-                
-                currentData.forEach((point, index) => {
-                    const row = document.createElement('tr');
-                    
-                    // X value cell
-                    const xCell = document.createElement('td');
-                    const xInput = document.createElement('input');
-                    xInput.type = 'number';
-                    xInput.step = 'any';
-                    xInput.value = point.x;
-                    xInput.addEventListener('change', (e) => {
-                        currentData[index].x = parseFloat(e.target.value);
-                    });
-                    xCell.appendChild(xInput);
-                    
-                    // Y value cell
-                    const yCell = document.createElement('td');
-                    const yInput = document.createElement('input');
-                    yInput.type = 'number';
-                    yInput.step = 'any';
-                    yInput.value = point.y;
-                    yInput.addEventListener('change', (e) => {
-                        currentData[index].y = parseFloat(e.target.value);
-                    });
-                    yCell.appendChild(yInput);
-                    
-                    // Action cell
-                    const actionCell = document.createElement('td');
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.className = 'delete-btn';
-                    deleteButton.addEventListener('click', () => {
-                        currentData.splice(index, 1);
-                        renderDataTable();
-                    });
-                    actionCell.appendChild(deleteButton);
-                    
-                    // Add cells to row
-                    row.appendChild(xCell);
-                    row.appendChild(yCell);
-                    row.appendChild(actionCell);
-                    
-                    // Add row to table
-                    dataBody.appendChild(row);
-                });
+        let data = [
+            { x: 1, y: 2 },
+            { x: 2, y: 3.5 },
+            { x: 3, y: 5 },
+            { x: 4, y: 6.2 },
+            { x: 5, y: 7.8 },
+            { x: 6, y: 9.5 }
+        ];
+
+        let chart;
+
+        function updateTable() {
+            let tbody = document.getElementById('data-body');
+            tbody.innerHTML = '';
+
+            data.forEach((point, index) => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="number" value="${point.x}" onchange="updateValue(${index}, 'x', this.value)"></td>
+                    <td><input type="number" value="${point.y}" onchange="updateValue(${index}, 'y', this.value)"></td>
+                    <td><button class="delete-btn" onclick="removeRow(${index})">Delete</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateValue(index, key, value) {
+            data[index][key] = parseFloat(value);
+        }
+
+        function addRow() {
+            data.push({ x: 0, y: 0 });
+            updateTable();
+        }
+
+        function removeRow(index) {
+            data.splice(index, 1);
+            updateTable();
+        }
+
+        function clearData() {
+            data = [];
+            updateTable();
+            chart.destroy();
+        }
+
+        function runRegression() {
+            if (data.length < 2) {
+                alert("At least two points required.");
+                return;
             }
-            
-            // Function to add a new row to the data table
-            function addNewRow() {
-                currentData.push({ x: 0, y: 0 });
-                renderDataTable();
-            }
-            
-            // Function to clear all data
-            function clearAllData() {
-                currentData = [];
-                renderDataTable();
-                // Clear charts
-                regressionChart.innerHTML = '';
-                residualChart.innerHTML = '';
-                // Clear results
-                regressionEquation.textContent = 'y = β₀ + β₁x';
-                beta0Element.textContent = '-';
-                beta1Element.textContent = '-';
-                rSquaredElement.textContent = '-';
-                mseElement.textContent = '-';
-            }
-            
-            // Function to calculate regression parameters
-            function calculateRegression(data) {
-                // Extract x and y values
-                const xValues = data.map(point => point.x);
-                const yValues = data.map(point => point.y);
-                
-                // Calculate means
-                const xMean = xValues.reduce((sum, val) => sum + val, 0) / xValues.length;
-                const yMean = yValues.reduce((sum, val) => sum + val, 0) / yValues.length;
-                
-                // Calculate sums for regression formula
-                let numerator = 0;
-                let denominator = 0;
-                
-                for (let i = 0; i < xValues.length; i++) {
-                    numerator += (xValues[i] - xMean) * (yValues[i] - yMean);
-                    denominator += Math.pow((xValues[i] - xMean), 2);
+
+            let xMin = Math.min(...data.map(p => p.x));
+            let xMax = Math.max(...data.map(p => p.x));
+
+            let xMean = data.reduce((sum, p) => sum + p.x, 0) / data.length;
+            let yMean = data.reduce((sum, p) => sum + p.y, 0) / data.length;
+
+            let numerator = data.reduce((sum, p) => sum + (p.x - xMean) * (p.y - yMean), 0);
+            let denominator = data.reduce((sum, p) => sum + Math.pow(p.x - xMean, 2), 0);
+            let beta1 = numerator / denominator;
+            let beta0 = yMean - beta1 * xMean;
+
+            document.getElementById('equation').textContent = `y = ${beta0.toFixed(2)} + ${beta1.toFixed(2)}x`;
+            document.getElementById('beta0').textContent = beta0.toFixed(4);
+            document.getElementById('beta1').textContent = beta1.toFixed(4);
+
+            drawChart(beta0, beta1, xMin, xMax);
+        }
+
+        function drawChart(beta0, beta1, xMin, xMax) {
+            if (chart) chart.destroy();
+
+            let ctx = document.getElementById('regressionChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Data Points',
+                            data: data,
+                            backgroundColor: 'blue'
+                        },
+                        {
+                            label: 'Regression Line',
+                            data: [
+                                { x: xMin, y: beta0 + beta1 * xMin },
+                                { x: xMax, y: beta0 + beta1 * xMax }
+                            ],
+                            type: 'line',
+                            borderColor: 'red',
+                            borderWidth: 2,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: { type: 'linear', position: 'bottom' },
+                        y: { type: 'linear' }
+                    }
                 }
-                
-                // Calculate β₁ (slope)
-                const beta1 = numerator / denominator;
-                
-                // Calculate β₀ (intercept)
-                const beta0 = yMean - beta1 * xMean;
-                
-                // Calculate predicted values and residuals
-                const predictedValues = xValues.map(x => beta0 + beta1 * x);
-                const residuals = yValues.map((y, i) => y - predictedValues[i]);
-                
-                // Calculate R² (coefficient of determination)
-                const sstot = yValues.reduce((sum, y) => sum + Math.pow((y - yMean), 2), 0);
-                const ssres = residuals.reduce((sum, res) => sum + Math.pow(res, 2), 0);
-                const rSquared = 1 - (ssres / sstot);
-                
-                // Calculate MSE (mean squared error)
-                const mse = ssres / xValues.length;
-                
-                return { beta0, beta1, rSquared, mse, predictedValues, residuals };
-            }
-            
-            // Function to draw the regression chart
-            function drawRegressionChart(data, beta0, beta1) {
-                // Clear previous chart
-                regressionChart.innerHTML = '';
-                
-                // Get min and max values for axes
-                const xValues = data.map(point => point.x);
-                const yValues = data.map(point => point.y);
-                const minX = Math.min(...xValues);
-                const maxX = Math.max(...xValues);
-                const minY = Math.min(...yValues);
-                const maxY = Math.max(...yValues);
-                
-                // Add some padding to the axes
-                const xPadding = Math.max(0.1, (maxX - minX) * 0.1);
-                const yPadding = Math.max(0.1, (maxY - minY) * 0.1);
-                const chartMinX = Math.max(0, minX - xPadding);
-                const chartMaxX = maxX + xPadding;
-                const chartMinY = Math.max(0, minY - yPadding);
-                const chartMaxY = maxY + yPadding;
-                
-                // Create SVG element
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('width', '100%');
-                svg.setAttribute('height', '100%');
-                svg.setAttribute('viewBox', `0 0 600 400`);
-                
-                // Add background
-                const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                background.setAttribute('width', '600');
-                background.setAttribute('height', '400');
-                background.setAttribute('fill', '#f9f9f9');
-                svg.appendChild(background);
-                
-                // Define chart dimensions
-                const chartWidth = 500;
-                const chartHeight = 300;
-                const marginLeft = 60;
-                const marginTop = 40;
-                
-                // Convert data point to chart coordinates
-                function xToChart(x) {
-                    return marginLeft + (x - chartMinX) / (chartMaxX - chartMinX) * chartWidth;
-                }
-                
-                function yToChart(y) {
-                    return marginTop + chartHeight - (y - chartMinY) / (chartMaxY - chartMinY) * chartHeight;
-                }
-                
-                // Draw grid lines
-                const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                gridGroup.setAttribute('stroke', '#e0e0e0');
-                gridGroup.setAttribute('stroke-width', '1');
-                
-                // Horizontal grid lines
-                for (let i = 0; i <= 10; i++) {
-                    const y = chartMinY + i * (chartMaxY - chartMinY) / 10;
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', marginLeft);
-                    line.setAttribute('y1', yToChart(y));
-                    line.setAttribute('x2', marginLeft + chartWidth);
-                    line.setAttribute('y2', yToChart(y));
-                    gridGroup.appendChild(line);
-                }
-                
-                // Vertical grid lines
-                for (let i = 0; i <= 10; i++) {
-                    const x = chartMinX + i * (chartMaxX - chartMinX) / 10;
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', xToChart(x));
-                    line.setAttribute('y1', marginTop);
-                    line.setAttribute('x2', xToChart(x));
-                    line.setAttribute('y2', marginTop + chartHeight);
-                    gridGroup.appendChild(line);
-                }
-                
-                svg.appendChild(gridGroup);
-                
-                // Draw axes
-                const axesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                axesGroup.setAttribute('stroke', '#333');
-                axesGroup.setAttribute('stroke-width', '2');
-                
-                // X-axis
-                const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                xAxis.setAttribute('x1', marginLeft);
-                xAxis.setAttribute('y1', marginTop + chartHeight);
-                xAxis.setAttribute('x2', marginLeft + chartWidth);
-                xAxis.setAttribute('y2', marginTop + chartHeight);
-                axesGroup.appendChild(xAxis);
-                
-                // Y-axis
-                const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                yAxis.setAttribute('x1', marginLeft);
-                yAxis.setAttribute('y1', marginTop);
-                yAxis.setAttribute('x2', marginLeft);
-                yAxis.setAttribute('y2', marginTop + chartHeight);
-                axesGroup.appendChild(yAxis);
-                
-                svg.appendChild(axesGroup);
-                
-                // Add axis labels
-                const labelsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                labelsGroup.setAttribute('fill', '#333');
-                labelsGroup.setAttribute('font-family', 'Arial, sans-serif');
-                labelsGroup.setAttribute('font-size', '12');
-                
-                // X-axis labels
-                for (let i = 0; i <= 5; i++) {
-                    const x = chartMinX + i * (chartMaxX - chartMinX) / 5;
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', xToChart(x));
-                    text.setAttribute('y', marginTop + chartHeight + 20);
-                    text.setAttribute('text-anchor', 'middle');
-                    text.textContent = x.toFixed(1);
-                    labelsGroup.appendChild(text);
-                }
-                
-                // Y-axis labels
-                for (let i = 0; i <= 5; i++) {
-                    const y = chartMinY + i * (chartMaxY - chartMinY) / 5;
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', marginLeft - 10);
-                    text.setAttribute('y', yToChart(y) + 5);
-                    text.setAttribute('text-anchor', 'end');
-                    text.textContent = y.toFixed(1);
-                    labelsGroup.appendChild(text);
-                }
-                
-                // Axis titles
-                const xTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                xTitle.setAttribute('x', marginLeft + chartWidth / 2);
-                xTitle.setAttribute('y', marginTop + chartHeight + 40);
-                xTitle.setAttribute('text-anchor', 'middle');
-                xTitle.setAttribute('font-weight', 'bold');
-                xTitle.textContent = 'x (Independent Variable)';
-                labelsGroup.appendChild(xTitle);
-                
-                const yTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                yTitle.setAttribute('x', 15);
-                yTitle.setAttribute('y', marginTop + chartHeight / 2);
-                yTitle.setAttribute('text-anchor', 'middle');
-                yTitle.setAttribute('font-weight', 'bold');
-                yTitle.setAttribute('transform', `rotate(-90, 15, ${marginTop + chartHeight / 2})`);
-                yTitle.textContent = 'y (Dependent Variable)';
-                labelsGroup.appendChild(yTitle);
-                
-                // Chart title
-                const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                title.setAttribute('x', marginLeft + chartWidth / 2);
-                title.setAttribute('y', 25);
-                title.setAttribute('text-anchor', 'middle');
-                title.setAttribute('font-weight', 'bold');
-                title.setAttribute('font-size', '16');
-                title.textContent = 'Linear Regression: x vs y';
-                labelsGroup.appendChild(title);
-                
-                svg.appendChild(labelsGroup);
-                
-                // Draw regression line
-                const startX = chartMinX;
-                const endX = chartMaxX;
-                const startY = beta0 + beta1 * startX;
-                const endY = beta0 + beta1 * endX;
-                
-                const regressionLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                regressionLine.setAttribute('x1', xToChart(startX));
-                regressionLine.setAttribute('y1', yToChart(startY));
-                regressionLine.setAttribute('x2', xToChart(endX));
-                regressionLine.setAttribute('y2', yToChart(endY));
-                regressionLine.setAttribute('stroke', 'red');
-                regressionLine.setAttribute('stroke-width', '2.5');
-                svg.appendChild(regressionLine);
-                
-                // Draw data points
-                const pointsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                
-                data.forEach(point => {
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', xToChart(point.x));
-                    circle.setAttribute('cy', yToChart(point.y));
-                    circle.setAttribute('r', '5');
-                    circle.setAttribute('fill', 'blue');
-                    pointsGroup.appendChild(circle);
-                });
-                
-                svg.appendChild(pointsGroup);
-                
-                // Add legend
-                const legendGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                legendGroup.setAttribute('transform', 'translate(430, 60)');
-                
-                const legendBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                legendBg.setAttribute('width', '150');
-                legendBg.setAttribute('height', '70');
-                legendBg.setAttribute('fill', 'white');
-                legendBg.setAttribute('stroke', '#ccc');
-                legendBg.setAttribute('stroke-width', '1');
-                legendGroup.appendChild(legendBg);
-                
-                // Data points in legend
-                const legendPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                legendPoint.setAttribute('cx', '20');
-                legendPoint.setAttribute('cy', '20');
-                legendPoint.setAttribute('r', '5');
-                legendPoint.setAttribute('fill', 'blue');
-                legendGroup.appendChild(legendPoint);
-                
-                const legendPointText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                legendPointText.setAttribute('x', '35');
-                legendPointText.setAttribute('y', '24');
-                legendPointText.setAttribute('font-family', 'Arial, sans-serif');
-                legendPointText.setAttribute('font-size', '12');
-                legendPointText.textContent = 'Data Points';
-                legendGroup.appendChild(legendPointText);
-                
-                // Regression line in legend
-                const legendLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                legendLine.setAttribute('x1', '10');
-                legendLine.setAttribute('y1', '40');
-                legendLine.setAttribute('x2', '30');
-                legendLine.setAttribute('y2', '40');
-                legendLine.setAttribute('stroke', 'red');
-                legendLine.setAttribute('stroke-width', '2.5');
-                legendGroup.appendChild(legendLine);
-                
-                const legendLineText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                legendLineText.setAttribute('x', '35');
-                legendLineText.setAttribute('y', '44');
-                legendLineText.setAttribute('font-family', 'Arial, sans-serif');
-                legendLineText.setAttribute('font-size', '12');
-                legendLineText.textContent = `y = ${beta0.toFixed(2)} + ${beta1.toFixed(2)}x`;
-                legendGroup.appendChild(legendLineText);
-                
-                svg.appendChild(legendGroup);
-                
-                // Add SVG to the chart container
-                regressionChart.appendChild(svg);
-            }
-            
-            // Function to draw the residual chart
-            function drawResidualChart(data, residuals) {
-                // Clear previous chart
-                residualChart.innerHTML = '';
-                
-                // Get min and max values for axes
-                const xValues = data.map(point => point.x);
-                const minX = Math.min(...xValues);
-                const maxX = Math.max(...xValues);
-                const minResidual = Math.min(...residuals);
-                const maxResidual = Math.max(...residuals);
-                const absMaxResidual = Math.max(Math.abs(minResidual), Math.abs(maxResidual));
-                
-                // Add some padding to the axes
-                const xPadding = Math.max(0.1, (maxX - minX) * 0.1);
-                const chartMinX = Math.max(0, minX - xPadding);
-                const chartMaxX = maxX + xPadding;
-                const chartMinY = -absMaxResidual * 1.1;
-                const chartMaxY = absMaxResidual * 1.1;
-                
-                // Create SVG element
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('width', '100%');
-                svg.setAttribute('height', '100%');
-                svg.setAttribute('viewBox', `0 0 600 400`);
-                
-                // Add background
-                const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                background.setAttribute('width', '600');
-                background.setAttribute('height', '400');
-                background.setAttribute('fill', '#f9f9f9');
-                svg.appendChild(background);
-                
-                // Define chart dimensions
-                const chartWidth = 500;
-                const chartHeight = 300;
-                const marginLeft = 60;
-                const marginTop = 40;
-                
-                // Convert data point to chart coordinates
-                function xToChart(x) {
-                    return marginLeft + (x - chartMinX) / (chartMaxX - chartMinX) * chartWidth;
-                }
-                
-                function yToChart(y) {
-                    return marginTop + chartHeight / 2 - (y / (chartMaxY - chartMinY) * chartHeight);
-                }
-                
-                // Draw grid lines
-                const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                gridGroup.setAttribute('stroke', '#e0e0e0');
-                gridGroup.setAttribute('stroke-width', '1');
-                
-                // Horizontal grid lines
-                for (let i = -5; i <= 5; i++) {
-                    const y = i * absMaxResidual / 5;
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', marginLeft);
-                    line.setAttribute('y1', yToChart(y));
-                    line.setAttribute('x2', marginLeft + chartWidth);
-                    line.setAttribute('y2', yToChart(y));
-                    gridGroup.appendChild(line);
-                }
-                
-                // Vertical grid lines
-                for (let i = 0; i <= 10; i++) {
-                    const x = chartMinX + i * (chartMaxX - chartMinX) / 10;
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', xToChart(x));
-                    line.setAttribute('y1', marginTop);
-                    line.setAttribute('x2', xToChart(x));
-                    line.setAttribute('y2', marginTop + chartHeight);
-                    gridGroup.appendChild(line);
-                }
-                
-                svg.appendChild(gridGroup);
-                
-                // Draw axes
-                const axesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                axesGroup.setAttribute('stroke', '#333');
-                axesGroup.setAttribute('stroke-width', '2');
-                
-                // X-axis
-                const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                xAxis.setAttribute('x1', marginLeft);
-                xAxis.setAttribute('y1', yToChart(0));
-                xAxis.setAttribute('x2', marginLeft + chartWidth);
-                xAxis.setAttribute('y2', yToChart(0));
-                axesGroup.appendChild(xAxis);
-                
-                // Y-axis
-                const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                yAxis.setAttribute('x1', marginLeft);
-                yAxis.setAttribute('y1', marginTop);
-                yAxis.setAttribute('x2', marginLeft);
-                yAxis.setAttribute('y2', marginTop + chartHeight);
-                axesGroup.appendChild(yAxis);
-                
-                svg.appendChild(axesGroup);
-                
-                // Zero line for residuals
-                const zeroLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                zeroLine.setAttribute('x1', marginLeft);
-                zeroLine.setAttribute('y1', yToChart(0));
-                zeroLine.setAttribute('x2', marginLeft + chartWidth);
-                zeroLine.setAttribute('y2', yToChart(0));
-                zeroLine.setAttribute('stroke', 'red');
-                zeroLine.setAttribute('stroke-width', '2');
-                zeroLine.setAttribute('stroke-dasharray', '5,5');
-                svg.appendChild(zeroLine);
-                
-                // Add axis labels
-                const labelsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                labelsGroup.setAttribute('fill', '#333');
-                labelsGroup.setAttribute('font-family', 'Arial, sans-serif');
-                labelsGroup.setAttribute('font-size', '12');
-                
-                // X-axis labels
-                for (let i = 0; i <= 5; i++) {
-                    const x = chartMinX + i * (chartMaxX - chartMinX) / 5;
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', xToChart(x));
-                    text.setAttribute('y', marginTop + chartHeight + 20);
-                    text.setAttribute('text-anchor', 'middle');
-                    text.textContent = x.toFixed(1);
-                    labelsGroup.appendChild(text);
-                }
-                
-                // Y-axis labels
-                for (let i = -2; i <= 2; i++) {
-                    const y = i * absMaxResidual / 2;
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', marginLeft - 10);
-                    text.setAttribute('y', yToChart(y) + 5);
-                    text.setAttribute('text-anchor', 'end');
-                    text.textContent = y.toFixed(2);
-                    labelsGroup.appendChild(text);
-                }
-                
-                // Axis titles
-                const xTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                xTitle.setAttribute('x', marginLeft + chartWidth / 2);
-                xTitle.setAttribute('y', marginTop + chartHeight + 40);
-                xTitle.setAttribute('text-anchor', 'middle');
-                xTitle.setAttribute('font-weight', 'bold');
-                xTitle.textContent = 'x (Independent Variable)';
-                labelsGroup.appendChild(xTitle);
-                
-                const yTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                yTitle.setAttribute('x', 15);
-                yTitle.setAttribute('y', marginTop + chartHeight / 2);
-                yTitle.setAttribute('text-anchor', 'middle');
-                yTitle.setAttribute('font-weight', 'bold');
-                yTitle.setAttribute('transform', `rotate(-90, 15, ${marginTop + chartHeight / 2})`);
-                yTitle.textContent = 'Residuals';
-                labelsGroup.appendChild(yTitle);
-                
-                // Chart title
-                const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                title.setAttribute('x', marginLeft + chartWidth / 2);
-                title.setAttribute('y', 25);
-                title.setAttribute('text-anchor', 'middle');
-                title.setAttribute('font-weight', 'bold');
-                title.setAttribute('font-size', '16');
-                title.textContent = 'Residual Plot';
-                labelsGroup.appendChild(title);
-                
-                svg.appendChild(labelsGroup);
-                
-                // Draw residual points
-                const pointsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                
-                for (let i = 0; i < data.length; i++) {
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', xToChart(data[i].x));
-                    circle.setAttribute('cy', yToChart(residuals[i]));
-                    circle.setAttribute('r', '5');
-                    circle.setAttribute('fill', 'purple');
-                    pointsGroup.appendChild(circle);
-                }
-                
-                svg.appendChild(pointsGroup);
-                
-                // Add SVG to the chart container
-                residualChart.appendChild(svg);
-            }
-            
-            // Function to run regression analysis
-            function runRegression() {
-                if (currentData.length < 2) {
-                    alert('At least 2 data points are required for regression analysis.');
-                    return;
-                }
-                
-                // Calculate regression parameters
-                const { beta0, beta1, rSquared, mse, predictedValues, residuals } = calculateRegression(currentData);
-                
-                // Update results
-                regressionEquation.textContent = `y = ${beta0.toFixed(2)} + ${beta1.toFixed(2)}x`;
-                beta0Element.textContent = beta0.toFixed(4);
-                beta1Element.textContent = beta1.toFixed(4);
-                rSquaredElement.textContent = rSquared.toFixed(4);
-                mseElement.textContent = mse.toFixed(4);
-                
-                // Draw charts
-                drawRegressionChart(currentData, beta0, beta1);
-                drawResidualChart(currentData, residuals);
-            }
-            
-            // Set up event listeners
-            addRowBtn.addEventListener('click', addNewRow);
-            clearDataBtn.addEventListener('click', clearAllData);
-            runBtn.addEventListener('click', runRegression);
-            
-            // Initialize the page
-            renderDataTable();
-            runRegression();
-        });
+            });
+        }
+
+        updateTable();
+        runRegression();
     </script>
+
 </body>
 </html>
