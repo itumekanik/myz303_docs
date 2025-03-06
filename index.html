@@ -12,6 +12,7 @@
             --light-bg: #ecf0f1;
             --dark-text: #2c3e50;
             --light-text: #ecf0f1;
+            --pdf-color: #e74c3c;
         }
         
         body {
@@ -113,6 +114,39 @@
             background-color: var(--primary-color);
         }
         
+        .pdf-resources {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .pdf-resources li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .pdf-link {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .pdf-link:hover {
+            background-color: #f5f5f5;
+            border-color: var(--pdf-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pdf-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
         footer {
             background-color: var(--primary-color);
             color: var(--light-text);
@@ -203,6 +237,20 @@
                     <a href="logistic_regression_tr.html" class="btn">Open Tool</a>
                 </div>
             </div>
+        </div>
+        
+        <h2>PDF Resources</h2>
+        <div class="course-description">
+            <p>Download lecture materials and additional resources for the course:</p>
+            <ul class="pdf-resources">
+                <li>
+                    <a href="./pdf/week1_A_Simple_ANN.pdf" download class="pdf-link">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNzRjM2MiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTQuNSAySDZhMiAyIDAgMCAwLTIgMnYxNmEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWNy41TDE0LjUgMnoiLz48cG9seWxpbmUgcG9pbnRzPSIxNCAyIDE0IDggMjAgOCIvPjxwYXRoIGQ9Ik0xMS45IDEyYTEuMyAxLjMgMCAxIDAgMCAyLjYgMS4zIDEuMyAwIDEgMCAwLTIuNloiLz48cGF0aCBkPSJNMTEuOSAxNS40VjE5Ii8+PHBhdGggZD0iTTkuMiAxOS4wMkw5IDE0LjNhMi4xIDIuMSAwIDAgMC0yLjA5LTIgMiAyIDAgMCAwLTIgMi45N2wyLjM5IDMuNzRjLjMyLjUgMSAuNjIgMS40NC4yN3MuODctLjc2IDEuMTUtMS4yOGEyIDIgMCAwIDAgLjMxLS45OFoiLz48cGF0aCBkPSJNMTQuNyAxNC4zMmwuMjggNC43YTIgMiAwIDAgMCAuMzIuOThjLjI4LjUyLjcuOTIgMS4xNSAxLjI4LjQ0LjM1IDEuMTIuMjQgMS40NC0uMjdsMS44Mi0yLjg1YTIuMTIgMi4xMiAwIDAgMCAuMi0xLjk5IDIgMiAwIDAgMC0zLjUgMGMtLjE4LjQtLjUuNy0uOTEuNzhaIi8+PC9zdmc+" alt="PDF" class="pdf-icon">
+                        Week 1: A Simple Artificial Neural Network - Introduction
+                    </a>
+                </li>
+                <!-- More PDF resources can be added here -->
+            </ul>
         </div>
         
         <h2>Additional Resources</h2>
