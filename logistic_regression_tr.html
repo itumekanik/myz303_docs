@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistik Regresyon Katsayılarının Matematiksel Türetimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        h2 {
+            color: #e74c3c;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        h3 {
+            color: #c0392b;
+        }
+        .math-block {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .example {
+            background-color: #f8e5e5;
+            border-left: 5px solid #e74c3c;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .note {
+            background-color: #fffacd;
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Logistik Regresyon Katsayılarının Matematiksel Türetimi</h1>
+
+    <p>Logistik regresyon modelleri, bağımlı değişken \(y\) ve bağımsız değişken(ler) \(x\) arasında doğrusal olmayan bir ilişki kurar ve genellikle ikili sınıflandırma problemlerinde kullanılır. Bu ilişki şu şekilde ifade edilir:</p>
+
+    <div class="math-block">
+        \[ P(y=1|x) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}} = \sigma(\beta_0 + \beta_1 x) \]
+    </div>
+
+    <p>Burada, \(\beta_0\) kesişim noktasını, \(\beta_1\) eğimi ve \(\sigma\) sigmoid fonksiyonunu temsil eder. Bu parametreleri bulmak için Maksimum Olabilirlik yöntemini kullanıyoruz.</p>
+
+    <h2>1. Logistik Regresyonun Temeli: Olabilirlik Fonksiyonu</h2>
+
+    <p>Lineer regresyonda en küçük kareler yöntemini kullanırken, logistik regresyonda Maksimum Olabilirlik (Maximum Likelihood) yöntemini kullanırız. Bu yöntem, verilerin gözlenme olasılığını maksimize eden parametreleri bulur:</p>
+
+    <div class="math-block">
+        \[ L(\beta_0, \beta_1) = \prod_{i=1}^{n} P(y_i|x_i; \beta_0, \beta_1) \]
+    </div>
+
+    <p>Her bir veri noktası için:</p>
+    <div class="math-block">
+        \[ P(y_i|x_i; \beta_0, \beta_1) = 
+        \begin{cases} 
+        P(y_i=1|x_i) & \text{eğer } y_i = 1 \\
+        1 - P(y_i=1|x_i) & \text{eğer } y_i = 0
+        \end{cases} \]
+    </div>
+
+    <p>Bu tek bir formülle ifade edilebilir:</p>
+    <div class="math-block">
+        \[ P(y_i|x_i; \beta_0, \beta_1) = P(y_i=1|x_i)^{y_i} \cdot (1-P(y_i=1|x_i))^{1-y_i} \]
+    </div>
+
+    <h2>2. Log-Olabilirlik</h2>
+
+    <p>Matematiksel hesaplamaları kolaylaştırmak için, çarpım yerine toplamları kullanmak adına olabilirlik fonksiyonunun logaritmasını alırız:</p>
+
+    <div class="math-block">
+        \begin{align}
+        \ell(\beta_0, \beta_1) &= \log L(\beta_0, \beta_1) \\
+        &= \sum_{i=1}^{n} \log P(y_i|x_i; \beta_0, \beta_1) \\
+        &= \sum_{i=1}^{n} \left[ y_i \log P(y_i=1|x_i) + (1-y_i) \log(1-P(y_i=1|x_i)) \right]
+        \end{align}
+    </div>
+
+    <p>Sigmoid fonksiyonunu kullanarak:</p>
+    <div class="math-block">
+        \begin{align}
+        \ell(\beta_0, \beta_1) &= \sum_{i=1}^{n} \left[ y_i \log \sigma(z_i) + (1-y_i) \log(1-\sigma(z_i)) \right]
+        \end{align}
+    </div>
+
+    <p>Burada \(z_i = \beta_0 + \beta_1 x_i\) şeklindedir.</p>
+
+    <h2>3. Maksimum Noktayı Bulmak</h2>
+
+    <p>Log-olabilirlik fonksiyonunu maksimize etmek için, \(\beta_0\) ve \(\beta_1\)'e göre kısmi türevleri alır ve sıfıra eşitleriz:</p>
+
+    <h3>β₀'a göre kısmi türev:</h3>
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_0} = \sum_{i=1}^{n} \left[ y_i - \sigma(z_i) \right] \]
+    </div>
+
+    <h3>β₁'e göre kısmi türev:</h3>
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_1} = \sum_{i=1}^{n} \left[ x_i(y_i - \sigma(z_i)) \right] \]
+    </div>
+
+    <h2>4. Türevleri Sıfıra Eşitlemek</h2>
+
+    <p>Maksimum noktada, bu türevler sıfır olmalıdır:</p>
+
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_0} = 0 \Rightarrow \sum_{i=1}^{n} \left[ y_i - \sigma(z_i) \right] = 0 \]
+    </div>
+
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_1} = 0 \Rightarrow \sum_{i=1}^{n} \left[ x_i(y_i - \sigma(z_i)) \right] = 0 \]
+    </div>
+
+    <p>Bu denklemler doğrusal olmadığı için kapalı bir çözümü yoktur. Bu nedenle genellikle nümerik optimizasyon yöntemleri kullanılır.</p>
+
+    <h2>5. Nümerik Optimizasyon: Gradyan Yükselişi</h2>
+
+    <p>Bu denklemleri çözmek için Gradyan Yükselişi (Gradient Ascent) yöntemini kullanabiliriz. Bu iteratif bir algoritma olup, her adımda parametre değerlerini günceller:</p>
+
+    <div class="math-block">
+        \[ \beta_0^{(t+1)} = \beta_0^{(t)} + \alpha \cdot \frac{\partial \ell}{\partial \beta_0} \]
+        \[ \beta_1^{(t+1)} = \beta_1^{(t)} + \alpha \cdot \frac{\partial \ell}{\partial \beta_1} \]
+    </div>
+
+    <p>Burada \(\alpha\) öğrenme hızını (learning rate) temsil eder.</p>
+
+    <h2>6. Newton-Raphson Yöntemi</h2>
+
+    <p>Daha hızlı yakınsama için Newton-Raphson yöntemi kullanılabilir. Bu yöntem ikinci dereceden türevleri (Hessian matrisini) de kullanır:</p>
+
+    <div class="math-block">
+        \[ H = 
+        \begin{bmatrix} 
+        \frac{\partial^2 \ell}{\partial \beta_0^2} & \frac{\partial^2 \ell}{\partial \beta_0 \partial \beta_1} \\
+        \frac{\partial^2 \ell}{\partial \beta_1 \partial \beta_0} & \frac{\partial^2 \ell}{\partial \beta_1^2}
+        \end{bmatrix} \]
+    </div>
+
+    <p>İkinci dereceden türevler:</p>
+
+    <div class="math-block">
+        \[ \frac{\partial^2 \ell}{\partial \beta_0^2} = -\sum_{i=1}^{n} \sigma(z_i)(1-\sigma(z_i)) \]
+        \[ \frac{\partial^2 \ell}{\partial \beta_1^2} = -\sum_{i=1}^{n} x_i^2 \sigma(z_i)(1-\sigma(z_i)) \]
+        \[ \frac{\partial^2 \ell}{\partial \beta_0 \partial \beta_1} = \frac{\partial^2 \ell}{\partial \beta_1 \partial \beta_0} = -\sum_{i=1}^{n} x_i \sigma(z_i)(1-\sigma(z_i)) \]
+    </div>
+
+    <p>Newton-Raphson güncellemesi:</p>
+
+    <div class="math-block">
+        \[ 
+        \begin{bmatrix} 
+        \beta_0^{(t+1)} \\
+        \beta_1^{(t+1)}
+        \end{bmatrix} = 
+        \begin{bmatrix} 
+        \beta_0^{(t)} \\
+        \beta_1^{(t)}
+        \end{bmatrix} - H^{-1} 
+        \begin{bmatrix} 
+        \frac{\partial \ell}{\partial \beta_0} \\
+        \frac{\partial \ell}{\partial \beta_1}
+        \end{bmatrix} \]
+    </div>
+
+    <h2>7. Çok Değişkenli Logistik Regresyon</h2>
+
+    <p>Birden fazla bağımsız değişken olduğunda, model şu şekilde genişletilir:</p>
+
+    <div class="math-block">
+        \[ P(y=1|\textbf{x}) = \sigma(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p) = \sigma(\beta_0 + \textbf{x}^T \boldsymbol{\beta}) \]
+    </div>
+
+    <p>Burada \(\textbf{x} = [x_1, x_2, \ldots, x_p]^T\) ve \(\boldsymbol{\beta} = [\beta_1, \beta_2, \ldots, \beta_p]^T\) vektörlerdir.</p>
+
+    <p>Log-olabilirlik fonksiyonu ve türevleri benzer şekilde genişletilebilir.</p>
+
+    <h2>8. Adım Adım Hesaplama ile Bir Örnek</h2>
+
+    <div class="example">
+        <p>Küçük bir veri seti ile adım adım hesaplama yapalım:</p>
+        <ul>
+            <li>x = [1, 2, 3, 4, 5]</li>
+            <li>y = [0, 0, 0, 1, 1]</li>
+        </ul>
+
+        <h3>Adım 1: Başlangıç parametrelerini belirle</h3>
+        <p>\(\beta_0^{(0)} = 0\), \(\beta_1^{(0)} = 0\)</p>
+
+        <h3>Adım 2: İlk iterasyon için olasılıkları hesapla</h3>
+        <p>Her bir \(x_i\) için \(z_i = \beta_0 + \beta_1 x_i\) ve \(P(y_i=1|x_i) = \sigma(z_i)\):</p>
+        <p>\(z_1 = 0 + 0 \cdot 1 = 0\), \(P(y_1=1|x_1) = \sigma(0) = 0.5\)</p>
+        <p>\(z_2 = 0 + 0 \cdot 2 = 0\), \(P(y_2=1|x_2) = \sigma(0) = 0.5\)</p>
+        <p>\(z_3 = 0 + 0 \cdot 3 = 0\), \(P(y_3=1|x_3) = \sigma(0) = 0.5\)</p>
+        <p>\(z_4 = 0 + 0 \cdot 4 = 0\), \(P(y_4=1|x_4) = \sigma(0) = 0.5\)</p>
+        <p>\(z_5 = 0 + 0 \cdot 5 = 0\), \(P(y_5=1|x_5) = \sigma(0) = 0.5\)</p>
+
+        <h3>Adım 3: Türevleri hesapla</h3>
+        <p>\(\frac{\partial \ell}{\partial \beta_0} = \sum_{i=1}^{5} [y_i - \sigma(z_i)] = (0-0.5) + (0-0.5) + (0-0.5) + (1-0.5) + (1-0.5) = -0.5\)</p>
+        <p>\(\frac{\partial \ell}{\partial \beta_1} = \sum_{i=1}^{5} [x_i(y_i - \sigma(z_i))] = 1(0-0.5) + 2(0-0.5) + 3(0-0.5) + 4(1-0.5) + 5(1-0.5) = -0.5 - 1 - 1.5 + 2 + 2.5 = 1.5\)</p>
+
+        <h3>Adım 4: Parametreleri güncelle (α = 0.1 ile)</h3>
+        <p>\(\beta_0^{(1)} = \beta_0^{(0)} + 0.1 \cdot \frac{\partial \ell}{\partial \beta_0} = 0 + 0.1 \cdot (-0.5) = -0.05\)</p>
+        <p>\(\beta_1^{(1)} = \beta_1^{(0)} + 0.1 \cdot \frac{\partial \ell}{\partial \beta_1} = 0 + 0.1 \cdot 1.5 = 0.15\)</p>
+
+        <p>Bu işlem yakınsama sağlanana kadar tekrarlanır.</p>
+
+        <h3>Son yaklaşık değerler (birkaç iterasyon sonra)</h3>
+        <p>\(\beta_0 \approx -3.0\), \(\beta_1 \approx 1.0\)</p>
+
+        <h3>Lojistik regresyon modeli</h3>
+        <p>\(P(y=1|x) = \frac{1}{1 + e^{-(-3.0 + 1.0x)}}\)</p>
+
+        <p>Bu model, düşük x değerleri için düşük olasılık (yaklaşık 0), yüksek x değerleri için yüksek olasılık (yaklaşık 1) tahmin eder. Eşik değeri yaklaşık x = 3'tür, bu da veri setimizle uyumludur.</p>
+    </div>
+
+    <h2>9. Logistik Regresyonun Geometrik Yorumu</h2>
+
+    <p>Logistik regresyon, özellik uzayını iki sınıfı ayıran bir karar sınırı (decision boundary) ile böler. İkili sınıflandırma durumunda, bu sınır şu denklemi sağlayan noktalardan oluşur:</p>
+
+    <div class="math-block">
+        \[ \beta_0 + \beta_1 x = 0 \]
+    </div>
+
+    <p>Çok değişkenli durumda:</p>
+
+    <div class="math-block">
+        \[ \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p = 0 \]
+    </div>
+
+    <p>Bu, özellik uzayını doğrusal olarak bölen bir hiperdüzlemdir.</p>
+
+    <h2>10. Regülarizasyon</h2>
+
+    <p>Aşırı uyumu (overfitting) önlemek için, log-olabilirlik fonksiyonuna bir ceza (penalty) terimi eklenebilir:</p>
+
+    <h3>L2 Regülarizasyonu (Ridge):</h3>
+    <div class="math-block">
+        \[ \ell_{ridge}(\boldsymbol{\beta}) = \ell(\boldsymbol{\beta}) - \lambda \sum_{j=1}^{p} \beta_j^2 \]
+    </div>
+
+    <h3>L1 Regülarizasyonu (Lasso):</h3>
+    <div class="math-block">
+        \[ \ell_{lasso}(\boldsymbol{\beta}) = \ell(\boldsymbol{\beta}) - \lambda \sum_{j=1}^{p} |\beta_j| \]
+    </div>
+
+    <div class="note">
+        <p>Burada \(\lambda\) regülarizasyon parametresidir ve daha büyük değerler daha fazla regülarizasyon sağlar.</p>
+    </div>
+
+    <h2>Sonuç</h2>
+
+    <p>Logistik regresyon, sınıflandırma problemleri için güçlü bir istatistiksel yöntemdir. Lineer regresyondan farklı olarak, olasılık çerçevesinde çalışır ve Maksimum Olabilirlik yöntemi ile parametreleri tahmin eder.</p>
+
+    <p>Bu yöntem, basit olmasına rağmen, makine öğrenmesi alanında temel bir yapı taşı oluşturur ve daha karmaşık algoritmaların anlaşılması için önemli bir adımdır.</p>
+</body>
+</html>

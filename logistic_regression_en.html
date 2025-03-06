@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Derivation of Logistic Regression Coefficients</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        h2 {
+            color: #e74c3c;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        h3 {
+            color: #c0392b;
+        }
+        .math-block {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .example {
+            background-color: #f8e5e5;
+            border-left: 5px solid #e74c3c;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .note {
+            background-color: #fffacd;
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Mathematical Derivation of Logistic Regression Coefficients</h1>
+
+    <p>Logistic regression models establish a non-linear relationship between a dependent variable \(y\) and independent variable(s) \(x\), and are typically used for binary classification problems. This relationship is expressed as:</p>
+
+    <div class="math-block">
+        \[ P(y=1|x) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}} = \sigma(\beta_0 + \beta_1 x) \]
+    </div>
+
+    <p>Here, \(\beta_0\) represents the intercept, \(\beta_1\) represents the slope, and \(\sigma\) represents the sigmoid function. To find these parameters, we use the Maximum Likelihood method.</p>
+
+    <h2>1. The Foundation of Logistic Regression: Likelihood Function</h2>
+
+    <p>While linear regression uses the least squares method, logistic regression uses the Maximum Likelihood method. This method finds parameters that maximize the probability of observing the given data:</p>
+
+    <div class="math-block">
+        \[ L(\beta_0, \beta_1) = \prod_{i=1}^{n} P(y_i|x_i; \beta_0, \beta_1) \]
+    </div>
+
+    <p>For each data point:</p>
+    <div class="math-block">
+        \[ P(y_i|x_i; \beta_0, \beta_1) = 
+        \begin{cases} 
+        P(y_i=1|x_i) & \text{if } y_i = 1 \\
+        1 - P(y_i=1|x_i) & \text{if } y_i = 0
+        \end{cases} \]
+    </div>
+
+    <p>This can be expressed with a single formula:</p>
+    <div class="math-block">
+        \[ P(y_i|x_i; \beta_0, \beta_1) = P(y_i=1|x_i)^{y_i} \cdot (1-P(y_i=1|x_i))^{1-y_i} \]
+    </div>
+
+    <h2>2. Log-Likelihood</h2>
+
+    <p>To simplify mathematical calculations, we take the logarithm of the likelihood function to use sums instead of products:</p>
+
+    <div class="math-block">
+        \begin{align}
+        \ell(\beta_0, \beta_1) &= \log L(\beta_0, \beta_1) \\
+        &= \sum_{i=1}^{n} \log P(y_i|x_i; \beta_0, \beta_1) \\
+        &= \sum_{i=1}^{n} \left[ y_i \log P(y_i=1|x_i) + (1-y_i) \log(1-P(y_i=1|x_i)) \right]
+        \end{align}
+    </div>
+
+    <p>Using the sigmoid function:</p>
+    <div class="math-block">
+        \begin{align}
+        \ell(\beta_0, \beta_1) &= \sum_{i=1}^{n} \left[ y_i \log \sigma(z_i) + (1-y_i) \log(1-\sigma(z_i)) \right]
+        \end{align}
+    </div>
+
+    <p>Where \(z_i = \beta_0 + \beta_1 x_i\).</p>
+
+    <h2>3. Finding the Maximum Point</h2>
+
+    <p>To maximize the log-likelihood function, we take partial derivatives with respect to \(\beta_0\) and \(\beta_1\) and set them equal to zero:</p>
+
+    <h3>Partial derivative with respect to β₀:</h3>
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_0} = \sum_{i=1}^{n} \left[ y_i - \sigma(z_i) \right] \]
+    </div>
+
+    <h3>Partial derivative with respect to β₁:</h3>
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_1} = \sum_{i=1}^{n} \left[ x_i(y_i - \sigma(z_i)) \right] \]
+    </div>
+
+    <h2>4. Setting Derivatives to Zero</h2>
+
+    <p>At the maximum point, these derivatives must be zero:</p>
+
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_0} = 0 \Rightarrow \sum_{i=1}^{n} \left[ y_i - \sigma(z_i) \right] = 0 \]
+    </div>
+
+    <div class="math-block">
+        \[ \frac{\partial \ell}{\partial \beta_1} = 0 \Rightarrow \sum_{i=1}^{n} \left[ x_i(y_i - \sigma(z_i)) \right] = 0 \]
+    </div>
+
+    <p>Since these equations are non-linear, they don't have a closed-form solution. Therefore, numerical optimization methods are typically used.</p>
+
+    <h2>5. Numerical Optimization: Gradient Ascent</h2>
+
+    <p>We can use the Gradient Ascent method to solve these equations. This is an iterative algorithm that updates parameter values at each step:</p>
+
+    <div class="math-block">
+        \[ \beta_0^{(t+1)} = \beta_0^{(t)} + \alpha \cdot \frac{\partial \ell}{\partial \beta_0} \]
+        \[ \beta_1^{(t+1)} = \beta_1^{(t)} + \alpha \cdot \frac{\partial \ell}{\partial \beta_1} \]
+    </div>
+
+    <p>Here \(\alpha\) represents the learning rate.</p>
+
+    <h2>6. Newton-Raphson Method</h2>
+
+    <p>For faster convergence, the Newton-Raphson method can be used. This method also uses second-order derivatives (the Hessian matrix):</p>
+
+    <div class="math-block">
+        \[ H = 
+        \begin{bmatrix} 
+        \frac{\partial^2 \ell}{\partial \beta_0^2} & \frac{\partial^2 \ell}{\partial \beta_0 \partial \beta_1} \\
+        \frac{\partial^2 \ell}{\partial \beta_1 \partial \beta_0} & \frac{\partial^2 \ell}{\partial \beta_1^2}
+        \end{bmatrix} \]
+    </div>
+
+    <p>Second-order derivatives:</p>
+
+    <div class="math-block">
+        \[ \frac{\partial^2 \ell}{\partial \beta_0^2} = -\sum_{i=1}^{n} \sigma(z_i)(1-\sigma(z_i)) \]
+        \[ \frac{\partial^2 \ell}{\partial \beta_1^2} = -\sum_{i=1}^{n} x_i^2 \sigma(z_i)(1-\sigma(z_i)) \]
+        \[ \frac{\partial^2 \ell}{\partial \beta_0 \partial \beta_1} = \frac{\partial^2 \ell}{\partial \beta_1 \partial \beta_0} = -\sum_{i=1}^{n} x_i \sigma(z_i)(1-\sigma(z_i)) \]
+    </div>
+
+    <p>Newton-Raphson update:</p>
+
+    <div class="math-block">
+        \[ 
+        \begin{bmatrix} 
+        \beta_0^{(t+1)} \\
+        \beta_1^{(t+1)}
+        \end{bmatrix} = 
+        \begin{bmatrix} 
+        \beta_0^{(t)} \\
+        \beta_1^{(t)}
+        \end{bmatrix} - H^{-1} 
+        \begin{bmatrix} 
+        \frac{\partial \ell}{\partial \beta_0} \\
+        \frac{\partial \ell}{\partial \beta_1}
+        \end{bmatrix} \]
+    </div>
+
+    <h2>7. Multivariate Logistic Regression</h2>
+
+    <p>When there are multiple independent variables, the model is extended as follows:</p>
+
+    <div class="math-block">
+        \[ P(y=1|\textbf{x}) = \sigma(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p) = \sigma(\beta_0 + \textbf{x}^T \boldsymbol{\beta}) \]
+    </div>
+
+    <p>Here \(\textbf{x} = [x_1, x_2, \ldots, x_p]^T\) and \(\boldsymbol{\beta} = [\beta_1, \beta_2, \ldots, \beta_p]^T\) are vectors.</p>
+
+    <p>The log-likelihood function and its derivatives can be extended similarly.</p>
+
+    <h2>8. Step-by-Step Calculation with an Example</h2>
+
+    <div class="example">
+        <p>Let's perform a step-by-step calculation with a small dataset:</p>
+        <ul>
+            <li>x = [1, 2, 3, 4, 5]</li>
+            <li>y = [0, 0, 0, 1, 1]</li>
+        </ul>
+
+        <h3>Step 1: Set initial parameters</h3>
+        <p>\(\beta_0^{(0)} = 0\), \(\beta_1^{(0)} = 0\)</p>
+
+        <h3>Step 2: Calculate probabilities for the first iteration</h3>
+        <p>For each \(x_i\), calculate \(z_i = \beta_0 + \beta_1 x_i\) and \(P(y_i=1|x_i) = \sigma(z_i)\):</p>
+        <p>\(z_1 = 0 + 0 \cdot 1 = 0\), \(P(y_1=1|x_1) = \sigma(0) = 0.5\)</p>
+        <p>\(z_2 = 0 + 0 \cdot 2 = 0\), \(P(y_2=1|x_2) = \sigma(0) = 0.5\)</p>
+        <p>\(z_3 = 0 + 0 \cdot 3 = 0\), \(P(y_3=1|x_3) = \sigma(0) = 0.5\)</p>
+        <p>\(z_4 = 0 + 0 \cdot 4 = 0\), \(P(y_4=1|x_4) = \sigma(0) = 0.5\)</p>
+        <p>\(z_5 = 0 + 0 \cdot 5 = 0\), \(P(y_5=1|x_5) = \sigma(0) = 0.5\)</p>
+
+        <h3>Step 3: Calculate derivatives</h3>
+        <p>\(\frac{\partial \ell}{\partial \beta_0} = \sum_{i=1}^{5} [y_i - \sigma(z_i)] = (0-0.5) + (0-0.5) + (0-0.5) + (1-0.5) + (1-0.5) = -0.5\)</p>
+        <p>\(\frac{\partial \ell}{\partial \beta_1} = \sum_{i=1}^{5} [x_i(y_i - \sigma(z_i))] = 1(0-0.5) + 2(0-0.5) + 3(0-0.5) + 4(1-0.5) + 5(1-0.5) = -0.5 - 1 - 1.5 + 2 + 2.5 = 1.5\)</p>
+
+        <h3>Step 4: Update parameters (with α = 0.1)</h3>
+        <p>\(\beta_0^{(1)} = \beta_0^{(0)} + 0.1 \cdot \frac{\partial \ell}{\partial \beta_0} = 0 + 0.1 \cdot (-0.5) = -0.05\)</p>
+        <p>\(\beta_1^{(1)} = \beta_1^{(0)} + 0.1 \cdot \frac{\partial \ell}{\partial \beta_1} = 0 + 0.1 \cdot 1.5 = 0.15\)</p>
+
+        <p>This process is repeated until convergence is achieved.</p>
+
+        <h3>Final approximate values (after several iterations)</h3>
+        <p>\(\beta_0 \approx -3.0\), \(\beta_1 \approx 1.0\)</p>
+
+        <h3>Logistic regression model</h3>
+        <p>\(P(y=1|x) = \frac{1}{1 + e^{-(-3.0 + 1.0x)}}\)</p>
+
+        <p>This model predicts low probability (approximately 0) for low x values and high probability (approximately 1) for high x values. The threshold value is approximately x = 3, which aligns with our dataset.</p>
+    </div>
+
+    <h2>9. Geometric Interpretation of Logistic Regression</h2>
+
+    <p>Logistic regression divides the feature space with a decision boundary that separates the two classes. In the binary classification case, this boundary consists of points that satisfy the equation:</p>
+
+    <div class="math-block">
+        \[ \beta_0 + \beta_1 x = 0 \]
+    </div>
+
+    <p>In the multivariate case:</p>
+
+    <div class="math-block">
+        \[ \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p = 0 \]
+    </div>
+
+    <p>This is a hyperplane that linearly divides the feature space.</p>
+
+    <h2>10. Regularization</h2>
+
+    <p>To prevent overfitting, a penalty term can be added to the log-likelihood function:</p>
+
+    <h3>L2 Regularization (Ridge):</h3>
+    <div class="math-block">
+        \[ \ell_{ridge}(\boldsymbol{\beta}) = \ell(\boldsymbol{\beta}) - \lambda \sum_{j=1}^{p} \beta_j^2 \]
+    </div>
+
+    <h3>L1 Regularization (Lasso):</h3>
+    <div class="math-block">
+        \[ \ell_{lasso}(\boldsymbol{\beta}) = \ell(\boldsymbol{\beta}) - \lambda \sum_{j=1}^{p} |\beta_j| \]
+    </div>
+
+    <div class="note">
+        <p>Here \(\lambda\) is the regularization parameter, and larger values provide more regularization.</p>
+    </div>
+
+    <h2>Conclusion</h2>
+
+    <p>Logistic regression is a powerful statistical method for classification problems. Unlike linear regression, it works within a probability framework and estimates parameters using the Maximum Likelihood method.</p>
+
+    <p>Despite its simplicity, this method forms a fundamental building block in the field of machine learning and is an important step in understanding more complex algorithms.</p>
+</body>
+</html>

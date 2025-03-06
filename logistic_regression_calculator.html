@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistic Regression Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #c0392b;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #e74c3c;
+            color: white;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .add-btn { background: #2ecc71; color: white; }
+        .add-btn:hover { background: #27ae60; }
+
+        .delete-btn { background: #e74c3c; color: white; }
+        .delete-btn:hover { background: #c0392b; }
+
+        .clear-btn { background: #f39c12; color: white; }
+        .clear-btn:hover { background: #e67e22; }
+
+        .run-btn { background: #e74c3c; color: white; }
+        .run-btn:hover { background: #c0392b; }
+
+        .results {
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .slider-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Interactive Logistic Regression Calculator</h1>
+
+    <div class="container">
+        <div class="panel">
+            <h2>Data Input</h2>
+            <p>Enter x values and binary y values (0 or 1)</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>x (Independent)</th>
+                        <th>y (Class: 0 or 1)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body"></tbody>
+            </table>
+            <button class="add-btn" onclick="addRow()">Add Data Point</button>
+            <button class="clear-btn" onclick="clearData()">Clear All</button>
+            <button class="run-btn" onclick="runRegression()">Run Logistic Regression</button>
+            
+            <div class="slider-container">
+                <label for="learning-rate">Learning Rate: <span id="lr-value">0.1</span></label>
+                <input type="range" id="learning-rate" class="slider" min="0.001" max="0.5" step="0.001" value="0.1" 
+                    oninput="document.getElementById('lr-value').textContent = this.value">
+                
+                <label for="iterations">Max Iterations: <span id="iter-value">100</span></label>
+                <input type="range" id="iterations" class="slider" min="10" max="1000" step="10" value="100" 
+                    oninput="document.getElementById('iter-value').textContent = this.value">
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Regression Results</h2>
+            <p class="formula" id="equation">P(y=1|x) = 1 / (1 + e<sup>-(β₀ + β₁x)</sup>)</p>
+            <div class="results">
+                <p>Intercept (β₀): <strong id="beta0">-</strong></p>
+                <p>Coefficient (β₁): <strong id="beta1">-</strong></p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <h3>Accuracy</h3>
+                    <p id="accuracy">-</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Log-Likelihood</h3>
+                    <p id="log-likelihood">-</p>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <label for="threshold">Classification Threshold: <span id="threshold-value">0.5</span></label>
+                <input type="range" id="threshold" class="slider" min="0.1" max="0.9" step="0.05" value="0.5" 
+                    oninput="document.getElementById('threshold-value').textContent = this.value; updateClassification();">
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="regressionChart"></canvas>
+    </div>
+
+    <script>
+        // Sample data
+        let data = [
+            { x: 1, y: 0 },
+            { x: 2, y: 0 },
+            { x: 3, y: 0 },
+            { x: 4, y: 1 },
+            { x: 5, y: 1 },
+            { x: 6, y: 1 }
+        ];
+
+        let chart;
+        let beta0 = 0;
+        let beta1 = 0;
+
+        function updateTable() {
+            let tbody = document.getElementById('data-body');
+            tbody.innerHTML = '';
+
+            data.forEach((point, index) => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="number" step="0.1" value="${point.x}" onchange="updateValue(${index}, 'x', this.value)"></td>
+                    <td>
+                        <select onchange="updateValue(${index}, 'y', this.value)">
+                            <option value="0" ${point.y == 0 ? 'selected' : ''}>0</option>
+                            <option value="1" ${point.y == 1 ? 'selected' : ''}>1</option>
+                        </select>
+                    </td>
+                    <td><button class="delete-btn" onclick="removeRow(${index})">Delete</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateValue(index, key, value) {
+            data[index][key] = parseFloat(value);
+        }
+
+        function addRow() {
+            data.push({ x: 0, y: 0 });
+            updateTable();
+        }
+
+        function removeRow(index) {
+            data.splice(index, 1);
+            updateTable();
+        }
+
+        function clearData() {
+            data = [];
+            updateTable();
+            if (chart) chart.destroy();
+            
+            // Reset results
+            document.getElementById('beta0').textContent = '-';
+            document.getElementById('beta1').textContent = '-';
+            document.getElementById('accuracy').textContent = '-';
+            document.getElementById('log-likelihood').textContent = '-';
+        }
+        
+        function sigmoid(z) {
+            return 1 / (1 + Math.exp(-z));
+        }
+        
+        function logLikelihood(beta0, beta1) {
+            let ll = 0;
+            for (let point of data) {
+                let p = sigmoid(beta0 + beta1 * point.x);
+                ll += point.y * Math.log(p) + (1 - point.y) * Math.log(1 - p);
+            }
+            return ll;
+        }
+        
+        function calculateAccuracy(beta0, beta1, threshold) {
+            let correct = 0;
+            for (let point of data) {
+                let prob = sigmoid(beta0 + beta1 * point.x);
+                let prediction = prob >= threshold ? 1 : 0;
+                if (prediction === point.y) {
+                    correct++;
+                }
+            }
+            return correct / data.length;
+        }
+
+        function runRegression() {
+            if (data.length < 2) {
+                alert("At least two points required.");
+                return;
+            }
+            
+            // Check if data contains both classes
+            let hasZero = data.some(p => p.y === 0);
+            let hasOne = data.some(p => p.y === 1);
+            
+            if (!hasZero || !hasOne) {
+                alert("Data must contain both class 0 and class 1 examples.");
+                return;
+            }
+
+            // Get learning parameters
+            let learningRate = parseFloat(document.getElementById('learning-rate').value);
+            let maxIterations = parseInt(document.getElementById('iterations').value);
+            
+            // Initialize parameters
+            beta0 = 0;
+            beta1 = 0;
+            
+            // Gradient Ascent
+            for (let iter = 0; iter < maxIterations; iter++) {
+                let grad0 = 0;
+                let grad1 = 0;
+                
+                // Calculate gradients
+                for (let point of data) {
+                    let p = sigmoid(beta0 + beta1 * point.x);
+                    grad0 += (point.y - p);
+                    grad1 += (point.y - p) * point.x;
+                }
+                
+                // Update parameters
+                beta0 += learningRate * grad0;
+                beta1 += learningRate * grad1;
+            }
+            
+            // Update results
+            document.getElementById('beta0').textContent = beta0.toFixed(4);
+            document.getElementById('beta1').textContent = beta1.toFixed(4);
+            
+            let threshold = parseFloat(document.getElementById('threshold').value);
+            let accuracy = calculateAccuracy(beta0, beta1, threshold);
+            let ll = logLikelihood(beta0, beta1);
+            
+            document.getElementById('accuracy').textContent = (accuracy * 100).toFixed(2) + '%';
+            document.getElementById('log-likelihood').textContent = ll.toFixed(4);
+            
+            // Draw chart
+            updateChart();
+        }
+        
+        function updateClassification() {
+            if (document.getElementById('beta0').textContent !== '-') {
+                let threshold = parseFloat(document.getElementById('threshold').value);
+                let accuracy = calculateAccuracy(beta0, beta1, threshold);
+                document.getElementById('accuracy').textContent = (accuracy * 100).toFixed(2) + '%';
+                updateChart();
+            }
+        }
+        
+        function updateChart() {
+            if (chart) chart.destroy();
+            
+            // Generate points for the logistic curve
+            let xMin = Math.min(...data.map(p => p.x)) - 1;
+            let xMax = Math.max(...data.map(p => p.x)) + 1;
+            let curvePoints = [];
+            
+            for (let x = xMin; x <= xMax; x += 0.1) {
+                curvePoints.push({
+                    x: x,
+                    y: sigmoid(beta0 + beta1 * x)
+                });
+            }
+            
+            // Get classification threshold
+            let threshold = parseFloat(document.getElementById('threshold').value);
+            
+            // Find x value where probability equals threshold
+            let decisionBoundary = null;
+            if (beta1 !== 0) {
+                decisionBoundary = (Math.log(threshold / (1 - threshold)) - beta0) / beta1;
+            }
+            
+            let ctx = document.getElementById('regressionChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Data Points (Class 0)',
+                            data: data.filter(p => p.y === 0),
+                            backgroundColor: 'blue',
+                            pointRadius: 8
+                        },
+                        {
+                            label: 'Data Points (Class 1)',
+                            data: data.filter(p => p.y === 1),
+                            backgroundColor: 'red',
+                            pointRadius: 8
+                        },
+                        {
+                            label: 'Logistic Curve',
+                            data: curvePoints,
+                            type: 'line',
+                            borderColor: '#e74c3c',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        decisionBoundary ? {
+                            label: 'Decision Boundary',
+                            data: [
+                                { x: decisionBoundary, y: 0 },
+                                { x: decisionBoundary, y: 1 }
+                            ],
+                            type: 'line',
+                            borderColor: 'green',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            borderDash: [5, 5]
+                        } : null
+                    ].filter(d => d !== null)
+                },
+                options: {
+                    scales: {
+                        x: { 
+                            type: 'linear', 
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'X Value'
+                            }
+                        },
+                        y: { 
+                            type: 'linear',
+                            min: 0,
+                            max: 1,
+                            title: {
+                                display: true,
+                                text: 'Probability P(y=1|x)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        updateTable();
+        runRegression();
+    </script>
+
+</body>
+</html>
