@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Descent Theory - MYZ 303E</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #ecf0f1;
+            --dark-text: #2c3e50;
+            --light-text: #ecf0f1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            color: var(--primary-color);
+            margin-top: 1.8rem;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+        }
+        
+        .math-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-left: 4px solid var(--secondary-color);
+            font-family: "Cambria Math", Georgia, serif;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .note {
+            background-color: #fef9e7;
+            border-left: 4px solid #f39c12;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .note-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #d35400;
+        }
+        
+        ol, ul {
+            padding-left: 2rem;
+        }
+        
+        li {
+            margin-bottom: 0.8rem;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .back-to-index {
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gradient Descent Theory</h1>
+        <p>MYZ 303E Artificial Intelligence in Civil Engineering</p>
+    </header>
+    
+    <div class="container">
+        <h2>Introduction to Gradient Descent</h2>
+        <p>Gradient Descent is a fundamental optimization algorithm used in machine learning to find the minimum of a function. In the context of machine learning, this function is typically a loss or cost function that measures how well a model performs on a given dataset. The goal is to find the weight values (W) that minimize this function, resulting in an optimal model.</p>
+        
+        <p>In essence, gradient descent is like finding the lowest point in a valley by taking steps in the steepest downhill direction. The algorithm gets its name from the fact that it follows the negative gradient (the direction of steepest descent) of the function to reach a minimum.</p>
+        
+        <h2>The Mathematical Foundation</h2>
+        
+        <h3>The Gradient</h3>
+        <p>The gradient of a function is a vector of partial derivatives. For a function f(x₁, x₂, ..., xₙ), the gradient is denoted as ∇f:</p>
+        
+        <div class="math-block">
+            \[ \nabla f = \left[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \ldots, \frac{\partial f}{\partial x_n}\right] \]
+        </div>
+        
+        <p>The gradient points in the direction of the steepest increase of the function. By taking steps in the opposite direction (-∇f), we can move toward the minimum of the function. In machine learning, we calculate the gradient with respect to the weights (W) of our model.</p>
+        
+        <h3>The Update Rule</h3>
+        <p>In gradient descent, we iteratively update the weights (W) using the following rule:</p>
+        
+        <div class="math-block">
+            \[ W = W - \alpha \nabla J(W) \]
+        </div>
+        
+        <p>Where:</p>
+        <ul>
+            <li>W represents the weights of the model</li>
+            <li>α (alpha) is the learning rate, which controls the size of each step</li>
+            <li>∇J(W) is the gradient of the cost function J with respect to the weights W</li>
+        </ul>
+        
+        <div class="note">
+            <div class="note-title">Important Note:</div>
+            <p>The learning rate α is a critical hyperparameter. If it's too small, the algorithm will converge very slowly. If it's too large, the algorithm might overshoot the minimum and fail to converge or even diverge.</p>
+        </div>
+        
+        <h2>Types of Gradient Descent</h2>
+        
+        <h3>Batch Gradient Descent</h3>
+        <p>In batch gradient descent, we compute the gradient of the cost function with respect to the weights for the entire training dataset:</p>
+        
+        <div class="formula">
+            W = W - α∇J(W)
+        </div>
+        
+        <p>This approach is computationally expensive for large datasets as it requires calculating gradients over the entire training set for each update step.</p>
+        
+        <h3>Stochastic Gradient Descent (SGD)</h3>
+        <p>Stochastic gradient descent updates the weights using only one training example at a time:</p>
+        
+        <div class="math-block">
+            \[ W = W - \alpha \nabla J(W; x^{(i)}, y^{(i)}) \]
+        </div>
+        
+        <p>Where (x⁽ⁱ⁾, y⁽ⁱ⁾) is a single training example. SGD is much faster but has higher variance in the parameter updates, which can cause the objective function to fluctuate heavily.</p>
+        
+        <h3>Mini-batch Gradient Descent</h3>
+        <p>Mini-batch gradient descent is a compromise between batch and stochastic methods. It updates the weights using a small random subset (mini-batch) of the training data:</p>
+        
+        <div class="math-block">
+            \[ W = W - \alpha \nabla J(W; x^{(i:i+n)}, y^{(i:i+n)}) \]
+        </div>
+        
+        <p>This approach reduces the variance of the parameter updates compared to SGD, leading to more stable convergence. It also allows for efficient matrix operations that can be parallelized.</p>
+        
+        <h2>Convergence and Challenges</h2>
+        
+        <h3>Convergence Criteria</h3>
+        <p>Gradient descent typically terminates when one of these conditions is met:</p>
+        <ul>
+            <li>The change in the cost function J(W) falls below a predefined threshold</li>
+            <li>The magnitude of the gradient ∇J(W) falls below a threshold</li>
+            <li>A maximum number of iterations is reached</li>
+        </ul>
+        
+        <h3>Challenges in Gradient Descent</h3>
+        
+        <h4>Local Minima</h4>
+        <p>For non-convex functions (like those in deep learning), gradient descent may converge to a local minimum rather than the global minimum. This is because the algorithm only moves downhill and can get trapped in valleys that aren't the deepest point globally.</p>
+        
+        <h4>Saddle Points</h4>
+        <p>Saddle points are points where the gradient is zero in all directions, but it's not a minimum. In high-dimensional spaces (common in machine learning), saddle points are more prevalent than local minima and can slow down convergence.</p>
+        
+        <h4>Plateaus</h4>
+        <p>Plateaus are flat regions where the gradient is very small but not zero. Gradient descent can slow down significantly in these regions, taking many iterations to escape.</p>
+        
+        <h2>Advanced Gradient Descent Variants</h2>
+        
+        <h3>Momentum</h3>
+        <p>Momentum helps accelerate gradient descent by adding a fraction of the previous update vector to the current update:</p>
+        
+        <div class="math-block">
+            \[ v = \gamma v - \alpha \nabla J(W) \]
+            \[ W = W + v \]
+        </div>
+        
+        <p>Where γ is the momentum coefficient (typically 0.9). This helps the algorithm navigate ravines (areas where the surface curves much more steeply in one dimension than in another) more effectively.</p>
+        
+        <h3>RMSprop</h3>
+        <p>RMSprop adapts the learning rate for each weight based on the history of squared gradients:</p>
+        
+        <div class="math-block">
+            \[ E[g^2]_t = 0.9E[g^2]_{t-1} + 0.1(\nabla J(W))^2 \]
+            \[ W = W - \frac{\alpha}{\sqrt{E[g^2]_t + \epsilon}}\nabla J(W) \]
+        </div>
+        
+        <p>This helps normalize the gradient, making the algorithm less sensitive to the scale of the features.</p>
+        
+        <h3>Adam (Adaptive Moment Estimation)</h3>
+        <p>Adam combines the ideas of momentum and RMSprop, keeping track of both the first moment (mean) and the second moment (uncentered variance) of the gradients:</p>
+        
+        <div class="math-block">
+            \[ m = \beta_1 m + (1-\beta_1)\nabla J(W) \]
+            \[ v = \beta_2 v + (1-\beta_2)(\nabla J(W))^2 \]
+            \[ \hat{m} = \frac{m}{1-\beta_1^t} \]
+            \[ \hat{v} = \frac{v}{1-\beta_2^t} \]
+            \[ W = W - \frac{\alpha}{\sqrt{\hat{v}} + \epsilon}\hat{m} \]
+        </div>
+        
+        <p>Adam is widely used in practice because it often converges faster and more reliably than basic gradient descent.</p>
+        
+        <h2>Applications in Civil Engineering</h2>
+        
+        <p>Gradient descent is widely used in civil engineering applications of machine learning, including:</p>
+        
+        <ul>
+            <li><strong>Structural Optimization:</strong> Finding optimal design parameters for structures that minimize weight while maintaining safety constraints.</li>
+            <li><strong>Material Modeling:</strong> Calibrating parameters of constitutive models to match experimental data.</li>
+            <li><strong>Traffic Flow Prediction:</strong> Training neural networks to predict traffic patterns and optimize transportation systems.</li>
+            <li><strong>Structural Health Monitoring:</strong> Developing models that can detect and classify structural damage from sensor data.</li>
+            <li><strong>Construction Project Management:</strong> Optimizing resource allocation and project scheduling.</li>
+        </ul>
+        
+        <div class="note">
+            <div class="note-title">Civil Engineering Perspective:</div>
+            <p>In civil engineering applications, the choice of the loss function is particularly important. For structural applications, safety-critical concerns often necessitate asymmetric loss functions that penalize under-prediction more severely than over-prediction.</p>
+        </div>
+        
+        <h2>Conclusion</h2>
+        
+        <p>Gradient descent is a powerful optimization technique that forms the backbone of most machine learning algorithms. Understanding its mathematical foundations, variants, and limitations is essential for effectively applying machine learning to civil engineering problems.</p>
+        
+        <p>While this tutorial has focused on the theoretical aspects, practical implementation requires careful consideration of hyperparameters, preprocessing of data, and selection of appropriate model architectures for the specific problem at hand.</p>
+        
+        <div class="navigation">
+            <a href="index.html" class="nav-button back-to-index">Back to Course Index</a>
+            <a href="gradient_descent_with_single_W.html" class="nav-button">Try Interactive Gradient Descent Tool</a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 MYZ 303E Artificial Intelligence in Civil Engineering</p>
+    </footer>
+</body>
+</html>
