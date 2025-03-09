@@ -127,11 +127,11 @@
     <button id="reset-btn">Reset</button>
     <div>
       <label for="learning-rate">Learning Rate:</label>
-      <input type="number" id="learning-rate" min="0.001" max="1" step="0.001" value="0.05"/>
+      <input type="number" id="learning-rate" min="0.001" max="1" step="0.001" value="0.01"/>
     </div>
     <div>
       <label for="iterations">Max Iterations:</label>
-      <input type="number" id="iterations" min="1" max="100" value="50"/>
+      <input type="number" id="iterations" min="1" max="100" value="35"/>
     </div>
   </div>
   
@@ -447,7 +447,12 @@ function gradientDescent(initialW, learningRate, maxIterations) {
       });
     }
     
-    // Update charts with new iteration data
+    // GLOBAL DEĞİŞKENLER
+    let allIterations = [];
+    let currentIndex = -1;
+    let animationInterval = null;
+    
+    // Soldaki ve sağdaki grafikleri günceller
     function updateCharts(iterations, currentIndex) {
       if (!iterations || iterations.length === 0) return;
       
@@ -518,6 +523,7 @@ function gradientDescent(initialW, learningRate, maxIterations) {
       functionChart.update();
     }
     
+    // İterasyon tablosunu günceller
     function updateTable(iterations, currentIndex = -1) {
       const tableBody = document.getElementById('iterations-log');
       tableBody.innerHTML = '';
@@ -538,6 +544,7 @@ function gradientDescent(initialW, learningRate, maxIterations) {
       });
     }
     
+    // Parametre gösterimlerini günceller
     function updateParameters(iteration) {
       document.getElementById('current-w').textContent = iteration.w.toFixed(4);
       document.getElementById('current-loss').textContent = iteration.loss.toFixed(4);
@@ -545,36 +552,7 @@ function gradientDescent(initialW, learningRate, maxIterations) {
       document.getElementById('current-iteration').textContent = iteration.iteration;
     }
     
-    // Genel değişkenler
-    let allIterations = [];
-    let currentIndex = -1;
-    let animationInterval = null;
-    
-    // Animasyonu başlat
-    function runAnimation() {
-      if (animationInterval) {
-        clearInterval(animationInterval);
-        animationInterval = null;
-      }
-      currentIndex = 0;
-      updateCharts(allIterations, currentIndex);
-      updateTable(allIterations, currentIndex);
-      updateParameters(allIterations[currentIndex]);
-      
-      animationInterval = setInterval(() => {
-        currentIndex++;
-        if (currentIndex >= allIterations.length) {
-          clearInterval(animationInterval);
-          animationInterval = null;
-          return;
-        }
-        updateCharts(allIterations, currentIndex);
-        updateTable(allIterations, currentIndex);
-        updateParameters(allIterations[currentIndex]);
-      }, 500);
-    }
-    
-    // Reset ve yeniden başlat
+    // Reset fonksiyonu: yeni learning rate & iteration okur, hesapları sıfırlar
     function reset() {
       if (animationInterval) {
         clearInterval(animationInterval);
@@ -586,14 +564,58 @@ function gradientDescent(initialW, learningRate, maxIterations) {
       allIterations = gradientDescent(0, learningRate, maxIterations);
       currentIndex = -1;
       
-      const initialIteration = allIterations[0];
-      document.getElementById('current-w').textContent = initialIteration.w.toFixed(4);
-      document.getElementById('current-loss').textContent = initialIteration.loss.toFixed(4);
-      document.getElementById('current-gradient').textContent = initialIteration.gradient.toFixed(4);
-      document.getElementById('current-iteration').textContent = initialIteration.iteration;
+      if (allIterations.length > 0) {
+        // İlk iterasyonu ekranda göster
+        const initialIteration = allIterations[0];
+        document.getElementById('current-w').textContent = initialIteration.w.toFixed(4);
+        document.getElementById('current-loss').textContent = initialIteration.loss.toFixed(4);
+        document.getElementById('current-gradient').textContent = initialIteration.gradient.toFixed(4);
+        document.getElementById('current-iteration').textContent = initialIteration.iteration;
+      } else {
+        // Her ihtimale karşı, hiçbir iterasyon yoksa sıfırla
+        document.getElementById('current-w').textContent = '0';
+        document.getElementById('current-loss').textContent = '0';
+        document.getElementById('current-gradient').textContent = '0';
+        document.getElementById('current-iteration').textContent = '0';
+      }
       
       updateCharts(allIterations, -1);
       updateTable(allIterations);
+    }
+    
+    // Animasyonu başlat: her defasında input'lardaki değerlerle yeniden hesaplama yapılır
+    function runAnimation() {
+      if (animationInterval) {
+        clearInterval(animationInterval);
+        animationInterval = null;
+      }
+      
+      // Kullanıcının girilen en güncel değerlerini al
+      const learningRate = parseFloat(document.getElementById('learning-rate').value);
+      const maxIterations = parseInt(document.getElementById('iterations').value);
+      
+      // allIterations'ı yeniden hesapla
+      allIterations = gradientDescent(0, learningRate, maxIterations);
+      currentIndex = 0;
+      
+      if (allIterations.length > 0) {
+        updateCharts(allIterations, currentIndex);
+        updateTable(allIterations, currentIndex);
+        updateParameters(allIterations[currentIndex]);
+      }
+      
+      // Adım adım animasyon
+      animationInterval = setInterval(() => {
+        currentIndex++;
+        if (currentIndex >= allIterations.length) {
+          clearInterval(animationInterval);
+          animationInterval = null;
+          return;
+        }
+        updateCharts(allIterations, currentIndex);
+        updateTable(allIterations, currentIndex);
+        updateParameters(allIterations[currentIndex]);
+      }, 500);
     }
     
     document.getElementById('run-btn').addEventListener('click', runAnimation);
