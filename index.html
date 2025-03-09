@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MYZ 303E Artificial Intelligence in Civil Engineering</title>
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPCEtLSBCYWNrZ3JvdW5kIC0tPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjQiIGZpbGw9IiMyYzNlNTAiLz4KICAKICA8IS0tIE5ldXJhbCBOZXR3b3JrIFJlcHJlc2VudGF0aW9uIC0tPgogIDxjaXJjbGUgY3g9IjgiIGN5PSI4IiByPSIyLjUiIGZpbGw9IiMzNDk4ZGIiLz4KICA8Y2lyY2xlIGN4PSI4IiBjeT0iMTYiIHI9IjIuNSIgZmlsbD0iIzM0OThkYiIvPgogIDxjaXJjbGUgY3g9IjgiIGN5PSIyNCIgcj0iMi41IiBmaWxsPSIjMzQ5OGRiIi8+CiAgCiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxMiIgcj0iMi41IiBmaWxsPSIjMzQ5OGRiIi8+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIyMCIgcj0iMi41IiBmaWxsPSIjMzQ5OGRiIi8+CiAgCiAgPGNpcmNsZSBjeD0iMjQiIGN5PSIxNiIgcj0iMi41IiBmaWxsPSIjMzQ5OGRiIi8+CiAgCiAgPCEtLSBDb25uZWN0aW9uIExpbmVzIC0tPgogIDxsaW5lIHgxPSI4IiB5MT0iOCIgeDI9IjE2IiB5Mj0iMTIiIHN0cm9rZT0iI2VjZjBmMSIgc3Ryb2tlLXdpZHRoPSIwLjciLz4KICA8bGluZSB4MT0iOCIgeTE9IjgiIHgyPSIxNiIgeTI9IjIwIiBzdHJva2U9IiNlY2YwZjEiIHN0cm9rZS13aWR0aD0iMC43Ii8+CiAgPGxpbmUgeDE9IjgiIHkxPSIxNiIgeDI9IjE2IiB5Mj0iMTIiIHN0cm9rZT0iI2VjZjBmMSIgc3Ryb2tlLXdpZHRoPSIwLjciLz4KICA8bGluZSB4MT0iOCIgeTE9IjE2IiB4Mj0iMTYiIHkyPSIyMCIgc3Ryb2tlPSIjZWNmMGYxIiBzdHJva2Utd2lkdGg9IjAuNyIvPgogIDxsaW5lIHgxPSI4IiB5MT0iMjQiIHgyPSIxNiIgeTI9IjIwIiBzdHJva2U9IiNlY2YwZjEiIHN0cm9rZS13aWR0aD0iMC43Ii8+CiAgPGxpbmUgeDE9IjE2IiB5MT0iMTIiIHgyPSIyNCIgeTI9IjE2IiBzdHJva2U9IiNlY2YwZjEiIHN0cm9rZS13aWR0aD0iMC43Ii8+CiAgPGxpbmUgeDE9IjE2IiB5MT0iMjAiIHgyPSIyNCIgeTI9IjE2IiBzdHJva2U9IiNlY2YwZjEiIHN0cm9rZS13aWR0aD0iMC43Ii8+CiAgCiAgPCEtLSBCdWlsZGluZy9TdHJ1Y3R1cmUgRWxlbWVudCAtLT4KICA8cGF0aCBkPSJNMjQsMTYgTDI4LDE2IEwyOCwyOCBMMjAsMjggTDIwLDE2IEwyNCwxNiBaIiBmaWxsPSIjZTc0YzNjIi8+CiAgPHJlY3QgeD0iMjIiIHk9IjIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBmaWxsPSIjZWNmMGYxIi8+Cjwvc3ZnPg==" type="image/svg+xml">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -119,11 +120,16 @@
             padding: 0;
         }
         
-        .pdf-resources li {
+        .excel-resources {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .excel-resources li {
             margin-bottom: 0.8rem;
         }
         
-        .pdf-link {
+        .excel-link {
             display: flex;
             align-items: center;
             color: var(--dark-text);
@@ -134,14 +140,14 @@
             transition: all 0.3s ease;
         }
         
-        .pdf-link:hover {
+        .excel-link:hover {
             background-color: #f5f5f5;
-            border-color: var(--pdf-color);
+            border-color: #219653;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .pdf-icon {
+        .excel-icon {
             width: 24px;
             height: 24px;
             margin-right: 10px;
@@ -289,6 +295,20 @@
                     </a>
                 </li>
                 <!-- More PDF resources can be added here -->
+            </ul>
+        </div>
+        
+        <h2>Excel Resources</h2>
+        <div class="course-description">
+            <p>Download Excel spreadsheets with data and exercises:</p>
+            <ul class="excel-resources">
+                <li>
+                    <a href="./excel/Week2_Gradient_Descent.xlsx" download class="excel-link">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTk2NTMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTQuNSAySDZhMiAyIDAgMCAwLTIgMnYxNmEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWNy41TDE0LjUgMnoiLz48cG9seWxpbmUgcG9pbnRzPSIxNCAyIDE0IDggMjAgOCIvPjxyZWN0IHg9IjYiIHk9IjEyIiB3aWR0aD0iMTIiIGhlaWdodD0iOCIgcng9IjEiIC8+PHBhdGggZD0iTTYgMTBIMTIiIC8+PHBhdGggZD0iTTkgMTRWMjAiIC8+PHBhdGggZD0iTTEyIDE0VjIwIiAvPjxwYXRoIGQ9Ik0xNSAxNFYyMCIgLz48L3N2Zz4=" alt="Excel" class="excel-icon">
+                        Week 2: Gradient Descent Excel Exercise
+                    </a>
+                </li>
+                <!-- More Excel resources can be added here -->
             </ul>
         </div>
         
