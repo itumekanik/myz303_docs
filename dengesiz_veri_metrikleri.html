@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dengesiz Veri Setlerinde Sınıflandırma</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <!-- Yedek Chart.js CDN bağlantısı -->
+    <script>
+        // İlk Chart.js CDN'i başarısız olursa, alternatif kaynaktan yüklemeyi dene
+        window.addEventListener('error', function (e) {
+            if (e.target.src && e.target.src.indexOf('chart.min.js') !== -1) {
+                console.log('Chart.js yüklenirken hata oluştu, alternatif kaynak deneniyor...');
+                const newScript = document.createElement('script');
+                newScript.src = 'https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js';
+                document.head.appendChild(newScript);
+                e.preventDefault();
+            }
+        }, true);
+    </script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333;
+            --success-color: #2ecc71;
+            --white: #ffffff;
+            --text-color: #333;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            height: 3px;
+            width: 100%;
+            background-color: var(--white);
+            border-radius: 3px;
+        }
+
+        main {
+            margin: 2rem 0;
+        }
+
+        .hero {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            flex: 1 1 300px;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .card-body ul {
+            margin-left: 1.5rem;
+        }
+
+        .card-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .card-body code {
+            background-color: var(--light-gray);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .code-block {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        /* SVG tabloları sayfa geneline uygun oranda küçült ve ortala */
+        .table-container svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem;
+        }
+
+        table td {
+            border: 1px solid var(--medium-gray);
+            padding: 0.75rem;
+        }
+
+        table tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1.5rem 0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+
+        .bad-metric {
+            color: var(--accent-color);
+        }
+
+        .good-metric {
+            color: var(--success-color);
+        }
+
+        .solution-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+            background-color: rgba(52, 152, 219, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .solution-item:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .solution-icon {
+            background-color: var(--primary-color);
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .solution-content {
+            flex-grow: 1;
+        }
+
+        .solution-content h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            border-radius: 8px 8px 0 0;
+        }
+
+        footer ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        footer ul li a {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        /* Responsive ayarlamalar */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hamburger {
+                display: flex;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+
+            nav {
+                width: 100%;
+                display: none;
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin: 0;
+                text-align: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            nav ul li a {
+                display: block;
+                padding: 0.75rem 0;
+            }
+
+            .flex-container {
+                flex-direction: column;
+            }
+
+            .card {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            h1,
+            h2,
+            h3 {
+                font-size: 1.2em;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .card-body,
+            .section,
+            .code-block {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-chart-pie"></i>
+                <h1>Dengesiz Veri Sınıflandırma</h1>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="#introduction">Giriş</a></li>
+                    <li><a href="#confusion-matrix">Karışıklık Matrisi</a></li>
+                    <li><a href="#metrics">Metrikler</a></li>
+                    <li><a href="#imbalance-analysis">Dengesizlik Analizi</a></li>
+                    <li><a href="#solutions">Çözümler</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Bölümü -->
+        <section class="hero">
+            <h2>Dengesiz Veri Setlerinde Sınıflandırma</h2>
+            <p>Dengesiz veri dağılımı olan datalarla çalışırken doğru metrik seçimi ve performans optimizasyonu
+            </p>
+        </section>
+
+        <!-- Giriş Bölümü -->
+        <section id="introduction" class="section">
+            <h2>Giriş</h2>
+            <p>Makine öğrenmesi projelerindeki en zorlu problemlerden biri, dengesiz veri setleriyle çalışmaktır.
+                Dengesiz veri seti, bazı sınıfların diğerlerine göre çok daha az örneğe sahip olduğu durumlarda ortaya
+                çıkar.</p>
+            <p>Bu öğreticide, A, B, C ve D kategorilerine sahip, son derece dengesiz bir veri seti üzerinde eğitilmiş
+                bir BERT modelini ele alacağız.</p>
+            <div class="chart-container" style="margin: 20px 0;">
+                <canvas id="sampleDistribution" width="800" height="400"></canvas>
+            </div>
+            <div class="table-container">
+                <h4>Kategori Başına Örnek Sayısı</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Örnek Sayısı</th>
+                            <th>Veri Dağılımı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A Kategorisi</td>
+                            <td>100</td>
+                            <td>
+                                <div style="background-color: rgba(52, 152, 219, 0.7); height: 20px; width: 100%;">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>B Kategorisi</td>
+                            <td>100</td>
+                            <td>
+                                <div style="background-color: rgba(52, 152, 219, 0.7); height: 20px; width: 100%;">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>C Kategorisi</td>
+                            <td>10</td>
+                            <td>
+                                <div style="background-color: rgba(231, 76, 60, 0.7); height: 20px; width: 10%;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>D Kategorisi</td>
+                            <td>10</td>
+                            <td>
+                                <div style="background-color: rgba(231, 76, 60, 0.7); height: 20px; width: 10%;"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Tablo ve grafikten de görüldüğü üzere, A ve B kategorileri 100’er örnek; C ve D kategorileri ise 10’ar
+                örneğe sahiptir. Bu dengesizlik, model performansını önemli ölçüde etkilemektedir.</p>
+            <div class="section-summary"
+                style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #3498db; margin: 20px 0;">
+                <strong>Veri Dengesizliği Özeti:</strong> A ve B kategorileri, C ve D kategorilerine göre 10 kat daha
+                fazla örneğe sahiptir. Bu durum, modelin azınlık sınıflarını (C ve D) doğru tahmin etme yeteneğini
+                olumsuz etkiler.
+            </div>
+        </section>
+
+        <!-- Karışıklık Matrisi Bölümü -->
+        <section id="confusion-matrix" class="section">
+            <h2>Karışıklık Matrisi</h2>
+            <p>Modelin performansını değerlendirmek için karışıklık matrisi, gerçek ve tahmin edilen sınıfları gösterir.
+            </p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tahmin/Gerçek</th>
+                            <th>A (Gerçek)</th>
+                            <th>B (Gerçek)</th>
+                            <th>C (Gerçek)</th>
+                            <th>D (Gerçek)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A (Tahmin)</strong></td>
+                            <td style="background-color: rgba(46, 204, 113, 0.2)">85</td>
+                            <td>7</td>
+                            <td>4</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B (Tahmin)</strong></td>
+                            <td>10</td>
+                            <td style="background-color: rgba(46, 204, 113, 0.2)">120</td>
+                            <td>3</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C (Tahmin)</strong></td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td style="background-color: rgba(46, 204, 113, 0.2)">2</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>D (Tahmin)</strong></td>
+                            <td>2</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td style="background-color: rgba(46, 204, 113, 0.2)">1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Karışıklık matrisinden; A ve B kategorileri için modelin performansı iyi, ancak C ve D kategorileri için
+                zayıf olduğu gözlemlenmektedir.</p>
+        </section>
+
+        <!-- A Kategorisi için Metrik Hesaplaması Bölümü -->
+        <!-- A Kategorisi için Metrik Hesaplaması -->
+        <section id="a-kategorisi" class="section">
+            <div class="table-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480">
+                    <!-- Arka plan -->
+                    <rect width="600" height="480" fill="#f8f9fa" />
+                    <!-- Başlık -->
+                    <text x="300" y="40" font-family="Arial" font-size="20" font-weight="bold" fill="#333"
+                        text-anchor="middle">
+                        A Kategorisi için Metrik Hesaplaması
+                    </text>
+                    <!-- Tablo başlıkları -->
+                    <rect x="100" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="105" font-family="Arial" font-size="16" fill="white"
+                        text-anchor="middle">Tahmin/Gerçek</text>
+                    <rect x="200" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="250" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">A
+                        (Gerçek)</text>
+                    <rect x="300" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="350" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">B
+                        (Gerçek)</text>
+                    <rect x="400" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="450" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">C
+                        (Gerçek)</text>
+                    <rect x="500" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="550" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">D
+                        (Gerçek)</text>
+
+                    <!-- Tahmin Satırları -->
+                    <!-- A (Tahmin) -->
+                    <rect x="100" y="130" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="165" font-family="Arial" font-size="16" fill="white" text-anchor="middle">A
+                        (Tahmin)</text>
+                    <rect x="200" y="130" width="100" height="60" fill="#90EE90" />
+                    <text x="250" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">85</text>
+                    <text x="250" y="185" font-family="Arial" font-size="12" fill="#006400" text-anchor="middle">True
+                        Positive</text>
+                    <rect x="300" y="130" width="100" height="60" fill="#FFB6C1" />
+                    <text x="350" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">7</text>
+                    <text x="350" y="185" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Positive</text>
+                    <rect x="400" y="130" width="100" height="60" fill="#FFB6C1" />
+                    <text x="450" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">4</text>
+                    <text x="450" y="185" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Positive</text>
+                    <rect x="500" y="130" width="100" height="60" fill="#FFB6C1" />
+                    <text x="550" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="550" y="185" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Positive</text>
+
+                    <!-- B (Tahmin) -->
+                    <rect x="100" y="190" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="225" font-family="Arial" font-size="16" fill="white" text-anchor="middle">B
+                        (Tahmin)</text>
+                    <rect x="200" y="190" width="100" height="60" fill="#FFA07A" />
+                    <text x="250" y="225" font-family="Arial" font-size="16" fill="black" text-anchor="middle">10</text>
+                    <text x="250" y="245" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Negative</text>
+                    <rect x="300" y="190" width="100" height="60" fill="#E6E6FA" />
+                    <text x="350" y="225" font-family="Arial" font-size="16" fill="black"
+                        text-anchor="middle">120</text>
+                    <text x="350" y="245" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="400" y="190" width="100" height="60" fill="#E6E6FA" />
+                    <text x="450" y="225" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="450" y="245" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="500" y="190" width="100" height="60" fill="#E6E6FA" />
+                    <text x="550" y="225" font-family="Arial" font-size="16" fill="black" text-anchor="middle">5</text>
+                    <text x="550" y="245" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+
+                    <!-- C (Tahmin) -->
+                    <rect x="100" y="250" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="285" font-family="Arial" font-size="16" fill="white" text-anchor="middle">C
+                        (Tahmin)</text>
+                    <rect x="200" y="250" width="100" height="60" fill="#FFA07A" />
+                    <text x="250" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="250" y="305" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Negative</text>
+                    <rect x="300" y="250" width="100" height="60" fill="#E6E6FA" />
+                    <text x="350" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="350" y="305" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="400" y="250" width="100" height="60" fill="#E6E6FA" />
+                    <text x="450" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">2</text>
+                    <text x="450" y="305" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="500" y="250" width="100" height="60" fill="#E6E6FA" />
+                    <text x="550" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">2</text>
+                    <text x="550" y="305" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+
+                    <!-- D (Tahmin) -->
+                    <rect x="100" y="310" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="345" font-family="Arial" font-size="16" fill="white" text-anchor="middle">D
+                        (Tahmin)</text>
+                    <rect x="200" y="310" width="100" height="60" fill="#FFA07A" />
+                    <text x="250" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">2</text>
+                    <text x="250" y="365" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Negative</text>
+                    <rect x="300" y="310" width="100" height="60" fill="#E6E6FA" />
+                    <text x="350" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">0</text>
+                    <text x="350" y="365" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="400" y="310" width="100" height="60" fill="#E6E6FA" />
+                    <text x="450" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">1</text>
+                    <text x="450" y="365" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="500" y="310" width="100" height="60" fill="#E6E6FA" />
+                    <text x="550" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">1</text>
+                    <text x="550" y="365" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                </svg>
+            </div>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <div style="font-size: 24px; font-weight: bold;">A Kategorisi için Metrik Hesaplamaları</div>
+                <h2 style="color: #34495e;">Temel Değerler</h2>
+                <p>A kategorisi için karışıklık matrisinden şu değerleri elde ediyoruz:</p>
+                <ul>
+                    <li><strong>True Positive (TP)</strong> = 85<br>
+                        <span style="color: #7f8c8d; font-style: italic;">A olarak tahmin edilen gerçek A
+                            örnekleri</span>
+                    </li>
+                    <li><strong>False Positive (FP)</strong> = 7 + 4 + 3 = 14<br>
+                        <span style="color: #7f8c8d; font-style: italic;">Gerçekte A olmayan, ancak A olarak tahmin
+                            edilen örnekler</span>
+                        <ul>
+                            <li>B'den 7 örnek</li>
+                            <li>C'den 4 örnek</li>
+                            <li>D'den 3 örnek</li>
+                        </ul>
+                    </li>
+                    <li><strong>False Negative (FN)</strong> = 10 + 3 + 2 = 15<br>
+                        <span style="color: #7f8c8d; font-style: italic;">Gerçekte A olan, ancak A olarak tahmin
+                            edilmeyen örnekler</span>
+                        <ul>
+                            <li>B olarak tahmin edilen 10 örnek</li>
+                            <li>C olarak tahmin edilen 3 örnek</li>
+                            <li>D olarak tahmin edilen 2 örnek</li>
+                        </ul>
+                    </li>
+                    <li><strong>True Negative (TN)</strong> = 120 + 3 + 5 + 3 + 2 + 2 + 0 + 1 + 1 = 137<br>
+                        <span style="color: #7f8c8d; font-style: italic;">A olmayan ve A olarak tahmin edilmeyen
+                            örnekler</span>
+                    </li>
+                </ul>
+                <h2 style="color: #34495e;">Adım Adım Metrik Hesaplamaları</h2>
+                <h3 style="color: #16a085;">1. Precision (Kesinlik)</h3>
+                <p>Precision = TP / (TP + FP)</p>
+                <p>Precision = 85 / (85 + 14) = 85 / 99 ≈ <strong>0.859</strong> = <strong>%85.9</strong></p>
+                <h3 style="color: #16a085;">2. Recall (Duyarlılık)</h3>
+                <p>Recall = TP / (TP + FN)</p>
+                <p>Recall = 85 / (85 + 15) = 85 / 100 = <strong>0.85</strong> = <strong>%85</strong></p>
+                <h3 style="color: #16a085;">3. F1 Skoru</h3>
+                <p>F1 = 2 * (Precision * Recall) / (Precision + Recall)</p>
+                <p>F1 ≈ 2 * (0.859 * 0.85) / (0.859 + 0.85) ≈ <strong>0.854</strong> = <strong>%85.4</strong></p>
+            </div>
+        </section>
+
+
+        <!-- C Kategorisi için Metrik Hesaplaması Bölümü -->
+        <!-- C Kategorisi için Metrik Hesaplaması -->
+        <section id="c-kategorisi" class="section">
+            <div class="table-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480">
+                    <!-- Arka plan -->
+                    <rect width="600" height="480" fill="#f8f9fa" />
+                    <!-- Başlık -->
+                    <text x="300" y="40" font-family="Arial" font-size="20" font-weight="bold" fill="#333"
+                        text-anchor="middle">
+                        C Kategorisi için Metrik Hesaplaması
+                    </text>
+                    <!-- Tablo başlıkları -->
+                    <rect x="100" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="105" font-family="Arial" font-size="16" fill="white"
+                        text-anchor="middle">Tahmin/Gerçek</text>
+                    <rect x="200" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="250" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">A
+                        (Gerçek)</text>
+                    <rect x="300" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="350" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">B
+                        (Gerçek)</text>
+                    <rect x="400" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="450" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">C
+                        (Gerçek)</text>
+                    <rect x="500" y="70" width="100" height="60" fill="#4472c4" />
+                    <text x="550" y="105" font-family="Arial" font-size="16" fill="white" text-anchor="middle">D
+                        (Gerçek)</text>
+
+                    <!-- Tahmin Satırları -->
+                    <!-- A (Tahmin) -->
+                    <rect x="100" y="130" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="165" font-family="Arial" font-size="16" fill="white" text-anchor="middle">A
+                        (Tahmin)</text>
+                    <rect x="200" y="130" width="100" height="60" fill="#E6E6FA" />
+                    <text x="250" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">85</text>
+                    <text x="250" y="185" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="300" y="130" width="100" height="60" fill="#E6E6FA" />
+                    <text x="350" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">7</text>
+                    <text x="350" y="185" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="400" y="130" width="100" height="60" fill="#FFA07A" />
+                    <text x="450" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">4</text>
+                    <text x="450" y="185" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Negative</text>
+                    <rect x="500" y="130" width="100" height="60" fill="#E6E6FA" />
+                    <text x="550" y="165" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="550" y="185" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+
+                    <!-- B (Tahmin) -->
+                    <rect x="100" y="190" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="225" font-family="Arial" font-size="16" fill="white" text-anchor="middle">B
+                        (Tahmin)</text>
+                    <rect x="200" y="190" width="100" height="60" fill="#E6E6FA" />
+                    <text x="250" y="225" font-family="Arial" font-size="16" fill="black" text-anchor="middle">10</text>
+                    <text x="250" y="245" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="300" y="190" width="100" height="60" fill="#E6E6FA" />
+                    <text x="350" y="225" font-family="Arial" font-size="16" fill="black"
+                        text-anchor="middle">120</text>
+                    <text x="350" y="245" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="400" y="190" width="100" height="60" fill="#FFA07A" />
+                    <text x="450" y="225" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="450" y="245" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Negative</text>
+                    <rect x="500" y="190" width="100" height="60" fill="#E6E6FA" />
+                    <text x="550" y="225" font-family="Arial" font-size="16" fill="black" text-anchor="middle">5</text>
+                    <text x="550" y="245" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+
+                    <!-- C (Tahmin) -->
+                    <rect x="100" y="250" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="285" font-family="Arial" font-size="16" fill="white" text-anchor="middle">C
+                        (Tahmin)</text>
+                    <rect x="200" y="250" width="100" height="60" fill="#FFB6C1" />
+                    <text x="250" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="250" y="305" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Positive</text>
+                    <rect x="300" y="250" width="100" height="60" fill="#FFB6C1" />
+                    <text x="350" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">3</text>
+                    <text x="350" y="305" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Positive</text>
+                    <rect x="400" y="250" width="100" height="60" fill="#90EE90" />
+                    <text x="450" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">2</text>
+                    <text x="450" y="305" font-family="Arial" font-size="12" fill="#006400" text-anchor="middle">True
+                        Positive</text>
+                    <rect x="500" y="250" width="100" height="60" fill="#FFB6C1" />
+                    <text x="550" y="285" font-family="Arial" font-size="16" fill="black" text-anchor="middle">2</text>
+                    <text x="550" y="305" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Positive</text>
+
+                    <!-- D (Tahmin) -->
+                    <rect x="100" y="310" width="100" height="60" fill="#4472c4" />
+                    <text x="150" y="345" font-family="Arial" font-size="16" fill="white" text-anchor="middle">D
+                        (Tahmin)</text>
+                    <rect x="200" y="310" width="100" height="60" fill="#E6E6FA" />
+                    <text x="250" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">2</text>
+                    <text x="250" y="365" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="300" y="310" width="100" height="60" fill="#E6E6FA" />
+                    <text x="350" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">0</text>
+                    <text x="350" y="365" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                    <rect x="400" y="310" width="100" height="60" fill="#FFA07A" />
+                    <text x="450" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">1</text>
+                    <text x="450" y="365" font-family="Arial" font-size="12" fill="#8B0000" text-anchor="middle">False
+                        Negative</text>
+                    <rect x="500" y="310" width="100" height="60" fill="#E6E6FA" />
+                    <text x="550" y="345" font-family="Arial" font-size="16" fill="black" text-anchor="middle">1</text>
+                    <text x="550" y="365" font-family="Arial" font-size="12" fill="#483D8B" text-anchor="middle">True
+                        Negative</text>
+                </svg>
+            </div>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <div style="font-size: 24px; font-weight: bold;">C Kategorisi için Metrik Hesaplamaları</div>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Temel Değerler</div>
+                <div>C kategorisi için karışıklık matrisinden elde edilen değerler:</div>
+                <ul>
+                    <li><b>True Positive (TP)</b> = 2</li>
+                    <li><b>False Positive (FP)</b> = 3 + 3 + 2 = 8
+                        <ul>
+                            <li>A'dan 3 örnek</li>
+                            <li>B'den 3 örnek</li>
+                            <li>D'den 2 örnek</li>
+                        </ul>
+                    </li>
+                    <li><b>False Negative (FN)</b> = 4 + 3 + 1 = 8
+                        <ul>
+                            <li>A olarak tahmin edilen 4 örnek</li>
+                            <li>B olarak tahmin edilen 3 örnek</li>
+                            <li>D olarak tahmin edilen 1 örnek</li>
+                        </ul>
+                    </li>
+                    <li><b>True Negative (TN)</b> = 233</li>
+                </ul>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Adım Adım Metrik Hesaplamaları</div>
+                <div style="font-size: 18px; font-weight: bold; margin-top: 10px;">1. Precision (Kesinlik)</div>
+                <div><b>Formül:</b> Precision = TP / (TP + FP)</div>
+                <div><b>Hesaplama:</b> 2 / (2 + 8) = 0.200 = <b>%20.0</b></div>
+                <div style="font-size: 18px; font-weight: bold; margin-top: 10px;">2. Recall (Duyarlılık)</div>
+                <div><b>Formül:</b> Recall = TP / (TP + FN)</div>
+                <div><b>Hesaplama:</b> 2 / (2 + 8) = 0.200 = <b>%20.0</b></div>
+                <div style="font-size: 18px; font-weight: bold; margin-top: 10px;">3. F1 Skoru</div>
+                <div><b>Formül:</b> F1 = 2 * (Precision * Recall) / (Precision + Recall)</div>
+                <div><b>Hesaplama:</b> 2 * (0.200 * 0.200) / (0.200 + 0.200) = 0.200 = <b>%20.0</b></div>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Sonuç</div>
+                <ul>
+                    <li>Precision: <b>0.200</b> (%20.0)</li>
+                    <li>Recall: <b>0.200</b> (%20.0)</li>
+                    <li>F1 Skoru: <b>0.200</b> (%20.0)</li>
+                </ul>
+                <div>Bu değerler, modelin C kategorisini tespit etmede başarısız olduğunu göstermektedir.</div>
+            </div>
+        </section>
+
+
+        <!-- Tüm Kategoriler için Karşılaştırma Bölümü -->
+        <section id="tum-kategoriler" class="section">
+            <div class="table-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+                    <!-- Arka plan -->
+                    <rect width="800" height="600" fill="#f8f9fa" />
+                    <!-- Başlık -->
+                    <text x="400" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#333"
+                        text-anchor="middle">
+                        Tüm Kategoriler için Metrik Karşılaştırması
+                    </text>
+                    <!-- Grafik Alanı -->
+                    <rect x="100" y="100" width="600" height="350" fill="white" stroke="#ddd" stroke-width="1" />
+                    <!-- Grid Çizgileri -->
+                    <line x1="100" y1="100" x2="100" y2="450" stroke="#ddd" stroke-width="1" />
+                    <line x1="100" y1="450" x2="700" y2="450" stroke="#ddd" stroke-width="1" />
+                    <line x1="100" y1="370" x2="700" y2="370" stroke="#ddd" stroke-width="1" stroke-dasharray="5,5" />
+                    <line x1="100" y1="290" x2="700" y2="290" stroke="#ddd" stroke-width="1" stroke-dasharray="5,5" />
+                    <line x1="100" y1="210" x2="700" y2="210" stroke="#ddd" stroke-width="1" stroke-dasharray="5,5" />
+                    <line x1="100" y1="130" x2="700" y2="130" stroke="#ddd" stroke-width="1" stroke-dasharray="5,5" />
+                    <!-- Y-Axis Etiketleri -->
+                    <text x="95" y="450" font-family="Arial" font-size="12" fill="#666" text-anchor="end">0.0</text>
+                    <text x="95" y="370" font-family="Arial" font-size="12" fill="#666" text-anchor="end">0.2</text>
+                    <text x="95" y="290" font-family="Arial" font-size="12" fill="#666" text-anchor="end">0.4</text>
+                    <text x="95" y="210" font-family="Arial" font-size="12" fill="#666" text-anchor="end">0.6</text>
+                    <text x="95" y="130" font-family="Arial" font-size="12" fill="#666" text-anchor="end">0.8</text>
+                    <text x="95" y="100" font-family="Arial" font-size="12" fill="#666" text-anchor="end">1.0</text>
+                    <!-- X-Axis ve Y-Axis Başlıkları -->
+                    <text x="400" y="490" font-family="Arial" font-size="16" fill="#333"
+                        text-anchor="middle">Kategoriler</text>
+                    <text x="50" y="275" font-family="Arial" font-size="16" fill="#333" text-anchor="middle"
+                        transform="rotate(-90,50,275)">
+                        Değer
+                    </text>
+                    <!-- A Kategorisi Barları -->
+                    <rect x="150" y="132" width="40" height="318" fill="#3498db" />
+                    <rect x="195" y="132" width="40" height="318" fill="#2ecc71" />
+                    <rect x="240" y="132" width="40" height="318" fill="#9b59b6" />
+                    <text x="195" y="470" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">A</text>
+                    <text x="195" y="485" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">(100
+                        örnek)</text>
+                    <!-- B Kategorisi Barları -->
+                    <rect x="320" y="119" width="40" height="331" fill="#3498db" />
+                    <rect x="365" y="96" width="40" height="354" fill="#2ecc71" />
+                    <rect x="410" y="124" width="40" height="326" fill="#9b59b6" />
+                    <text x="365" y="470" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">B</text>
+                    <text x="365" y="485" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">(100
+                        örnek)</text>
+                    <!-- C Kategorisi Barları -->
+                    <rect x="490" y="370" width="40" height="80" fill="#3498db" />
+                    <rect x="535" y="370" width="40" height="80" fill="#2ecc71" />
+                    <rect x="580" y="370" width="40" height="80" fill="#9b59b6" />
+                    <text x="535" y="470" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">C</text>
+                    <text x="535" y="485" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">(10
+                        örnek)</text>
+                    <!-- D Kategorisi Barları -->
+                    <rect x="660" y="362" width="40" height="88" fill="#3498db" />
+                    <rect x="705" y="414" width="40" height="36" fill="#2ecc71" />
+                    <rect x="750" y="396" width="40" height="54" fill="#9b59b6" />
+                    <text x="705" y="470" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">D</text>
+                    <text x="705" y="485" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">(10
+                        örnek)</text>
+                    <!-- Bar Değerleri -->
+                    <!-- A Kategorisi -->
+                    <text x="170" y="125" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.86</text>
+                    <text x="215" y="125" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.85</text>
+                    <text x="260" y="125" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.85</text>
+                    <!-- B Kategorisi -->
+                    <text x="340" y="112" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.87</text>
+                    <text x="385" y="89" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">0.92</text>
+                    <text x="430" y="117" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.90</text>
+                    <!-- C Kategorisi -->
+                    <text x="510" y="363" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.20</text>
+                    <text x="555" y="363" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.20</text>
+                    <text x="600" y="363" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.20</text>
+                    <!-- D Kategorisi -->
+                    <text x="680" y="355" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.25</text>
+                    <text x="725" y="407" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.09</text>
+                    <text x="770" y="389" font-family="Arial" font-size="12" fill="#333"
+                        text-anchor="middle">0.13</text>
+                    <!-- Renk Açıklaması -->
+                    <rect x="270" y="520" width="20" height="20" fill="#3498db" />
+                    <text x="300" y="535" font-family="Arial" font-size="14" fill="#333"
+                        text-anchor="start">Precision</text>
+                    <rect x="370" y="520" width="20" height="20" fill="#2ecc71" />
+                    <text x="400" y="535" font-family="Arial" font-size="14" fill="#333"
+                        text-anchor="start">Recall</text>
+                    <rect x="470" y="520" width="20" height="20" fill="#9b59b6" />
+                    <text x="500" y="535" font-family="Arial" font-size="14" fill="#333" text-anchor="start">F1
+                        Skoru</text>
+                    <!-- Oklar ve Açıklama -->
+                    <line x1="240" y1="560" x2="660" y2="560" stroke="#e74c3c" stroke-width="2" />
+                    <polygon points="660,560 650,555 650,565" fill="#e74c3c" />
+                    <text x="270" y="555" font-family="Arial" font-size="12" fill="#e74c3c" text-anchor="start">
+                        Yüksek örnek sayısı
+                    </text>
+                    <text x="610" y="555" font-family="Arial" font-size="12" fill="#e74c3c" text-anchor="end">
+                        Düşük örnek sayısı
+                    </text>
+                    <text x="450" y="575" font-family="Arial" font-size="14" font-style="italic" fill="#333"
+                        text-anchor="middle">
+                        Örnek sayısı azaldıkça performans düşüyor
+                    </text>
+                </svg>
+            </div>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <div style="font-size: 24px; font-weight: bold;">Tüm Kategoriler için Hesaplanan Metrikler - Özet Tablo
+                </div>
+                <div>Her kategori için hesaplanan precision, recall ve F1 skorlarının özetlendiği tablo:</div>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Kategorilere Göre Metrikler</div>
+                <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%; text-align: center;">
+                    <tr>
+                        <th>Kategori</th>
+                        <th>Örnek Sayısı</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1 Skoru</th>
+                        <th>TP</th>
+                        <th>FP</th>
+                        <th>FN</th>
+                        <th>TN</th>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>100</td>
+                        <td>0.859</td>
+                        <td>0.85</td>
+                        <td>0.854</td>
+                        <td>85</td>
+                        <td>14</td>
+                        <td>15</td>
+                        <td>137</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>100</td>
+                        <td>0.870</td>
+                        <td>0.923</td>
+                        <td>0.896</td>
+                        <td>120</td>
+                        <td>18</td>
+                        <td>10</td>
+                        <td>103</td>
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>10</td>
+                        <td>0.200</td>
+                        <td>0.20</td>
+                        <td>0.200</td>
+                        <td>2</td>
+                        <td>8</td>
+                        <td>8</td>
+                        <td>233</td>
+                    </tr>
+                    <tr>
+                        <td>D</td>
+                        <td>10</td>
+                        <td>0.250</td>
+                        <td>0.091</td>
+                        <td>0.133</td>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>10</td>
+                        <td>237</td>
+                    </tr>
+                </table>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Hesaplama Detayları ve Formüller
+                </div>
+                <div><b>Precision (Kesinlik):</b> TP / (TP + FP)</div>
+                <div><b>Recall (Duyarlılık):</b> TP / (TP + FN)</div>
+                <div><b>F1 Skoru:</b> 2 * (Precision * Recall) / (Precision + Recall)</div>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Ortalama Metrikler</div>
+                <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%; text-align: center;">
+                    <tr>
+                        <th>Ortalama Türü</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1 Skoru</th>
+                        <th>Açıklama</th>
+                    </tr>
+                    <tr>
+                        <td>Makro-ortalama</td>
+                        <td>0.545</td>
+                        <td>0.516</td>
+                        <td>0.521</td>
+                        <td>Her sınıfa eşit ağırlık verir.</td>
+                    </tr>
+                    <tr>
+                        <td>Ağırlıklı Ortalama</td>
+                        <td>0.807</td>
+                        <td>0.789</td>
+                        <td>0.798</td>
+                        <td>Sınıf örnek sayılarına göre ağırlıklandırılır.</td>
+                    </tr>
+                    <tr>
+                        <td>Mikro-ortalama</td>
+                        <td>0.840</td>
+                        <td>0.800</td>
+                        <td>0.820</td>
+                        <td>Tüm sınıflar üzerinden hesaplanır.</td>
+                    </tr>
+                </table>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Veri Dengesizliğinin Etkisi</div>
+                <div>
+                    <ul>
+                        <li>A ve B (100 örnek): F1 ≈ 0.85-0.90</li>
+                        <li>C ve D (10 örnek): F1 ≈ 0.13-0.20</li>
+                    </ul>
+                </div>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">Kategorilere Göre Zorluk Derecesi
+                </div>
+                <ol>
+                    <li><b>B Kategorisi</b>: F1 = 0.896</li>
+                    <li><b>A Kategorisi</b>: F1 = 0.854</li>
+                    <li><b>C Kategorisi</b>: F1 = 0.200</li>
+                    <li><b>D Kategorisi</b>: F1 = 0.133</li>
+                </ol>
+                <div style="font-size: 20px; font-weight: bold; margin-top: 10px;">İyileştirme İçin Öncelikli Alanlar
+                </div>
+                <ul>
+                    <li>D kategorisi için Recall değerini artırmak</li>
+                    <li>C kategorisi için Precision ve Recall değerlerini artırmak</li>
+                </ul>
+                <div>Bu amaçla; oversampling, SMOTE, sınıf ağırlıklandırma ve focal loss gibi yöntemler kullanılabilir.
+                </div>
+            </div>
+        </section>
+
+        <!-- Performans Metrikleri Bölümü -->
+        <section id="metrics" class="section">
+            <h2>Performans Metrikleri</h2>
+            <p>Sınıflandırma performansını değerlendirmede kullanılan temel metrikler: Precision, Recall ve F1 Skorudur.
+            </p>
+            <h3>Temel Kavramlar</h3>
+            <ul>
+                <li><strong>True Positive (TP)</strong>: Doğru pozitif tahminler</li>
+                <li><strong>False Positive (FP)</strong>: Yanlış pozitif tahminler</li>
+                <li><strong>False Negative (FN)</strong>: Yanlış negatif tahminler</li>
+                <li><strong>True Negative (TN)</strong>: Doğru negatif tahminler</li>
+            </ul>
+            <h3>Formüller</h3>
+            <div class="code-block">
+                Precision = TP / (TP + FP) <br>
+                Recall = TP / (TP + FN) <br>
+                F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
+            </div>
+            <h3>Kategori Bazlı Metrikler</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>A Kategorisi</h4>
+                    <div class="metric-value good-metric">0.85</div>
+                    <p>F1 Skoru</p>
+                </div>
+                <div class="metric-card">
+                    <h4>B Kategorisi</h4>
+                    <div class="metric-value good-metric">0.87</div>
+                    <p>F1 Skoru</p>
+                </div>
+                <div class="metric-card">
+                    <h4>C Kategorisi</h4>
+                    <div class="metric-value bad-metric">0.20</div>
+                    <p>F1 Skoru</p>
+                </div>
+                <div class="metric-card">
+                    <h4>D Kategorisi</h4>
+                    <div class="metric-value bad-metric">0.14</div>
+                    <p>F1 Skoru</p>
+                </div>
+            </div>
+            <div class="chart-container" style="margin: 20px 0;">
+                <canvas id="metricsChart" width="800" height="400"></canvas>
+            </div>
+            <div class="table-container">
+                <h4>Kategori Bazlı Performans Metrikleri</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Skoru</th>
+                            <th>Performans Düzeyi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A Kategorisi</strong></td>
+                            <td>0.85</td>
+                            <td>0.85</td>
+                            <td>0.85</td>
+                            <td><span style="color: #2ecc71;">✓ İyi</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>B Kategorisi</strong></td>
+                            <td>0.89</td>
+                            <td>0.86</td>
+                            <td>0.87</td>
+                            <td><span style="color: #2ecc71;">✓ İyi</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>C Kategorisi</strong></td>
+                            <td>0.20</td>
+                            <td>0.20</td>
+                            <td>0.20</td>
+                            <td><span style="color: #e74c3c;">✗ Çok Düşük</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>D Kategorisi</strong></td>
+                            <td>0.25</td>
+                            <td>0.10</td>
+                            <td>0.14</td>
+                            <td><span style="color: #e74c3c;">✗ Çok Düşük</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Ortalama Metrikler</h3>
+            <div class="flex-container" style="margin-top: 30px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Makro-ortalama</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Her sınıfa eşit ağırlık verilir.</p>
+                        <ul>
+                            <li>Precision: 0.55</li>
+                            <li>Recall: 0.50</li>
+                            <li>F1 Skoru: 0.52</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic;">Azınlık sınıflarının düşük performansı
+                            makro-ortalamayı düşürür.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Ağırlıklı Ortalama</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Sınıf büyüklüklerine göre ağırlıklandırılır.</p>
+                        <ul>
+                            <li>Precision: 0.81</li>
+                            <li>Recall: 0.79</li>
+                            <li>F1 Skoru: 0.80</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic;">Büyük sınıfların etkisiyle daha yüksek
+                            görünür.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Mikro-ortalama</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Tüm örnekler üzerinden hesaplanır.</p>
+                        <ul>
+                            <li>Precision: 0.84</li>
+                            <li>Recall: 0.80</li>
+                            <li>F1 Skoru: 0.82</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic;">Büyük sınıfların etkisi nedeniyle yanıltıcı
+                            olabilir.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dengesizlik Analizi Bölümü -->
+        <section id="imbalance-analysis" class="section">
+            <h2>Dengesizlik Analizi</h2>
+            <p>Veri setindeki aşırı dengesizlik model performansını ciddi biçimde etkilemektedir. Bu bölümde,
+                dengesizliğin etkileri analiz edilmiştir.</p>
+            <h3>Dengesizliğin Ana Etkileri</h3>
+            <ul>
+                <li><strong>Makro vs Ağırlıklı Ortalama Farkı:</strong> Büyük fark, azınlık sınıflarında başarısızlığı
+                    gösterir.</li>
+                <li><strong>Düşük Recall:</strong> C ve D için düşük recall, modelin bu sınıfları tanımakta zorlandığını
+                    gösterir.</li>
+                <li><strong>Hatalı Tahmin Dağılımı:</strong> Karışıklık matrisinde C ve D örneklerinin A ve B olarak
+                    yanlış sınıflandırılması.</li>
+            </ul>
+            <div class="chart-container" style="margin: 20px 0;">
+                <canvas id="imbalanceChart" width="800" height="400"></canvas>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; margin: 30px 0; justify-content: space-between;">
+                <div
+                    style="flex: 1; min-width: 280px; background-color: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #2c3e50;"><i class="fas fa-balance-scale"></i> Dengeli Veri</h4>
+                    <div style="display: flex; margin: 15px 0;">
+                        <div style="flex: 1; background-color: #3498db; height: 30px; margin: 0 2px;"></div>
+                        <div style="flex: 1; background-color: #3498db; height: 30px; margin: 0 2px;"></div>
+                        <div style="flex: 1; background-color: #3498db; height: 30px; margin: 0 2px;"></div>
+                        <div style="flex: 1; background-color: #3498db; height: 30px; margin: 0 2px;"></div>
+                    </div>
+                    <p>Tüm sınıfların eşit temsil edildiği durumlarda model dengeli öğrenir.</p>
+                    <div style="margin-top: 10px; font-weight: bold; color: #2ecc71;">Sonuç: Yüksek F1 skoru</div>
+                </div>
+                <div
+                    style="flex: 1; min-width: 280px; background-color: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #2c3e50;"><i class="fas fa-exclamation-triangle"></i> Dengesiz Veri</h4>
+                    <div style="display: flex; margin: 15px 0; align-items: flex-end;">
+                        <div style="flex: 10; background-color: #3498db; height: 30px; margin: 0 2px;"></div>
+                        <div style="flex: 10; background-color: #3498db; height: 30px; margin: 0 2px;"></div>
+                        <div style="flex: 1; background-color: #e74c3c; height: 30px; margin: 0 2px;"></div>
+                        <div style="flex: 1; background-color: #e74c3c; height: 30px; margin: 0 2px;"></div>
+                    </div>
+                    <p>Az temsil edilen sınıflar nedeniyle çoğunluk sınıflarına yanlılık oluşur.</p>
+                    <div style="margin-top: 10px; font-weight: bold; color: #e74c3c;">Sonuç: C ve D için çok düşük F1
+                        skoru</div>
+                </div>
+            </div>
+            <h3>Dengesizliğin Temel Nedenleri</h3>
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <ol>
+                    <li><strong>Yetersiz Öğrenme:</strong> Az örnek, modelin doğru öğrenmesini engeller.</li>
+                    <li><strong>Genelleme Zorluğu:</strong> Az örnekle yeni örneklere genelleme yapılamaz.</li>
+                    <li><strong>Çoğunluk Sınıflarına Yanlılık:</strong> Model, çoğunluk sınıflarına odaklanır.</li>
+                    <li><strong>Karar Sınırı Problemi:</strong> Az örnek, doğru sınırları belirlemeyi zorlaştırır.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Çözüm Stratejileri Bölümü -->
+        <section id="solutions" class="section">
+            <h2>Çözüm Stratejileri</h2>
+            <p>Dengesiz veri setlerinde model performansını artırmak için çeşitli stratejiler uygulanabilir:</p>
+            <div class="solution-item">
+                <div class="solution-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="solution-content">
+                    <h3>1. Veri Dengeleme Teknikleri</h3>
+                    <p>Az temsil edilen sınıflar için veri artırma ve çoğaltma teknikleri:</p>
+                    <ul>
+                        <li><strong>Oversampling:</strong> C ve D kategorileri için veri sayısını artırma</li>
+                        <li><strong>SMOTE:</strong> Sentetik örnekler oluşturma</li>
+                        <li><strong>Veri Artırma:</strong> Metin verileri için augmentasyon teknikleri</li>
+                    </ul>
+                    <div class="code-block">
+                        # C ve D kategorileri için veri artırma örneği<br>
+                        from nlpaug.augmenter.word import SynonymAug<br><br>
+                        syn_aug = SynonymAug()<br>
+                        augmented_samples = []<br><br>
+                        for text, label in minority_samples:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;for _ in range(50):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aug_text = syn_aug.augment(text)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;augmented_samples.append((aug_text, label))
+                    </div>
+                </div>
+            </div>
+            <div class="solution-item">
+                <div class="solution-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="solution-content">
+                    <h3>2. Model İyileştirme Stratejileri</h3>
+                    <p>Modelin eğitim sürecini optimize etmek:</p>
+                    <ul>
+                        <li><strong>Sınıf Ağırlıklandırma:</strong> C ve D kategorilerine yüksek ağırlık verilmesi</li>
+                        <li><strong>Focal Loss:</strong> Zor örneklere odaklanan kayıp fonksiyonu</li>
+                        <li><strong>Eşik Optimizasyonu:</strong> Düşük tahmin eşikleri belirleme</li>
+                    </ul>
+                    <div class="code-block">
+                        # Sınıf ağırlıklı Focal Loss implementasyonu<br>
+                        class FocalLoss(nn.Module):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, alpha, gamma=2.0):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(FocalLoss, self).__init__()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.alpha = alpha<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.gamma = gamma<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;def forward(self, inputs, targets):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CE_loss = F.cross_entropy(inputs, targets,
+                        reduction='none', weight=self.alpha)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pt = torch.exp(-CE_loss)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F_loss = (1 - pt)**self.gamma * CE_loss<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return torch.mean(F_loss)<br><br>
+                        # A:1, B:1, C:25, D:25 ağırlıkları<br>
+                        class_weights = torch.tensor([1.0, 1.0, 25.0, 25.0])<br>
+                        criterion = FocalLoss(alpha=class_weights, gamma=3.0)
+                    </div>
+                </div>
+            </div>
+            <div class="solution-item">
+                <div class="solution-icon">
+                    <i class="fas fa-random"></i>
+                </div>
+                <div class="solution-content">
+                    <h3>3. Ensemble Yöntemleri</h3>
+                    <p>Birden çok modeli birleştirerek performansı artırma:</p>
+                    <ul>
+                        <li><strong>Çoklu Model Entegrasyonu:</strong> Farklı stratejilerle eğitilmiş modellerin
+                            kombinasyonu</li>
+                        <li><strong>Bagging ve Boosting:</strong> AdaBoost veya Gradient Boosting kullanımı</li>
+                        <li><strong>Cascade Sınıflandırma:</strong> Aşamalı sınıflandırma yaklaşımı</li>
+                    </ul>
+                    <div class="chart-container">
+                        <canvas id="ensembleChart" width="800" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="solution-item">
+                <div class="solution-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="solution-content">
+                    <h3>4. İleri Seviye Teknikler</h3>
+                    <p>Derin öğrenme ve meta-öğrenme yaklaşımları:</p>
+                    <ul>
+                        <li><strong>Few-Shot Learning:</strong> Az örnekle öğrenme teknikleri</li>
+                        <li><strong>Meta-Learning:</strong> MAML veya Prototypical Networks</li>
+                        <li><strong>Aktif Öğrenme:</strong> En bilgilendirici örneklerin seçimi</li>
+                    </ul>
+                    <p>Bu teknikler, özellikle az veri bulunan durumlarda modelin genelleme yeteneğini artırır.</p>
+                </div>
+            </div>
+            <h3>Pratik Uygulama Adımları</h3>
+            <div
+                style="background-color: #f1f8ff; padding: 25px; border-radius: 10px; border: 1px dashed #3498db; margin: 20px 0;">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div
+                        style="background-color: #3498db; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; margin-right: 15px;">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h4 style="margin: 0; color: #2c3e50;">Dengesiz Veri Seti İyileştirme Planı</h4>
+                </div>
+                <ol style="margin-bottom: 0; padding-left: 60px;">
+                    <li style="margin-bottom: 15px;">
+                        <strong style="color: #3498db;">Veri Artırma:</strong> C ve D kategorileri için 50-100 kat veri
+                        artırma uygulayın.
+                        <div style="margin-top: 5px; font-size: 0.9em; color: #555;">Backtranslation, kelime değiştirme
+                            ve SMOTE teknikleri kullanın.</div>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong style="color: #3498db;">Sınıf Ağırlıklandırma:</strong> C ve D için yüksek ağırlıklar
+                        (25-50x) kullanın.
+                        <div style="margin-top: 5px; font-size: 0.9em; color: #555;">Focal Loss ile azınlık sınıflarına
+                            daha fazla önem verin.</div>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong style="color: #3498db;">İki Aşamalı Eğitim:</strong> Önce genel eğitim, sonra azınlık
+                        sınıflarına odaklı ince ayar yapın.
+                        <div style="margin-top: 5px; font-size: 0.9em; color: #555;">İkinci aşamada öğrenme oranını
+                            düşürün (örneğin 5e-6) ve daha uzun eğitim yapın.</div>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong style="color: #3498db;">Eşik Optimizasyonu:</strong> C ve D için düşük eşik değerleri
+                        belirleyin (0.2-0.3).
+                        <div style="margin-top: 5px; font-size: 0.9em; color: #555;">Precision’dan ödün vererek recall’u
+                            artırın.</div>
+                    </li>
+                    <li>
+                        <strong style="color: #3498db;">Ensemble Modeller:</strong> Farklı stratejilerle eğitilmiş
+                        modelleri birleştirin.
+                        <div style="margin-top: 5px; font-size: 0.9em; color: #555;">C ve D odaklı modellere daha yüksek
+                            ağırlık verin (0.3-0.4).</div>
+                    </li>
+                </ol>
+            </div>
+            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 30px 0;">
+                <h4 style="text-align: center; color: #2c3e50;">Beklenen İyileştirme</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <h5>C Kategorisi</h5>
+                        <div style="display: flex; align-items: center; height: 40px;">
+                            <div style="width: 80px;">Hedef:</div>
+                            <div style="flex-grow: 1; height: 20px; background-color: #f0f0f0; border-radius: 4px;">
+                                <div style="width: 50%; height: 100%; background-color: #2ecc71; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px; font-weight: bold;">0.50</div>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 250px;">
+                        <h5>D Kategorisi</h5>
+                        <div style="display: flex; align-items: center; height: 40px; margin-bottom: 15px;">
+                            <div style="width: 80px;">Mevcut:</div>
+                            <div style="flex-grow: 1; height: 20px; background-color: #f0f0f0; border-radius: 4px;">
+                                <div style="width: 14%; height: 100%; background-color: #e74c3c; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px; font-weight: bold;">0.14</div>
+                        </div>
+                        <div style="display: flex; align-items: center; height: 40px;">
+                            <div style="width: 80px;">Hedef:</div>
+                            <div style="flex-grow: 1; height: 20px; background-color: #f0f0f0; border-radius: 4px;">
+                                <div style="width: 45%; height: 100%; background-color: #2ecc71; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px; font-weight: bold;">0.45</div>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 250px;">
+                        <h5>Makro F1 Skoru</h5>
+                        <div style="display: flex; align-items: center; height: 40px; margin-bottom: 15px;">
+                            <div style="width: 80px;">Mevcut:</div>
+                            <div style="flex-grow: 1; height: 20px; background-color: #f0f0f0; border-radius: 4px;">
+                                <div style="width: 52%; height: 100%; background-color: #f39c12; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px; font-weight: bold;">0.52</div>
+                        </div>
+                        <div style="display: flex; align-items: center; height: 40px;">
+                            <div style="width: 80px;">Hedef:</div>
+                            <div style="flex-grow: 1; height: 20px; background-color: #f0f0f0; border-radius: 4px;">
+                                <div style="width: 70%; height: 100%; background-color: #2ecc71; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px; font-weight: bold;">0.70</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gerçek Dünya Uygulamaları Bölümü -->
+        <section id="real-world" class="section">
+            <h2>Gerçek Dünya Uygulamaları</h2>
+            <p>Dengesiz veri setleri, gerçek dünyada çeşitli alanlarda karşımıza çıkar. İşte bazı örnek senaryolar:</p>
+            <div class="flex-container" style="margin-top: 30px;">
+                <div class="card">
+                    <div class="card-header" style="background-color: #3498db;">
+                        <h3><i class="fas fa-heartbeat" style="margin-right: 10px;"></i> Tıbbi Teşhis</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Nadir hastalıkların teşhisi, doğal olarak dengesiz veri setleri içerir.</p>
+                        <h4 style="margin-top: 15px; font-size: 1rem; color: #3498db;">Problem:</h4>
+                        <ul>
+                            <li>Nadir hastalık verileri çok sınırlı</li>
+                            <li>Yanlış negatifler ciddi sonuçlar doğurabilir</li>
+                        </ul>
+                        <h4 style="margin-top: 15px; font-size: 1rem; color: #3498db;">Çözüm:</h4>
+                        <ul>
+                            <li>Yanlış negatiflerin maliyetini artıracak özel kayıp fonksiyonları</li>
+                            <li>Farklı hastalık aşamalarından örneklerle sentetik veri oluşturma</li>
+                            <li>Few-shot learning teknikleri</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: #9b59b6;">
+                        <h3><i class="fas fa-shield-alt" style="margin-right: 10px;"></i> Dolandırıcılık Tespiti</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Finansal dolandırıcılık tespiti genellikle aşırı dengesiz veriler içerir.</p>
+                        <h4 style="margin-top: 15px; font-size: 1rem; color: #9b59b6;">Problem:</h4>
+                        <ul>
+                            <li>Dolandırıcılık işlemleri toplam işlemlerin çok küçük bir yüzdesini oluşturur</li>
+                            <li>Desenler hızla değişir</li>
+                        </ul>
+                        <h4 style="margin-top: 15px; font-size: 1rem; color: #9b59b6;">Çözüm:</h4>
+                        <ul>
+                            <li>Anormallik tespiti ve one-class sınıflandırma</li>
+                            <li>Zaman bazlı örnekleme</li>
+                            <li>Aktif öğrenme ile etiketleme verimliliğini artırma</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: #e74c3c;">
+                        <h3><i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i> Arıza Tespiti</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Endüstriyel ekipmanlarda arıza tespiti, sınırlı arıza verisi nedeniyle zorlayıcıdır.</p>
+                        <h4 style="margin-top: 15px; font-size: 1rem; color: #e74c3c;">Problem:</h4>
+                        <ul>
+                            <li>Gerçek arıza verisi azdır</li>
+                            <li>Her arıza türü için yeterli örnek bulunmayabilir</li>
+                        </ul>
+                        <h4 style="margin-top: 15px; font-size: 1rem; color: #e74c3c;">Çözüm:</h4>
+                        <ul>
+                            <li>Fizik tabanlı simülasyonlar ile arıza verisi oluşturma</li>
+                            <li>Transfer öğrenme</li>
+                            <li>Hibrit denetimli/denetimsiz öğrenme yöntemleri</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- İleri Kaynaklar Bölümü -->
+        <section id="resources" class="section">
+            <h2>İleri Kaynaklar</h2>
+            <p>Dengesiz veri setleriyle sınıflandırma konusunda daha fazla bilgi edinmek için aşağıdaki kaynaklara göz
+                atabilirsiniz:</p>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+                <div
+                    style="background-color: #f8f9fa; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                    <div style="background-color: #3498db; padding: 15px; color: white;">
+                        <h4 style="margin: 0;"><i class="fas fa-book" style="margin-right: 10px;"></i> Akademik
+                            Makaleler</h4>
+                    </div>
+                    <div style="padding: 20px;">
+                        <ul style="padding-left: 20px;">
+                            <li>"Learning from Imbalanced Data" - He &amp; Garcia (2009)</li>
+                            <li>"SMOTE: Synthetic Minority Over-sampling Technique" - Chawla et al.</li>
+                            <li>"Focal Loss for Dense Object Detection" - Lin et al. (2017)</li>
+                            <li>"Class-Balanced Loss Based on Effective Number of Samples" - Cui et al.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    style="background-color: #f8f9fa; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                    <div style="background-color: #2ecc71; padding: 15px; color: white;">
+                        <h4 style="margin: 0;"><i class="fas fa-code" style="margin-right: 10px;"></i> Kod Kütüphaneleri
+                        </h4>
+                    </div>
+                    <div style="padding: 20px;">
+                        <ul style="padding-left: 20px;">
+                            <li>imbalanced-learn (Python)</li>
+                            <li>TensorFlow Addons</li>
+                            <li>nlpaug</li>
+                            <li>PyTorch SMOTE</li>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    style="background-color: #f8f9fa; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                    <div style="background-color: #9b59b6; padding: 15px; color: white;">
+                        <h4 style="margin: 0;"><i class="fas fa-laptop" style="margin-right: 10px;"></i> Online Kurslar
+                        </h4>
+                    </div>
+                    <div style="padding: 20px;">
+                        <ul style="padding-left: 20px;">
+                            <li>"Practical Solutions for Class Imbalance" - Kaggle Courses</li>
+                            <li>"Advanced NLP with BERT" - TensorFlow Data and Deployment Specialization</li>
+                            <li>"Anomaly Detection in Time Series Data with Keras" - Coursera</li>
+                            <li>"Machine Learning with Imbalanced Datasets" - edX</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <h3>Dengesiz Veri Sınıflandırma Öğreticisi</h3>
+            <p>&copy; 2025 Dengesiz Veri Sınıflandırma Öğreticisi | Tüm Hakları Saklıdır</p>
+            <ul>
+                <li><a href="#introduction"><i class="fas fa-home"></i></a></li>
+                <li><a href="#confusion-matrix"><i class="fas fa-chart-pie"></i></a></li>
+                <li><a href="#metrics"><i class="fas fa-calculator"></i></a></li>
+                <li><a href="#solutions"><i class="fas fa-lightbulb"></i></a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        // Mobil menü aç/kapa
+        document.getElementById('hamburger').addEventListener('click', function () {
+            document.getElementById('nav').classList.toggle('active');
+        });
+        // Anchor linklerde yumuşak kaydırma
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Mobil menüyü kapat
+                document.getElementById('nav').classList.remove('active');
+            });
+        });
+        // Chart.js'in yüklenip yüklenmediğini kontrol et
+        function isChartJsLoaded() {
+            return typeof Chart !== 'undefined';
+        }
+        // Grafiklerin güvenli şekilde başlatılması
+        function initializeCharts() {
+            if (!isChartJsLoaded()) {
+                console.error('Chart.js kütüphanesi yüklenemedi!');
+                return;
+            }
+            // Canvas elemanlarını kontrol et
+            const canvases = ['sampleDistribution', 'metricsChart', 'imbalanceChart', 'ensembleChart'];
+            canvases.forEach(id => {
+                const canvas = document.getElementById(id);
+                if (!canvas) {
+                    console.warn(`${id} canvas elemanı bulunamadı!`);
+                }
+            });
+            // Sample Distribution Chart
+            const sampleDistCtx = document.getElementById('sampleDistribution').getContext('2d');
+            new Chart(sampleDistCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['A Kategorisi', 'B Kategorisi', 'C Kategorisi', 'D Kategorisi'],
+                    datasets: [{
+                        label: 'Örnek Sayısı',
+                        data: [100, 100, 10, 10],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(231, 76, 60, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(231, 76, 60, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Kategori Başına Örnek Sayısı Dağılımı',
+                            font: { size: 16 }
+                        },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Örnek Sayısı' } },
+                        x: { title: { display: true, text: 'Kategoriler' } }
+                    }
+                }
+            });
+            // Metrics Chart (radar)
+            const metricsCtx = document.getElementById('metricsChart').getContext('2d');
+            new Chart(metricsCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Precision', 'Recall', 'F1 Skoru'],
+                    datasets: [
+                        {
+                            label: 'A Kategorisi',
+                            data: [0.85, 0.85, 0.85],
+                            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(52, 152, 219, 1)'
+                        },
+                        {
+                            label: 'B Kategorisi',
+                            data: [0.89, 0.86, 0.87],
+                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(46, 204, 113, 1)'
+                        },
+                        {
+                            label: 'C Kategorisi',
+                            data: [0.20, 0.20, 0.20],
+                            backgroundColor: 'rgba(155, 89, 182, 0.2)',
+                            borderColor: 'rgba(155, 89, 182, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(155, 89, 182, 1)'
+                        },
+                        {
+                            label: 'D Kategorisi',
+                            data: [0.25, 0.10, 0.14],
+                            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(231, 76, 60, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { r: { angleLines: { display: true }, suggestedMin: 0, suggestedMax: 1 } },
+                    plugins: { title: { display: true, text: 'Kategori Bazlı Performans Metrikleri', font: { size: 16 } } }
+                }
+            });
+            // Imbalance Chart (line)
+            const imbalanceCtx = document.getElementById('imbalanceChart').getContext('2d');
+            new Chart(imbalanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1:1', '10:1', '20:1', '50:1', '100:1'],
+                    datasets: [
+                        {
+                            label: 'Accuracy',
+                            data: [0.8, 0.85, 0.89, 0.92, 0.95],
+                            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Makro F1',
+                            data: [0.78, 0.70, 0.62, 0.55, 0.52],
+                            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Performans' } },
+                        x: { title: { display: true, text: 'Dengesizlik Oranı (Çoğunluk:Azınlık)' } }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Veri Dengesizliğinin Model Performansına Etkisi',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+            // Ensemble Chart (bar)
+            const ensembleCtx = document.getElementById('ensembleChart').getContext('2d');
+            new Chart(ensembleCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tek Model', 'Sınıf Ağırlıklı', 'Veri Dengeli', 'Ensemble (5 Model)'],
+                    datasets: [
+                        {
+                            label: 'A Kategorisi F1',
+                            data: [0.85, 0.82, 0.83, 0.86],
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)'
+                        },
+                        {
+                            label: 'B Kategorisi F1',
+                            data: [0.87, 0.84, 0.85, 0.88],
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)'
+                        },
+                        {
+                            label: 'C Kategorisi F1',
+                            data: [0.20, 0.38, 0.42, 0.58],
+                            backgroundColor: 'rgba(155, 89, 182, 0.7)'
+                        },
+                        {
+                            label: 'D Kategorisi F1',
+                            data: [0.14, 0.35, 0.38, 0.52],
+                            backgroundColor: 'rgba(231, 76, 60, 0.7)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'F1 Skoru' }, max: 1 },
+                        x: { title: { display: true, text: 'Model Stratejisi' } }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Farklı Stratejilerin Kategori Bazlı Performansa Etkisi',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+        }
+        window.onload = function () {
+            setTimeout(initializeCharts, 500);
+        };
+    </script>
+</body>
+
+</html>
