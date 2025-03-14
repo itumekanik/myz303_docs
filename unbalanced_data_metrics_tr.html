@@ -446,7 +446,7 @@
         <div class="container header-container">
             <div class="logo">
                 <i class="fas fa-chart-pie"></i>
-                <h1>Dengesiz Veri Setleri Metrikleri</h1>
+                <h1>Dengesiz Veri Sınıflandırma</h1>
             </div>
             <div class="hamburger" id="hamburger">
                 <span></span>
@@ -468,7 +468,7 @@
     <main class="container">
         <!-- Hero Bölümü -->
         <section class="hero">
-            <h2>Dengesiz Veri Setleri Metrikleri</h2>
+            <h2>Dengesiz Veri Setlerinde Sınıflandırma</h2>
             <p>Dengesiz veri dağılımı olan datalarla çalışırken doğru metrik seçimi ve performans optimizasyonu
             </p>
         </section>
@@ -480,13 +480,13 @@
                 Dengesiz veri seti, bazı sınıfların diğerlerine göre çok daha az örneğe sahip olduğu durumlarda ortaya
                 çıkar.</p>
             <p>Bu öğreticide, A, B, C ve D kategorilerine sahip, son derece dengesiz bir veri seti üzerinde eğitilmiş
-                bir modeli ele alacağız.</p>
+                bir BERT modelini ele alacağız.</p>
             <div class="chart-container" style="margin: 20px 0;">
                 <canvas id="sampleDistribution" width="800" height="400"></canvas>
             </div>
             <div class="table-container">
                 <h4>Kategori Başına Örnek Sayısı</h4>
-                <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%; text-align: center;">
+                <table>
                     <thead>
                         <tr>
                             <th>Kategori</th>
@@ -543,7 +543,7 @@
             <h2>Karışıklık Matrisi</h2>
             <p>Modelin performansını değerlendirmek için karışıklık matrisi, gerçek ve tahmin edilen sınıfları gösterir.
             </p>
-            <div class="tab le-container">
+            <div class="table-container">
                 <table>
                     <thead>
                         <tr>
@@ -588,147 +588,6 @@
             </div>
             <p>Karışıklık matrisinden; A ve B kategorileri için modelin performansı iyi, ancak C ve D kategorileri için
                 zayıf olduğu gözlemlenmektedir.</p>
-        </section>
-
-          <!-- Performans Metrikleri Bölümü -->
-          <section id="metrics" class="section">
-            <h2>Performans Metrikleri</h2>
-            <p>Sınıflandırma performansını değerlendirmede kullanılan temel metrikler: Precision, Recall ve F1 Skorudur.
-            </p>
-            <h3>Temel Kavramlar</h3>
-            <ul>
-                <li><strong>True Positive (TP)</strong>: Model bir örneği doğru şekilde ilgili kategoriye ait olarak tahmin eder. Örnek doğru şekilde kategoriye aittir.
-                </li>
-                <li><strong>False Positive (FP)</strong>: Model bir örneği yanlış şekilde ilgili kategoriye ait olarak tahmin eder. Aslında örnek farklı bir kategoriye aittir.
-                </li>
-                <li><strong>False Negative (FN)</strong>: Model bir örneği yanlış şekilde ilgili kategoriye ait değil olarak tahmin eder. Aslında örnek ilgili kategoriye aittir.
-                </li>
-                <li><strong>True Negative (TN)</strong>: Model bir örneği doğru şekilde ilgili kategoriye ait değil olarak tahmin eder. Örneğin doğru şekilde ilgili kategoriye ait değildir. </li>
-            </ul>
-            <h3>Formüller</h3>
-            <div class="code-block">
-                Precision = TP / (TP + FP) <br>
-                Recall = TP / (TP + FN) <br>
-                F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
-            </div>
-            <h3>Kategori Bazlı Metrikler</h3>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <h4>A Kategorisi</h4>
-                    <div class="metric-value good-metric">0.85</div>
-                    <p>F1 Skoru</p>
-                </div>
-                <div class="metric-card">
-                    <h4>B Kategorisi</h4>
-                    <div class="metric-value good-metric">0.87</div>
-                    <p>F1 Skoru</p>
-                </div>
-                <div class="metric-card">
-                    <h4>C Kategorisi</h4>
-                    <div class="metric-value bad-metric">0.20</div>
-                    <p>F1 Skoru</p>
-                </div>
-                <div class="metric-card">
-                    <h4>D Kategorisi</h4>
-                    <div class="metric-value bad-metric">0.14</div>
-                    <p>F1 Skoru</p>
-                </div>
-            </div>
-            <div class="chart-container" style="margin: 20px 0;">
-                <canvas id="metricsChart" width="800" height="400"></canvas>
-            </div>
-            <div class="table-container">
-                <h4>Kategori Bazlı Performans Metrikleri</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Kategori</th>
-                            <th>Precision</th>
-                            <th>Recall</th>
-                            <th>F1 Skoru</th>
-                            <th>Performans Düzeyi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>A Kategorisi</strong></td>
-                            <td>0.85</td>
-                            <td>0.85</td>
-                            <td>0.85</td>
-                            <td><span style="color: #2ecc71;">✓ İyi</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>B Kategorisi</strong></td>
-                            <td>0.89</td>
-                            <td>0.86</td>
-                            <td>0.87</td>
-                            <td><span style="color: #2ecc71;">✓ İyi</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>C Kategorisi</strong></td>
-                            <td>0.20</td>
-                            <td>0.20</td>
-                            <td>0.20</td>
-                            <td><span style="color: #e74c3c;">✗ Çok Düşük</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>D Kategorisi</strong></td>
-                            <td>0.25</td>
-                            <td>0.10</td>
-                            <td>0.14</td>
-                            <td><span style="color: #e74c3c;">✗ Çok Düşük</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3>Ortalama Metrikler</h3>
-            <div class="flex-container" style="margin-top: 30px;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Makro-ortalama</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Her sınıfa eşit ağırlık verilir.</p>
-                        <ul>
-                            <li>Precision: 0.55</li>
-                            <li>Recall: 0.50</li>
-                            <li>F1 Skoru: 0.52</li>
-                        </ul>
-                        <div style="margin-top: 10px; font-style: italic;">Azınlık sınıflarının düşük performansı
-                            makro-ortalamayı düşürür.</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Ağırlıklı Ortalama</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Sınıf büyüklüklerine göre ağırlıklandırılır.</p>
-                        <ul>
-                            <li>Precision: 0.81</li>
-                            <li>Recall: 0.79</li>
-                            <li>F1 Skoru: 0.80</li>
-                        </ul>
-                        <div style="margin-top: 10px; font-style: italic;">Büyük sınıfların etkisiyle daha yüksek
-                            görünür.</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Mikro-ortalama</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Tüm örnekler üzerinden hesaplanır.</p>
-                        <ul>
-                            <li>Precision: 0.84</li>
-                            <li>Recall: 0.80</li>
-                            <li>F1 Skoru: 0.82</li>
-                        </ul>
-                        <div style="margin-top: 10px; font-style: italic;">Büyük sınıfların etkisi nedeniyle yanıltıcı
-                            olabilir.</div>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <!-- A Kategorisi için Metrik Hesaplaması Bölümü -->
@@ -1291,6 +1150,143 @@
             </div>
         </section>
 
+        <!-- Performans Metrikleri Bölümü -->
+        <section id="metrics" class="section">
+            <h2>Performans Metrikleri</h2>
+            <p>Sınıflandırma performansını değerlendirmede kullanılan temel metrikler: Precision, Recall ve F1 Skorudur.
+            </p>
+            <h3>Temel Kavramlar</h3>
+            <ul>
+                <li><strong>True Positive (TP)</strong>: Doğru pozitif tahminler</li>
+                <li><strong>False Positive (FP)</strong>: Yanlış pozitif tahminler</li>
+                <li><strong>False Negative (FN)</strong>: Yanlış negatif tahminler</li>
+                <li><strong>True Negative (TN)</strong>: Doğru negatif tahminler</li>
+            </ul>
+            <h3>Formüller</h3>
+            <div class="code-block">
+                Precision = TP / (TP + FP) <br>
+                Recall = TP / (TP + FN) <br>
+                F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
+            </div>
+            <h3>Kategori Bazlı Metrikler</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>A Kategorisi</h4>
+                    <div class="metric-value good-metric">0.85</div>
+                    <p>F1 Skoru</p>
+                </div>
+                <div class="metric-card">
+                    <h4>B Kategorisi</h4>
+                    <div class="metric-value good-metric">0.87</div>
+                    <p>F1 Skoru</p>
+                </div>
+                <div class="metric-card">
+                    <h4>C Kategorisi</h4>
+                    <div class="metric-value bad-metric">0.20</div>
+                    <p>F1 Skoru</p>
+                </div>
+                <div class="metric-card">
+                    <h4>D Kategorisi</h4>
+                    <div class="metric-value bad-metric">0.14</div>
+                    <p>F1 Skoru</p>
+                </div>
+            </div>
+            <div class="chart-container" style="margin: 20px 0;">
+                <canvas id="metricsChart" width="800" height="400"></canvas>
+            </div>
+            <div class="table-container">
+                <h4>Kategori Bazlı Performans Metrikleri</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Skoru</th>
+                            <th>Performans Düzeyi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A Kategorisi</strong></td>
+                            <td>0.85</td>
+                            <td>0.85</td>
+                            <td>0.85</td>
+                            <td><span style="color: #2ecc71;">✓ İyi</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>B Kategorisi</strong></td>
+                            <td>0.89</td>
+                            <td>0.86</td>
+                            <td>0.87</td>
+                            <td><span style="color: #2ecc71;">✓ İyi</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>C Kategorisi</strong></td>
+                            <td>0.20</td>
+                            <td>0.20</td>
+                            <td>0.20</td>
+                            <td><span style="color: #e74c3c;">✗ Çok Düşük</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>D Kategorisi</strong></td>
+                            <td>0.25</td>
+                            <td>0.10</td>
+                            <td>0.14</td>
+                            <td><span style="color: #e74c3c;">✗ Çok Düşük</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Ortalama Metrikler</h3>
+            <div class="flex-container" style="margin-top: 30px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Makro-ortalama</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Her sınıfa eşit ağırlık verilir.</p>
+                        <ul>
+                            <li>Precision: 0.55</li>
+                            <li>Recall: 0.50</li>
+                            <li>F1 Skoru: 0.52</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic;">Azınlık sınıflarının düşük performansı
+                            makro-ortalamayı düşürür.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Ağırlıklı Ortalama</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Sınıf büyüklüklerine göre ağırlıklandırılır.</p>
+                        <ul>
+                            <li>Precision: 0.81</li>
+                            <li>Recall: 0.79</li>
+                            <li>F1 Skoru: 0.80</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic;">Büyük sınıfların etkisiyle daha yüksek
+                            görünür.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Mikro-ortalama</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Tüm örnekler üzerinden hesaplanır.</p>
+                        <ul>
+                            <li>Precision: 0.84</li>
+                            <li>Recall: 0.80</li>
+                            <li>F1 Skoru: 0.82</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic;">Büyük sınıfların etkisi nedeniyle yanıltıcı
+                            olabilir.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Dengesizlik Analizi Bölümü -->
         <section id="imbalance-analysis" class="section">

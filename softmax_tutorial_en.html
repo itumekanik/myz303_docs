@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Softmax Function Tutorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --section-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding: 0;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .section {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+        
+        .math {
+            overflow-x: auto;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background-color: #fcfcfc;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .output-container {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Softmax Function</h1>
+            <p>A Fundamental Tool for Multi-Class Classification</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>1. What is the Softmax Function?</h2>
+            <p>The softmax function is widely used in machine learning and deep learning for multi-class classification problems. Its main purpose is to convert a set of real numbers (typically the output values of a neural network's output layer) into a probability distribution.</p>
+
+            <p>Softmax produces a value between 0 and 1 for each element of an input vector, and the sum of these values equals 1. This property allows softmax outputs to be directly interpreted as probabilities.</p>
+
+            <div class="math">
+                <p>The softmax function is mathematically expressed as:</p>
+                <p>\[ \sigma(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}} \]</p>
+                <p>Where:</p>
+                <ul>
+                    <li>\( \mathbf{z} \): Input vector</li>
+                    <li>\( z_i \): The i-th element of the vector</li>
+                    <li>\( K \): Dimension of the vector (number of classes)</li>
+                    <li>\( \sigma(\mathbf{z})_i \): Probability of the i-th class</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Implementing Softmax</h2>
+            <p>Let's look at a softmax calculation for a 5-class classification problem. We'll use raw neural network outputs (logits) as input and convert them to probabilities.</p>
+
+            <h3>Softmax Function in Vanilla JavaScript:</h3>
+            <pre>
+function softmax(logits, temperature = 1.0) {
+    // Temperature application (T parameter)
+    const scaledLogits = logits.map(x => x / temperature);
+    
+    // Find the maximum value (for numerical stability)
+    const maxLogit = Math.max(...scaledLogits);
+    
+    // Calculate exp(x_i - max) (overflow prevention)
+    const expValues = scaledLogits.map(x => Math.exp(x - maxLogit));
+    
+    // Calculate the sum
+    const expSum = expValues.reduce((a, b) => a + b, 0);
+    
+    // Calculate probability for each value
+    return expValues.map(x => x / expSum);
+}</pre>
+
+            <p>Here's a sample input vector (logits). Click the "Calculate" button to see the softmax values:</p>
+
+            <div class="input-container">
+                <input type="text" id="logitsInput" value="2.0, 1.0, 0.1, 3.0, -1.0" style="width: 300px;">
+                <button id="calculateBtn">Calculate</button>
+            </div>
+
+            <div class="output-container">
+                <h3>Results:</h3>
+                <table id="resultTable">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Logit Value</th>
+                            <th>Softmax Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultBody">
+                        <!-- To be filled with JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="softmaxChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Softmax and Temperature Parameter</h2>
+            <p>By adding a temperature parameter to the softmax function, we can control the sharpness of the distribution. The temperature parameter is used to scale the logits before the softmax calculation:</p>
+            
+            <div class="math">
+                <p>\[ \sigma(\mathbf{z}, T)_i = \frac{e^{z_i/T}}{\sum_{j=1}^{K} e^{z_j/T}} \]</p>
+                <p>Where \(T\) is the temperature parameter.</p>
+            </div>
+            
+            <ul>
+                <li><strong>Low Temperature (T < 1):</strong> Makes the distribution sharper. The highest values become more prominent.</li>
+                <li><strong>High Temperature (T > 1):</strong> Makes the distribution softer. Differences between values decrease.</li>
+                <li><strong>T = 1:</strong> Standard softmax function.</li>
+            </ul>
+            
+            <p>Below, you can see the effect of the temperature parameter on the distribution:</p>
+            
+            <div class="input-container">
+                <label for="temperatureInput">Temperature (T):</label>
+                <input type="range" id="temperatureInput" min="0.1" max="5" step="0.1" value="1.0" style="width: 200px;">
+                <span id="temperatureValue">1.0</span>
+                
+                <label for="tempLogitsInput" style="margin-left: 20px;">Logit Values:</label>
+                <input type="text" id="tempLogitsInput" value="2.0, 1.0, 0.1, 3.0, -1.0" style="width: 250px;">
+                <button id="updateTempBtn">Update</button>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+
+        </div>
+
+        <div class="section">
+            <h2>4. Properties of Softmax</h2>
+            <p>Some important properties that distinguish the softmax function from other activation functions:</p>
+            
+            <ul>
+                <li><strong>Multi-Class Suitability:</strong> Softmax is ideal for multi-class classification problems because it produces a probability distribution across all classes.</li>
+                <li><strong>Sum to 1:</strong> Softmax outputs always sum to 1, forming a proper probability distribution.</li>
+                <li><strong>Range:</strong> Each output value is between 0 and 1.</li>
+                <li><strong>Differentiability:</strong> The softmax function is differentiable, allowing it to be trained with gradient-based optimization algorithms.</li>
+            </ul>
+
+            <div class="math">
+                <p>The derivative of the softmax function:</p>
+                <p>\[ \frac{\partial \sigma(\mathbf{z})_i}{\partial z_j} = 
+                \begin{cases} 
+                \sigma(\mathbf{z})_i(1 - \sigma(\mathbf{z})_i) & \text{if } i = j \\
+                -\sigma(\mathbf{z})_i\sigma(\mathbf{z})_j & \text{if } i \neq j
+                \end{cases} \]</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. Numerical Stability</h2>
+            <p>One of the biggest issues in softmax calculation is numerical overflow. For large input values, \(e^{z_i}\) can produce very large numbers that cause overflow in calculations.</p>
+
+            <p>A common technique to solve this is to subtract the maximum value from all input values:</p>
+
+            <div class="math">
+                <p>\[ \sigma(\mathbf{z})_i = \frac{e^{z_i - \max(\mathbf{z})}}{\sum_{j=1}^{K} e^{z_j - \max(\mathbf{z})}} \]</p>
+            </div>
+
+            <p>This gives the same mathematical result but improves numerical stability. We implemented this technique in our JavaScript code above.</p>
+
+            <h3>Stability Test:</h3>
+            <p>You can use the field below to test with very large numbers:</p>
+
+            <div class="input-container">
+                <input type="text" id="largeLogitsInput" value="100, 150, 120, 80, 90" style="width: 300px;">
+                <button id="calculateLargeBtn">Calculate with Large Values</button>
+            </div>
+
+            <div class="output-container">
+                <h3>Results with Large Values:</h3>
+                <table id="largeResultTable">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Logit Value</th>
+                            <th>Softmax Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="largeResultBody">
+                        <!-- To be filled with JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>6. Real-World Applications</h2>
+            <p>The softmax function is used in a wide variety of machine learning and deep learning applications:</p>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h3>Image Classification</h3>
+                    <p>Deep Convolutional Neural Networks (CNNs) typically use softmax in the final layer to separate images into multiple classes. For example, MNIST digit recognition (10 classes) or ImageNet classification (1000 classes).</p>
+                </div>
+                <div class="flex-item">
+                    <h3>Natural Language Processing</h3>
+                    <p>Word predictions, sentiment analysis, or text classification problems use softmax in the output layer to obtain a probability distribution across possible classes.</p>
+                </div>
+            </div>
+
+            <h3>Example Scenario: Handwritten Digit Recognition</h3>
+            <p>In the example below, you can see the logit values produced by a neural network to classify 5 different digits and their conversion to probabilities using softmax:</p>
+
+            <div class="chart-container">
+                <canvas id="digitClassificationChart"></canvas>
+            </div>
+
+            <p>In this example, the model has assigned the highest probability to the digit "5", which means the model will classify this input as "5".</p>
+        </div>
+    </div>
+
+    <script>
+        // Softmax function (with temperature parameter)
+        function softmax(logits, temperature = 1.0) {
+            // Temperature application (T parameter)
+            const scaledLogits = logits.map(x => x / temperature);
+            
+            // Find the maximum value (for numerical stability)
+            const maxLogit = Math.max(...scaledLogits);
+            
+            // Calculate exp(x_i - max) (overflow prevention)
+            const expValues = scaledLogits.map(x => Math.exp(x - maxLogit));
+            
+            // Calculate the sum
+            const expSum = expValues.reduce((a, b) => a + b, 0);
+            
+            // Calculate probability for each value
+            return expValues.map(x => x / expSum);
+        }
+
+        // Chart colors
+        const chartColors = [
+            'rgba(74, 111, 165, 0.8)',
+            'rgba(22, 96, 136, 0.8)',
+            'rgba(79, 195, 247, 0.8)',
+            'rgba(45, 140, 180, 0.8)',
+            'rgba(120, 160, 200, 0.8)'
+        ];
+
+        // Chart creation function
+        function createBarChart(canvasId, labels, values, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: values,
+                        backgroundColor: chartColors,
+                        borderColor: chartColors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1.0,
+                            title: {
+                                display: true,
+                                text: 'Probability'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    }
+                }
+            });
+        }
+
+        // Table filling function
+        function fillResultTable(tableBodyId, logits, softmaxValues) {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+            
+            logits.forEach((logit, index) => {
+                const row = document.createElement('tr');
+                
+                const classCell = document.createElement('td');
+                classCell.textContent = `Class ${index + 1}`;
+                
+                const logitCell = document.createElement('td');
+                logitCell.textContent = logit.toFixed(4);
+                
+                const softmaxCell = document.createElement('td');
+                softmaxCell.textContent = softmaxValues[index].toFixed(6);
+                
+                row.appendChild(classCell);
+                row.appendChild(logitCell);
+                row.appendChild(softmaxCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Parse numerical values function
+        function parseInput(inputStr) {
+            return inputStr.split(',').map(s => parseFloat(s.trim()));
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            let softmaxChart = null;
+            let digitClassificationChart = null;
+            let temperatureChart = null;
+            
+            // Initial calculation and chart
+            const calculateBtn = document.getElementById('calculateBtn');
+            calculateBtn.addEventListener('click', function() {
+                const logitsInput = document.getElementById('logitsInput').value;
+                const logits = parseInput(logitsInput);
+                const softmaxValues = softmax(logits);
+                
+                fillResultTable('resultBody', logits, softmaxValues);
+                
+                // Chart updating or creation
+                if (softmaxChart) {
+                    softmaxChart.data.labels = logits.map((_, i) => `Class ${i + 1}`);
+                    softmaxChart.data.datasets[0].data = softmaxValues;
+                    softmaxChart.update();
+                } else {
+                    softmaxChart = createBarChart(
+                        'softmaxChart',
+                        logits.map((_, i) => `Class ${i + 1}`),
+                        softmaxValues,
+                        'Softmax Values'
+                    );
+                }
+            });
+            
+            // Calculation with large values
+            const calculateLargeBtn = document.getElementById('calculateLargeBtn');
+            calculateLargeBtn.addEventListener('click', function() {
+                const largeLogitsInput = document.getElementById('largeLogitsInput').value;
+                const largeLogits = parseInput(largeLogitsInput);
+                const largeSoftmaxValues = softmax(largeLogits);
+                
+                fillResultTable('largeResultBody', largeLogits, largeSoftmaxValues);
+            });
+            
+            // Temperature chart
+            const temperatureInput = document.getElementById('temperatureInput');
+            const temperatureValue = document.getElementById('temperatureValue');
+            const tempLogitsInput = document.getElementById('tempLogitsInput');
+            const updateTempBtn = document.getElementById('updateTempBtn');
+            
+            // Temperature chart creation
+            function updateTemperatureChart() {
+                const temperature = parseFloat(temperatureInput.value);
+                temperatureValue.textContent = temperature.toFixed(1);
+                
+                const logits = parseInput(tempLogitsInput.value);
+                const softmaxValues = softmax(logits, temperature);
+                
+                if (temperatureChart) {
+                    temperatureChart.data.labels = logits.map((_, i) => `Class ${i + 1}`);
+                    temperatureChart.data.datasets[0].data = softmaxValues;
+                    temperatureChart.options.plugins.title.text = `Softmax Values (T = ${temperature.toFixed(1)})`;
+                    temperatureChart.update();
+                } else {
+                    temperatureChart = createBarChart(
+                        'temperatureChart',
+                        logits.map((_, i) => `Class ${i + 1}`),
+                        softmaxValues,
+                        `Softmax Values (T = ${temperature.toFixed(1)})`
+                    );
+                }
+            }
+            
+            // Temperature change event
+            temperatureInput.addEventListener('input', updateTemperatureChart);
+            
+            // Logit values update event
+            updateTempBtn.addEventListener('click', updateTemperatureChart);
+            
+            // Digit classification example
+            const digitLogits = [1.2, 0.8, 2.5, 4.3, 0.5];
+            const digitLabels = ['0', '1', '3', '5', '7'];
+            const digitSoftmax = softmax(digitLogits);
+            
+            digitClassificationChart = createBarChart(
+                'digitClassificationChart',
+                digitLabels,
+                digitSoftmax,
+                'Digit Classification Probabilities'
+            );
+            
+            // Initial calculation after loading
+            calculateBtn.click();
+            
+            // Initial temperature chart
+            updateTemperatureChart();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Softmax Fonksiyonu Tutorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --section-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding: 0;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .section {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+        
+        .math {
+            overflow-x: auto;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background-color: #fcfcfc;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .output-container {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Softmax Fonksiyonu</h1>
+            <p>Çok Sınıflı Sınıflandırma İçin Temel Bir Araç</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>1. Softmax Fonksiyonu Nedir?</h2>
+            <p>Softmax fonksiyonu, makine öğrenmesinde ve derin öğrenmede çok sınıflı sınıflandırma problemlerinde yaygın olarak kullanılan bir fonksiyondur. Temel amacı, bir dizi reel sayıyı (genellikle bir sinir ağının çıktı katmanının değerleri) olasılık dağılımına dönüştürmektir.</p>
+
+            <p>Softmax, bir girdi vektörünün her elemanı için 0 ile 1 arasında bir değer üretir ve bu değerlerin toplamı 1'e eşittir. Bu özelliği, softmax çıktılarının doğrudan olasılık olarak yorumlanmasına olanak tanır.</p>
+
+            <div class="math">
+                <p>Softmax fonksiyonu matematiksel olarak şu şekilde ifade edilir:</p>
+                <p>\[ \sigma(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}} \]</p>
+                <p>Burada:</p>
+                <ul>
+                    <li>\( \mathbf{z} \): Girdi vektörü</li>
+                    <li>\( z_i \): Vektörün i. elemanı</li>
+                    <li>\( K \): Vektörün boyutu (sınıf sayısı)</li>
+                    <li>\( \sigma(\mathbf{z})_i \): i. sınıfa ait olasılık</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Softmax Uygulaması</h2>
+            <p>Burada 5 sınıflı bir sınıflandırma problemi için softmax hesaplamasını görelim. Bir sinir ağının ham çıktılarını (logits) girdi olarak kullanalım ve bunları olasılıklara dönüştürelim.</p>
+
+            <h3>Vanilla JavaScript ile Softmax Fonksiyonu:</h3>
+            <pre>
+function softmax(logits, temperature = 1.0) {
+    // Temperature uygulaması (T parametresi)
+    const scaledLogits = logits.map(x => x / temperature);
+    
+    // En büyük değeri bulalım (sayısal stabilite için)
+    const maxLogit = Math.max(...scaledLogits);
+    
+    // exp(x_i - max) hesaplaması (taşma önlemi)
+    const expValues = scaledLogits.map(x => Math.exp(x - maxLogit));
+    
+    // Toplamı hesaplayalım
+    const expSum = expValues.reduce((a, b) => a + b, 0);
+    
+    // Her bir değer için olasılık hesaplayalım
+    return expValues.map(x => x / expSum);
+}</pre>
+
+            <p>Aşağıda örnek bir girdi vektörü (logits) verilmiştir. "Hesapla" düğmesine tıklayarak softmax değerlerini görebilirsiniz:</p>
+
+            <div class="input-container">
+                <input type="text" id="logitsInput" value="2.0, 1.0, 0.1, 3.0, -1.0" style="width: 300px;">
+                <button id="calculateBtn">Hesapla</button>
+            </div>
+
+            <div class="output-container">
+                <h3>Sonuçlar:</h3>
+                <table id="resultTable">
+                    <thead>
+                        <tr>
+                            <th>Sınıf</th>
+                            <th>Logit Değeri</th>
+                            <th>Softmax Değeri</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultBody">
+                        <!-- JavaScript ile doldurulacak -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="softmaxChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Softmax ve Sıcaklık (Temperature) Parametresi</h2>
+            <p>Softmax fonksiyonuna bir sıcaklık (temperature) parametresi ekleyerek, dağılımın keskinliğini kontrol edebiliriz. Sıcaklık parametresi, softmax hesaplamasından önce logitleri ölçeklendirmek için kullanılır:</p>
+            
+            <div class="math">
+                <p>\[ \sigma(\mathbf{z}, T)_i = \frac{e^{z_i/T}}{\sum_{j=1}^{K} e^{z_j/T}} \]</p>
+                <p>Burada \(T\) sıcaklık parametresidir.</p>
+            </div>
+            
+            <ul>
+                <li><strong>Düşük Sıcaklık (T < 1):</strong> Dağılımı daha keskin hale getirir. En yüksek değerler daha belirgin olur.</li>
+                <li><strong>Yüksek Sıcaklık (T > 1):</strong> Dağılımı daha yumuşak hale getirir. Değerler arasındaki farklar azalır.</li>
+                <li><strong>T = 1:</strong> Standart softmax fonksiyonudur.</li>
+            </ul>
+            
+            <p>Aşağıda, sıcaklık parametresinin dağılım üzerindeki etkisini görebilirsiniz:</p>
+            
+            <div class="input-container">
+                <label for="temperatureInput">Sıcaklık (T):</label>
+                <input type="range" id="temperatureInput" min="0.1" max="5" step="0.1" value="1.0" style="width: 200px;">
+                <span id="temperatureValue">1.0</span>
+                
+                <label for="tempLogitsInput" style="margin-left: 20px;">Logit Değerleri:</label>
+                <input type="text" id="tempLogitsInput" value="2.0, 1.0, 0.1, 3.0, -1.0" style="width: 250px;">
+                <button id="updateTempBtn">Güncelle</button>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            
+            <h2>4. Softmax'in Özellikleri</h2>
+            <p>Softmax fonksiyonunu diğer aktivasyon fonksiyonlarından ayıran bazı önemli özellikler:</p>
+            
+            <ul>
+                <li><strong>Çok Sınıflı Uygunluk:</strong> Softmax, çok sınıflı sınıflandırma problemleri için idealdir çünkü tüm sınıflar için olasılık dağılımı üretir.</li>
+                <li><strong>Toplam 1:</strong> Softmax çıktıları her zaman toplamı 1 olan bir olasılık dağılımıdır.</li>
+                <li><strong>Aralık:</strong> Her bir çıktı değeri 0 ile 1 arasındadır.</li>
+                <li><strong>Diferansiyellenebilirlik:</strong> Softmax fonksiyonu türevi alınabilir, bu nedenle gradyan temelli optimizasyon algoritmaları ile eğitilebilir.</li>
+            </ul>
+
+            <div class="math">
+                <p>Softmax fonksiyonunun türevi:</p>
+                <p>\[ \frac{\partial \sigma(\mathbf{z})_i}{\partial z_j} = 
+                \begin{cases} 
+                \sigma(\mathbf{z})_i(1 - \sigma(\mathbf{z})_i) & \text{if } i = j \\
+                -\sigma(\mathbf{z})_i\sigma(\mathbf{z})_j & \text{if } i \neq j
+                \end{cases} \]</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Sayısal Stabilite</h2>
+            <p>Softmax hesaplamasında karşılaşılabilecek en büyük sorunlardan biri sayısal taşmadır. Büyük giriş değerleri için \(e^{z_i}\) çok büyük sayılar üretebilir ve bu da hesaplamada taşmalara neden olabilir.</p>
+
+            <p>Bu sorunu çözmek için yaygın bir teknik, tüm giriş değerlerinden maksimum değeri çıkarmaktır:</p>
+
+            <div class="math">
+                <p>\[ \sigma(\mathbf{z})_i = \frac{e^{z_i - \max(\mathbf{z})}}{\sum_{j=1}^{K} e^{z_j - \max(\mathbf{z})}} \]</p>
+            </div>
+
+            <p>Bu matematiksel olarak aynı sonucu verir, ancak sayısal stabiliteyi iyileştirir. Yukarıdaki JavaScript kodumuzda bu tekniği uyguladık.</p>
+
+            <h3>Stabilite Testi:</h3>
+            <p>Aşağıdaki alanı çok büyük sayılarla denemek için kullanabilirsiniz:</p>
+
+            <div class="input-container">
+                <input type="text" id="largeLogitsInput" value="100, 150, 120, 80, 90" style="width: 300px;">
+                <button id="calculateLargeBtn">Büyük Değerlerle Hesapla</button>
+            </div>
+
+            <div class="output-container">
+                <h3>Büyük Değerlerle Sonuçlar:</h3>
+                <table id="largeResultTable">
+                    <thead>
+                        <tr>
+                            <th>Sınıf</th>
+                            <th>Logit Değeri</th>
+                            <th>Softmax Değeri</th>
+                        </tr>
+                    </thead>
+                    <tbody id="largeResultBody">
+                        <!-- JavaScript ile doldurulacak -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. Gerçek Dünya Uygulamaları</h2>
+            <p>Softmax fonksiyonu, çok çeşitli makine öğrenmesi ve derin öğrenme uygulamalarında kullanılır:</p>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h3>Görüntü Sınıflandırma</h3>
+                    <p>Derin Evrişimli Sinir Ağları (CNN), genellikle son katmanda softmax kullanarak görüntüleri birden çok sınıfa ayırır. Örneğin MNIST rakam tanıma problemi (10 sınıf) veya ImageNet sınıflandırması (1000 sınıf).</p>
+                </div>
+                <div class="flex-item">
+                    <h3>Doğal Dil İşleme</h3>
+                    <p>Kelime tahminleri, duygu analizi veya metin sınıflandırma problemlerinde, çıktı katmanında softmax fonksiyonu kullanılarak olası sınıflar arasında olasılık dağılımı elde edilir.</p>
+                </div>
+            </div>
+
+            <h3>Örnek Senaryo: El Yazısı Rakam Tanıma</h3>
+            <p>Aşağıdaki örnekte, bir sinir ağının 5 farklı rakamı sınıflandırmak için ürettiği logit değerleri ve bunların softmax ile olasılıklara dönüşümünü görebilirsiniz:</p>
+
+            <div class="chart-container">
+                <canvas id="digitClassificationChart"></canvas>
+            </div>
+
+            <p>Bu örnekte, model en yüksek olasılığı "5" rakamına atamıştır, bu da modelin bu girdiyi "5" olarak sınıflandıracağı anlamına gelir.</p>
+        </div>
+    </div>
+
+    <script>
+        // Softmax fonksiyonu (sıcaklık parametresi ile)
+        function softmax(logits, temperature = 1.0) {
+            // Temperature uygulaması (T parametresi)
+            const scaledLogits = logits.map(x => x / temperature);
+            
+            // En büyük değeri bulalım (sayısal stabilite için)
+            const maxLogit = Math.max(...scaledLogits);
+            
+            // exp(x_i - max) hesaplaması (taşma önlemi)
+            const expValues = scaledLogits.map(x => Math.exp(x - maxLogit));
+            
+            // Toplamı hesaplayalım
+            const expSum = expValues.reduce((a, b) => a + b, 0);
+            
+            // Her bir değer için olasılık hesaplayalım
+            return expValues.map(x => x / expSum);
+        }
+
+        // Grafik renkleri
+        const chartColors = [
+            'rgba(74, 111, 165, 0.8)',
+            'rgba(22, 96, 136, 0.8)',
+            'rgba(79, 195, 247, 0.8)',
+            'rgba(45, 140, 180, 0.8)',
+            'rgba(120, 160, 200, 0.8)'
+        ];
+
+        // Grafik oluşturma fonksiyonu
+        function createBarChart(canvasId, labels, values, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: values,
+                        backgroundColor: chartColors,
+                        borderColor: chartColors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1.0,
+                            title: {
+                                display: true,
+                                text: 'Olasılık'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    }
+                }
+            });
+        }
+
+        // Tabloyu doldurma fonksiyonu
+        function fillResultTable(tableBodyId, logits, softmaxValues) {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+            
+            logits.forEach((logit, index) => {
+                const row = document.createElement('tr');
+                
+                const classCell = document.createElement('td');
+                classCell.textContent = `Sınıf ${index + 1}`;
+                
+                const logitCell = document.createElement('td');
+                logitCell.textContent = logit.toFixed(4);
+                
+                const softmaxCell = document.createElement('td');
+                softmaxCell.textContent = softmaxValues[index].toFixed(6);
+                
+                row.appendChild(classCell);
+                row.appendChild(logitCell);
+                row.appendChild(softmaxCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Sayısal değerleri parse etme fonksiyonu
+        function parseInput(inputStr) {
+            return inputStr.split(',').map(s => parseFloat(s.trim()));
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            let softmaxChart = null;
+            let digitClassificationChart = null;
+            let temperatureChart = null;
+            
+            // İlk hesaplama ve grafik
+            const calculateBtn = document.getElementById('calculateBtn');
+            calculateBtn.addEventListener('click', function() {
+                const logitsInput = document.getElementById('logitsInput').value;
+                const logits = parseInput(logitsInput);
+                const softmaxValues = softmax(logits);
+                
+                fillResultTable('resultBody', logits, softmaxValues);
+                
+                // Grafik güncelleme veya oluşturma
+                if (softmaxChart) {
+                    softmaxChart.data.labels = logits.map((_, i) => `Sınıf ${i + 1}`);
+                    softmaxChart.data.datasets[0].data = softmaxValues;
+                    softmaxChart.update();
+                } else {
+                    softmaxChart = createBarChart(
+                        'softmaxChart',
+                        logits.map((_, i) => `Sınıf ${i + 1}`),
+                        softmaxValues,
+                        'Softmax Değerleri'
+                    );
+                }
+            });
+            
+            // Büyük değerlerle hesaplama
+            const calculateLargeBtn = document.getElementById('calculateLargeBtn');
+            calculateLargeBtn.addEventListener('click', function() {
+                const largeLogitsInput = document.getElementById('largeLogitsInput').value;
+                const largeLogits = parseInput(largeLogitsInput);
+                const largeSoftmaxValues = softmax(largeLogits);
+                
+                fillResultTable('largeResultBody', largeLogits, largeSoftmaxValues);
+            });
+            
+            // Sıcaklık grafiği
+            const temperatureInput = document.getElementById('temperatureInput');
+            const temperatureValue = document.getElementById('temperatureValue');
+            const tempLogitsInput = document.getElementById('tempLogitsInput');
+            const updateTempBtn = document.getElementById('updateTempBtn');
+            
+            // Sıcaklık grafiği oluşturma
+            function updateTemperatureChart() {
+                const temperature = parseFloat(temperatureInput.value);
+                temperatureValue.textContent = temperature.toFixed(1);
+                
+                const logits = parseInput(tempLogitsInput.value);
+                const softmaxValues = softmax(logits, temperature);
+                
+                if (temperatureChart) {
+                    temperatureChart.data.labels = logits.map((_, i) => `Sınıf ${i + 1}`);
+                    temperatureChart.data.datasets[0].data = softmaxValues;
+                    temperatureChart.options.plugins.title.text = `Softmax Değerleri (T = ${temperature.toFixed(1)})`;
+                    temperatureChart.update();
+                } else {
+                    temperatureChart = createBarChart(
+                        'temperatureChart',
+                        logits.map((_, i) => `Sınıf ${i + 1}`),
+                        softmaxValues,
+                        `Softmax Değerleri (T = ${temperature.toFixed(1)})`
+                    );
+                }
+            }
+            
+            // Sıcaklık değişimi olayı
+            temperatureInput.addEventListener('input', updateTemperatureChart);
+            
+            // Logit değerlerini güncelleme olayı
+            updateTempBtn.addEventListener('click', updateTemperatureChart);
+            
+            // Dijital sınıflandırma örneği
+            const digitLogits = [1.2, 0.8, 2.5, 4.3, 0.5];
+            const digitLabels = ['0', '1', '3', '5', '7'];
+            const digitSoftmax = softmax(digitLogits);
+            
+            digitClassificationChart = createBarChart(
+                'digitClassificationChart',
+                digitLabels,
+                digitSoftmax,
+                'Rakam Sınıflandırma Olasılıkları'
+            );
+            
+            // İlk yükleme sonrası varsayılan hesaplama
+            calculateBtn.click();
+            
+            // İlk sıcaklık grafiği
+            updateTemperatureChart();
+        });
+    </script>
+</body>
+</html>
