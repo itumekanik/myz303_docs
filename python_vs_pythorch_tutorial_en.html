@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python and PyTorch Tutorial</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4568dc, #b06ab3);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .accordion {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .accordion-header {
+            background: #f1f3f5;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .accordion-header:hover {
+            background: #e9ecef;
+        }
+        
+        .accordion-header.active {
+            background: #4568dc;
+            color: white;
+        }
+        
+        .accordion-content {
+            background: white;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content-inner {
+            padding: 20px;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4568dc;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .highlight {
+            color: #4568dc;
+            font-weight: bold;
+        }
+        
+        .keyword {
+            color: #d73a49;
+        }
+        
+        .string {
+            color: #032f62;
+        }
+        
+        .comment {
+            color: #6a737d;
+        }
+        
+        .function {
+            color: #6f42c1;
+        }
+        
+        .number {
+            color: #005cc5;
+        }
+        
+        .section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .section-title {
+            color: #4568dc;
+            margin-bottom: 20px;
+        }
+        
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+        
+        .active .arrow {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Python and PyTorch Tutorial</h1>
+        <div class="subtitle">From basic Python concepts to deep learning with PyTorch</div>
+    </header>
+    
+    <div class="section">
+        <h2 class="section-title">Python Basics</h2>
+        
+        <!-- Python Data Structures Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Python Data Structures (Containers)
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Lists</h3>
+                    <p>Lists are one of the most commonly used data structures in Python. They are mutable, ordered, and can contain elements of different data types.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Defining a list</span><br>
+                        <span class="variable">fruits</span> = [<span class="string">'apple'</span>, <span class="string">'pear'</span>, <span class="string">'banana'</span>, <span class="string">'strawberry'</span>]<br>
+                        <span class="variable">mixed_list</span> = [<span class="number">1</span>, <span class="string">'python'</span>, <span class="number">3.14</span>, <span class="keyword">True</span>]<br><br>
+                        
+                        <span class="comment"># Accessing list elements</span><br>
+                        <span class="keyword">print</span>(<span class="variable">fruits</span>[<span class="number">0</span>])  <span class="comment"># 'apple'</span><br>
+                        <span class="keyword">print</span>(<span class="variable">fruits</span>[<span class="number">-1</span>]) <span class="comment"># 'strawberry' - last element</span><br><br>
+                        
+                        <span class="comment"># List slicing</span><br>
+                        <span class="keyword">print</span>(<span class="variable">fruits</span>[<span class="number">1</span>:<span class="number">3</span>]) <span class="comment"># ['pear', 'banana']</span><br><br>
+                        
+                        <span class="comment"># List methods</span><br>
+                        <span class="variable">fruits</span>.<span class="function">append</span>(<span class="string">'kiwi'</span>)  <span class="comment"># Adding an element to the list</span><br>
+                        <span class="variable">fruits</span>.<span class="function">remove</span>(<span class="string">'pear'</span>) <span class="comment"># Removing an element from the list</span><br>
+                        <span class="variable">fruits</span>.<span class="function">sort</span>()          <span class="comment"># Sorting the list</span><br>
+                    </div>
+                    
+                    <h3>Dictionaries</h3>
+                    <p>Dictionaries are collections that store key-value pairs. The keys must be unique.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Defining a dictionary</span><br>
+                        <span class="variable">student</span> = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'name'</span>: <span class="string">'John'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'age'</span>: <span class="number">20</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'courses'</span>: [<span class="string">'Mathematics'</span>, <span class="string">'Physics'</span>, <span class="string">'Programming'</span>]<br>
+                        }<br><br>
+                        
+                        <span class="comment"># Accessing dictionary elements</span><br>
+                        <span class="keyword">print</span>(<span class="variable">student</span>[<span class="string">'name'</span>])      <span class="comment"># 'John'</span><br>
+                        <span class="keyword">print</span>(<span class="variable">student</span>.<span class="function">get</span>(<span class="string">'age'</span>))  <span class="comment"># 20</span><br><br>
+                        
+                        <span class="comment"># Dictionary methods</span><br>
+                        <span class="keyword">print</span>(<span class="variable">student</span>.<span class="function">keys</span>())   <span class="comment"># List all keys</span><br>
+                        <span class="keyword">print</span>(<span class="variable">student</span>.<span class="function">values</span>()) <span class="comment"># List all values</span><br>
+                        <span class="variable">student</span>[<span class="string">'major'</span>] = <span class="string">'Computer Science'</span> <span class="comment"># Adding a new key-value pair</span><br>
+                    </div>
+                    
+                    <h3>Tuples</h3>
+                    <p>Tuples are similar to lists but are immutable (cannot be changed).</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Defining a tuple</span><br>
+                        <span class="variable">coordinate</span> = (<span class="number">10</span>, <span class="number">20</span>)<br>
+                        <span class="variable">RGB</span> = (<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>) <span class="comment"># Red color</span><br><br>
+                        
+                        <span class="comment"># Accessing tuple elements</span><br>
+                        <span class="keyword">print</span>(<span class="variable">coordinate</span>[<span class="number">0</span>]) <span class="comment"># 10</span><br><br>
+                        
+                        <span class="comment"># Tuples are immutable</span><br>
+                        <span class="comment"># coordinate[0] = 15  # This will raise an error!</span><br>
+                    </div>
+                    
+                    <h3>Sets</h3>
+                    <p>Sets are unordered collections of unique elements.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Defining a set</span><br>
+                        <span class="variable">fruits</span> = {<span class="string">'apple'</span>, <span class="string">'pear'</span>, <span class="string">'banana'</span>, <span class="string">'apple'</span>} <span class="comment"># Duplicate 'apple' is counted only once</span><br>
+                        <span class="keyword">print</span>(<span class="variable">fruits</span>) <span class="comment"># {'apple', 'pear', 'banana'}</span><br><br>
+                        
+                        <span class="comment"># Set operations</span><br>
+                        <span class="variable">A</span> = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>}<br>
+                        <span class="variable">B</span> = {<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>}<br>
+                        <span class="keyword">print</span>(<span class="variable">A</span> | <span class="variable">B</span>) <span class="comment"># Union: {1, 2, 3, 4, 5, 6}</span><br>
+                        <span class="keyword">print</span>(<span class="variable">A</span> & <span class="variable">B</span>) <span class="comment"># Intersection: {3, 4}</span><br>
+                        <span class="keyword">print</span>(<span class="variable">A</span> - <span class="variable">B</span>) <span class="comment"># Difference: {1, 2}</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loops, Iterators, and Generators Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Loops, Iterators, and Generators
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>For Loop</h3>
+                    <p>In Python, the for loop is used to iterate over a collection.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># For loop over a list</span><br>
+                        <span class="variable">fruits</span> = [<span class="string">'apple'</span>, <span class="string">'pear'</span>, <span class="string">'banana'</span>]<br>
+                        <span class="keyword">for</span> <span class="variable">fruit</span> <span class="keyword">in</span> <span class="variable">fruits</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">fruit</span>)<br><br>
+                        
+                        <span class="comment"># For loop with range()</span><br>
+                        <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">i</span>) <span class="comment"># 0, 1, 2, 3, 4</span><br><br>
+                        
+                        <span class="comment"># For loop with enumerate() - getting index and value</span><br>
+                        <span class="keyword">for</span> <span class="variable">i</span>, <span class="variable">fruit</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">fruits</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"{i}. index: {fruit}"</span>)<br>
+                    </div>
+                    
+                    <h3>While Loop</h3>
+                    <p>The while loop runs as long as a specified condition is true.</p>
+                    
+                    <div class="code-block">
+                        <span class="variable">counter</span> = <span class="number">0</span><br>
+                        <span class="keyword">while</span> <span class="variable">counter</span> < <span class="number">5</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">counter</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">counter</span> += <span class="number">1</span> <span class="comment"># Increment the counter to avoid an infinite loop</span><br>
+                    </div>
+                    
+                    <h3>Iterators</h3>
+                    <p>Iterators are objects that allow you to access the elements of a collection one at a time.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Creating an iterator</span><br>
+                        <span class="variable">fruits</span> = [<span class="string">'apple'</span>, <span class="string">'pear'</span>, <span class="string">'banana'</span>]<br>
+                        <span class="variable">iter_fruits</span> = <span class="function">iter</span>(<span class="variable">fruits</span>)<br><br>
+                        
+                        <span class="comment"># Accessing elements using next()</span><br>
+                        <span class="keyword">print</span>(<span class="function">next</span>(<span class="variable">iter_fruits</span>)) <span class="comment"># 'apple'</span><br>
+                        <span class="keyword">print</span>(<span class="function">next</span>(<span class="variable">iter_fruits</span>)) <span class="comment"># 'pear'</span><br>
+                        <span class="keyword">print</span>(<span class="function">next</span>(<span class="variable">iter_fruits</span>)) <span class="comment"># 'banana'</span><br>
+                        <span class="comment"># print(next(iter_fruits))  # Raises StopIteration error!</span><br>
+                    </div>
+                    
+                    <h3>Generators</h3>
+                    <p>Generators are a special type of iterator that generate values on the fly, which is memory efficient for large datasets.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Defining a generator function</span><br>
+                        <span class="keyword">def</span> <span class="function">generate_numbers</span>(<span class="variable">n</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="variable">n</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">yield</span> <span class="variable">i</span> * <span class="variable">i</span> <span class="comment"># Return the square using yield</span><br><br>
+                        
+                        <span class="comment"># Using the generator</span><br>
+                        <span class="keyword">for</span> <span class="variable">number</span> <span class="keyword">in</span> <span class="function">generate_numbers</span>(<span class="number">5</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">number</span>) <span class="comment"># 0, 1, 4, 9, 16</span><br><br>
+                        
+                        <span class="comment"># Generator expression</span><br>
+                        <span class="variable">squares</span> = (<span class="variable">x</span>**<span class="number">2</span> <span class="keyword">for</span> <span class="variable">x</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>))<br>
+                        <span class="keyword">print</span>(<span class="function">list</span>(<span class="variable">squares</span>)) <span class="comment"># [0, 1, 4, 9, 16]</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Functions Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Functions
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Defining and Calling Functions</h3>
+                    <p>Functions allow you to create reusable blocks of code.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Defining a simple function</span><br>
+                        <span class="keyword">def</span> <span class="function">greet</span>(<span class="variable">name</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">f</span><span class="string">"Hello, {name}!"</span><br><br>
+                        
+                        <span class="comment"># Calling the function</span><br>
+                        <span class="variable">message</span> = <span class="function">greet</span>(<span class="string">"John"</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">message</span>) <span class="comment"># "Hello, John!"</span><br>
+                    </div>
+                    
+                    <h3>Parameters and Arguments</h3>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Default parameter values</span><br>
+                        <span class="keyword">def</span> <span class="function">power</span>(<span class="variable">base</span>, <span class="variable">exponent</span>=<span class="number">2</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">base</span> ** <span class="variable">exponent</span><br><br>
+                        
+                        <span class="keyword">print</span>(<span class="function">power</span>(<span class="number">3</span>))    <span class="comment"># 9 (3^2)</span><br>
+                        <span class="keyword">print</span>(<span class="function">power</span>(<span class="number">3</span>, <span class="number">3</span>)) <span class="comment"># 27 (3^3)</span><br><br>
+                        
+                        <span class="comment"># Passing arguments by name</span><br>
+                        <span class="keyword">print</span>(<span class="function">power</span>(<span class="variable">exponent</span>=<span class="number">3</span>, <span class="variable">base</span>=<span class="number">2</span>)) <span class="comment"># 8 (2^3)</span><br>
+                    </div>
+                    
+                    <h3>*args and **kwargs</h3>
+                    <p>*args accepts a variable number of positional arguments, while **kwargs accepts a variable number of keyword arguments.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">def</span> <span class="function">example_function</span>(*<span class="variable">args</span>, **<span class="variable">kwargs</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Positional arguments:"</span>, <span class="variable">args</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Keyword arguments:"</span>, <span class="variable">kwargs</span>)<br><br>
+                        
+                        <span class="function">example_function</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="variable">name</span>=<span class="string">"John"</span>, <span class="variable">age</span>=<span class="number">25</span>)<br>
+                        <span class="comment"># Output:</span><br>
+                        <span class="comment"># Positional arguments: (1, 2, 3)</span><br>
+                        <span class="comment"># Keyword arguments: {'name': 'John', 'age': 25}</span><br>
+                    </div>
+                    
+                    <h3>Lambda Functions</h3>
+                    <p>Lambda functions are anonymous functions defined in a single line.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Lambda function</span><br>
+                        <span class="variable">square</span> = <span class="keyword">lambda</span> <span class="variable">x</span>: <span class="variable">x</span> * <span class="variable">x</span><br>
+                        <span class="keyword">print</span>(<span class="variable">square</span>(<span class="number">5</span>)) <span class="comment"># 25</span><br><br>
+                        
+                        <span class="comment"># Using lambda for sorting</span><br>
+                        <span class="variable">students</span> = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">'name'</span>: <span class="string">'Alice'</span>, <span class="string">'grade'</span>: <span class="number">85</span>},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">'name'</span>: <span class="string">'Bob'</span>, <span class="string">'grade'</span>: <span class="number">92</span>},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">'name'</span>: <span class="string">'Charlie'</span>, <span class="string">'grade'</span>: <span class="number">78</span>}<br>
+                        ]<br><br>
+                        
+                        <span class="variable">sorted_students</span> = <span class="function">sorted</span>(<span class="variable">students</span>, <span class="variable">key</span>=<span class="keyword">lambda</span> <span class="variable">x</span>: <span class="variable">x</span>[<span class="string">'grade'</span>], <span class="variable">reverse</span>=<span class="keyword">True</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">sorted_students</span>) <span class="comment"># Sorted in descending order by grade</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Classes and Object-Oriented Programming Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Classes and Object-Oriented Programming
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Defining a Class</h3>
+                    <p>Classes are structures that bundle data and behavior together.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">class</span> <span class="function">Car</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Constructor method</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">brand</span>, <span class="variable">model</span>, <span class="variable">year</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">brand</span> = <span class="variable">brand</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">model</span> = <span class="variable">model</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">year</span> = <span class="variable">year</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">km</span> = <span class="number">0</span><br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Instance method</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">display_info</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">f</span><span class="string">"{self.year} {self.brand} {self.model}, {self.km} km"</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">drive</span>(<span class="variable">self</span>, <span class="variable">distance</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">km</span> += <span class="variable">distance</span><br><br>
+                        
+                        <span class="comment"># Creating and using an object</span><br>
+                        <span class="variable">car1</span> = <span class="function">Car</span>(<span class="string">"Toyota"</span>, <span class="string">"Corolla"</span>, <span class="number">2020</span>)<br>
+                        <span class="variable">car1</span>.<span class="function">drive</span>(<span class="number">150</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">car1</span>.<span class="function">display_info</span>()) <span class="comment"># "2020 Toyota Corolla, 150 km"</span><br>
+                    </div>
+                    
+                    <h3>Inheritance</h3>
+                    <p>Inheritance allows one class to inherit attributes and methods from another class.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Base class</span><br>
+                        <span class="keyword">class</span> <span class="function">Shape</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">color</span>=<span class="string">"black"</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">color</span> = <span class="variable">color</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_area</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">pass</span> <span class="comment"># Abstract method to be implemented in subclasses</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_color</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">self</span>.<span class="variable">color</span><br><br>
+                        
+                        <span class="comment"># Subclass (Circle)</span><br>
+                        <span class="keyword">class</span> <span class="function">Circle</span>(<span class="function">Shape</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">radius</span>, <span class="variable">color</span>=<span class="string">"red"</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">super</span>().<span class="function">__init__</span>(<span class="variable">color</span>) <span class="comment"># Calling the base class constructor</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">radius</span> = <span class="variable">radius</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_area</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">import</span> <span class="variable">math</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">math</span>.<span class="variable">pi</span> * <span class="variable">self</span>.<span class="variable">radius</span> ** <span class="number">2</span><br><br>
+                        
+                        <span class="comment"># Using the subclasses</span><br>
+                        <span class="variable">circle</span> = <span class="function">Circle</span>(<span class="number">5</span>)<br>
+                        <span class="keyword">print</span>(<span class="function">f</span><span class="string">"Circle's color: {circle.get_color()}"</span>) <span class="comment"># "Circle's color: red"</span><br>
+                        <span class="keyword">print</span>(<span class="function">f</span><span class="string">"Circle's area: {circle.get_area():.2f}"</span>) <span class="comment"># "Circle's area: 78.54"</span><br>
+                    </div>
+                    
+                    <h3>Special Methods (Magic Methods)</h3>
+                    <p>Special methods in Python classes, which start and end with double underscores, define special behaviors.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">class</span> <span class="function">Point</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">x</span>, <span class="variable">y</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">x</span> = <span class="variable">x</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">y</span> = <span class="variable">y</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__str__</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">f</span><span class="string">"Point({self.x}, {self.y})"</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__add__</span>(<span class="variable">self</span>, <span class="variable">other</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">Point</span>(<span class="variable">self</span>.<span class="variable">x</span> + <span class="variable">other</span>.<span class="variable">x</span>, <span class="variable">self</span>.<span class="variable">y</span> + <span class="variable">other</span>.<span class="variable">y</span>)<br><br>
+                        
+                        <span class="variable">point1</span> = <span class="function">Point</span>(<span class="number">1</span>, <span class="number">2</span>)<br>
+                        <span class="variable">point2</span> = <span class="function">Point</span>(<span class="number">3</span>, <span class="number">4</span>)<br>
+                        <span class="variable">point3</span> = <span class="variable">point1</span> + <span class="variable">point2</span> <span class="comment"># Calls the __add__ method</span><br>
+                        <span class="keyword">print</span>(<span class="variable">point3</span>) <span class="comment"># Calls the __str__ method - "Point(4, 6)"</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- File Operations Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                File Operations
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Reading and Writing Text Files</h3>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Writing to a file</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'example.txt'</span>, <span class="string">'w'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">f</span>.<span class="function">write</span>(<span class="string">"Hello, World!\n"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">f</span>.<span class="function">write</span>(<span class="string">"Learning Python."</span>)<br><br>
+                        
+                        <span class="comment"># Reading from a file</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'example.txt'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">content</span> = <span class="variable">f</span>.<span class="function">read</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">content</span>)<br><br>
+                        
+                        <span class="comment"># Reading line by line</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'example.txt'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">line</span> <span class="keyword">in</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">line</span>.<span class="function">strip</span>())<br>
+                    </div>
+                    
+                    <h3>JSON File Operations</h3>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">json</span><br><br>
+                        
+                        <span class="comment"># Converting a Python object to JSON and writing to a file</span><br>
+                        <span class="variable">data</span> = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'name'</span>: <span class="string">'John'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'age'</span>: <span class="number">25</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'courses'</span>: [<span class="string">'Python'</span>, <span class="string">'Data Science'</span>, <span class="string">'Machine Learning'</span>]<br>
+                        }<br><br>
+                        
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.json'</span>, <span class="string">'w'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">json</span>.<span class="function">dump</span>(<span class="variable">data</span>, <span class="variable">f</span>, <span class="variable">ensure_ascii</span>=<span class="keyword">False</span>, <span class="variable">indent</span>=<span class="number">4</span>)<br><br>
+                        
+                        <span class="comment"># Reading a JSON file and converting it to a Python object</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.json'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">read_data</span> = <span class="variable">json</span>.<span class="function">load</span>(<span class="variable">f</span>)<br><br>
+                        
+                        <span class="keyword">print</span>(<span class="variable">read_data</span>[<span class="string">'name'</span>]) <span class="comment"># 'John'</span><br>
+                    </div>
+                    
+                    <h3>CSV File Operations</h3>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">csv</span><br><br>
+                        
+                        <span class="comment"># Writing to a CSV file</span><br>
+                        <span class="variable">students</span> = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'First Name'</span>, <span class="string">'Last Name'</span>, <span class="string">'Grade'</span>],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Alice'</span>, <span class="string">'Smith'</span>, <span class="number">85</span>],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Bob'</span>, <span class="string">'Johnson'</span>, <span class="number">92</span>],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Charlie'</span>, <span class="string">'Williams'</span>, <span class="number">78</span>]<br>
+                        ]<br><br>
+                        
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'students.csv'</span>, <span class="string">'w'</span>, <span class="variable">newline</span>=<span class="string">''</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">writer</span> = <span class="variable">csv</span>.<span class="function">writer</span>(<span class="variable">f</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">writer</span>.<span class="function">writerows</span>(<span class="variable">students</span>)<br><br>
+                        
+                        <span class="comment"># Reading a CSV file</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'students.csv'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">reader</span> = <span class="variable">csv</span>.<span class="function">reader</span>(<span class="variable">f</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">row</span> <span class="keyword">in</span> <span class="variable">reader</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">row</span>)<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 class="section-title">PyTorch Basics</h2>
+        
+        <!-- PyTorch Dataset and DataLoader Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Dataset and DataLoader
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>What is a PyTorch Dataset?</h3>
+                    <p>A Dataset is an abstract class representing a dataset and providing data access. In PyTorch, custom datasets are created by subclassing <code>torch.utils.data.Dataset</code>.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">torch</span><br>
+                        <span class="keyword">from</span> <span class="variable">torch.utils.data</span> <span class="keyword">import</span> <span class="variable">Dataset</span><br><br>
+                        
+                        <span class="keyword">class</span> <span class="function">SentenceDataset</span>(<span class="variable">Dataset</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">sentences</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">sentences</span> = <span class="variable">sentences</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__len__</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">len</span>(<span class="variable">self</span>.<span class="variable">sentences</span>)<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__getitem__</span>(<span class="variable">self</span>, <span class="variable">idx</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">sentence</span> = <span class="variable">self</span>.<span class="variable">sentences</span>[<span class="variable">idx</span>]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">sentence</span><br><br>
+                        
+                        <span class="comment"># Creating an example dataset</span><br>
+                        <span class="variable">sentences</span> = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Deep learning with PyTorch is very enjoyable."</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Python is a very practical programming language."</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Artificial Intelligence is the technology of the future."</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Data science is used in many fields."</span><br>
+                        ]<br><br>
+                        
+                        <span class="variable">dataset</span> = <span class="function">SentenceDataset</span>(<span class="variable">sentences</span>)<br>
+                        <span class="keyword">print</span>(<span class="function">len</span>(<span class="variable">dataset</span>)) <span class="comment"># 4</span><br>
+                        <span class="keyword">print</span>(<span class="variable">dataset</span>[<span class="number">0</span>]) <span class="comment"># "Deep learning with PyTorch is very enjoyable."</span><br>
+                    </div>
+                    
+                    <h3>What is a DataLoader?</h3>
+                    <p>A DataLoader is a helper class that loads data from a Dataset in batches. It also provides features like shuffling and parallel loading.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">from</span> <span class="variable">torch.utils.data</span> <span class="keyword">import</span> <span class="variable">DataLoader</span><br><br>
+                        
+                        <span class="comment"># Creating a DataLoader (batch_size=2)</span><br>
+                        <span class="variable">dataloader</span> = <span class="function">DataLoader</span>(<span class="variable">dataset</span>, <span class="variable">batch_size</span>=<span class="number">2</span>, <span class="variable">shuffle</span>=<span class="keyword">True</span>)<br><br>
+                        
+                        <span class="comment"># Printing the batches</span><br>
+                        <span class="keyword">for</span> <span class="variable">i</span>, <span class="variable">batch</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">dataloader</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"Batch {i+1}:"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">sentence</span> <span class="keyword">in</span> <span class="variable">batch</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"  - {sentence}"</span>)<br>
+                    </div>
+                    
+                    <h3>Custom Collate Function</h3>
+                    <p>The collate function allows you to customize how the data in a batch is combined.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">def</span> <span class="function">custom_collate_fn</span>(<span class="variable">batch</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Take the first 10 characters of each sentence</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">short_sentences</span> = [<span class="variable">sentence</span>[:<span class="number">10</span>] + <span class="string">"..."</span> <span class="keyword">for</span> <span class="variable">sentence</span> <span class="keyword">in</span> <span class="variable">batch</span>]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">short_sentences</span><br><br>
+                        
+                        <span class="comment"># Creating a DataLoader with a custom collate function</span><br>
+                        <span class="variable">custom_dataloader</span> = <span class="function">DataLoader</span>(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">dataset</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">batch_size</span>=<span class="number">2</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">shuffle</span>=<span class="keyword">True</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">collate_fn</span>=<span class="variable">custom_collate_fn</span><br>
+                        )<br><br>
+                        
+                        <span class="comment"># Printing batches with the custom format</span><br>
+                        <span class="keyword">print</span>(<span class="string">"\nWith Custom Collate Function:"</span>)<br>
+                        <span class="keyword">for</span> <span class="variable">i</span>, <span class="variable">batch</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">custom_dataloader</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"Batch {i+1}:"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">short_sentence</span> <span class="keyword">in</span> <span class="variable">batch</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"  - {short_sentence}"</span>)<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Neural Networks with PyTorch Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Neural Networks with PyTorch
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Creating an Artificial Neural Network (ANN) Class</h3>
+                    <p>In PyTorch, neural networks are created by subclassing <code>torch.nn.Module</code>.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">torch</span><br>
+                        <span class="keyword">import</span> <span class="variable">torch.nn</span> <span class="keyword">as</span> <span class="variable">nn</span><br>
+                        <span class="keyword">import</span> <span class="variable">torch.nn.functional</span> <span class="keyword">as</span> <span class="variable">F</span><br><br>
+                        
+                        <span class="keyword">class</span> <span class="function">SimpleANN</span>(<span class="variable">nn.Module</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">input_size</span>, <span class="variable">hidden_size</span>, <span class="variable">output_size</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">super</span>(<span class="function">SimpleANN</span>, <span class="variable">self</span>).<span class="function">__init__</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Defining layers</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">fc1</span> = <span class="variable">nn</span>.<span class="function">Linear</span>(<span class="variable">input_size</span>, <span class="variable">hidden_size</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">fc2</span> = <span class="variable">nn</span>.<span class="function">Linear</span>(<span class="variable">hidden_size</span>, <span class="variable">output_size</span>)<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">forward</span>(<span class="variable">self</span>, <span class="variable">x</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Forward propagation</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">x</span> = <span class="variable">F</span>.<span class="function">relu</span>(<span class="variable">self</span>.<span class="variable">fc1</span>(<span class="variable">x</span>))  <span class="comment"># Apply ReLU activation on the first layer's output</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">x</span> = <span class="variable">self</span>.<span class="variable">fc2</span>(<span class="variable">x</span>)         <span class="comment"># Output layer</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">x</span><br><br>
+                        
+                        <span class="comment"># Example usage of the neural network</span><br>
+                        <span class="variable">input_size</span> = <span class="number">10</span>   <span class="comment"># Input dimension</span><br>
+                        <span class="variable">hidden_size</span> = <span class="number">20</span>  <span class="comment"># Hidden layer dimension</span><br>
+                        <span class="variable">output_size</span> = <span class="number">2</span>   <span class="comment"># Output dimension</span><br><br>
+                        
+                        <span class="variable">model</span> = <span class="function">SimpleANN</span>(<span class="variable">input_size</span>, <span class="variable">hidden_size</span>, <span class="variable">output_size</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">model</span>)<br><br>
+                        
+                        <span class="comment"># Forward pass with a sample input</span><br>
+                        <span class="variable">dummy_input</span> = <span class="variable">torch</span>.<span class="function">randn</span>(<span class="number">1</span>, <span class="variable">input_size</span>)<br>
+                        <span class="variable">output</span> = <span class="variable">model</span>(<span class="variable">dummy_input</span>)<br>
+                        <span class="keyword">print</span>(<span class="function">f</span><span class="string">"Output shape: {output.shape}"</span>)<br>
+                    </div>
+                    
+                    <h3>Forward Function and How It Works</h3>
+                    <p>The forward function defines the forward pass of the neural network. It determines how the data is processed as it flows through the network.</p>
+                    
+                    <div class="note">
+                        <strong>Note:</strong> The <code>forward()</code> function is automatically called when using <code>module(input)</code>. That is, <code>model(x)</code> actually calls <code>model.forward(x)</code>.
+                    </div>
+                    
+                    <p>Steps in the forward function:</p>
+                    <ol>
+                        <li>The input data is passed to the first layer: <code>self.fc1(x)</code></li>
+                        <li>The result undergoes a linear transformation and then an activation function is applied: <code>F.relu(...)</code></li>
+                        <li>The output from the intermediate layer is passed to the next layer</li>
+                        <li>The result from the final layer is returned</li>
+                    </ol>
+                    
+                    <p>Thanks to PyTorch's automatic differentiation, a computational graph is created during the forward pass, which is used for backpropagation.</p>
+                    
+                    <h3>PyTorch Module Class and Inheritance</h3>
+                    <p>All our neural network models in PyTorch are derived from the <code>nn.Module</code> class. This inheritance provides:</p>
+                    
+                    <ul>
+                        <li>The ability to nest models</li>
+                        <li>Automatic tracking of weights</li>
+                        <li>Easy transfer to GPU and model saving</li>
+                        <li>Access to other useful methods</li>
+                    </ul>
+                    
+                    <div class="code-block">
+                        <span class="comment"># A more complex model example</span><br>
+                        <span class="keyword">class</span> <span class="function">ComplexNN</span>(<span class="variable">nn.Module</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">super</span>().<span class="function">__init__</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Defining submodules</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">feature_extractor</span> = <span class="variable">nn</span>.<span class="function">Sequential</span>(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">Linear</span>(<span class="number">784</span>, <span class="number">256</span>),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">ReLU</span>(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">Linear</span>(<span class="number">256</span>, <span class="number">64</span>),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">ReLU</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">classifier</span> = <span class="variable">nn</span>.<span class="function">Linear</span>(<span class="number">64</span>, <span class="number">10</span>)<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">forward</span>(<span class="variable">self</span>, <span class="variable">x</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">features</span> = <span class="variable">self</span>.<span class="variable">feature_extractor</span>(<span class="variable">x</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">output</span> = <span class="variable">self</span>.<span class="variable">classifier</span>(<span class="variable">features</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">output</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        Python and PyTorch Tutorial Site &copy; 2023
+    </footer>
+    
+    <script>
+        // Accordion functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    
+                    const content = this.nextElementSibling;
+                    if (this.classList.contains('active')) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    } else {
+                        content.style.maxHeight = '0';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

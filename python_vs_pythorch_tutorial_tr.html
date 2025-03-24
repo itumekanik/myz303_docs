@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python ve PyTorch Eğitimi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4568dc, #b06ab3);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .accordion {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .accordion-header {
+            background: #f1f3f5;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .accordion-header:hover {
+            background: #e9ecef;
+        }
+        
+        .accordion-header.active {
+            background: #4568dc;
+            color: white;
+        }
+        
+        .accordion-content {
+            background: white;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content-inner {
+            padding: 20px;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4568dc;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .highlight {
+            color: #4568dc;
+            font-weight: bold;
+        }
+        
+        .keyword {
+            color: #d73a49;
+        }
+        
+        .string {
+            color: #032f62;
+        }
+        
+        .comment {
+            color: #6a737d;
+        }
+        
+        .function {
+            color: #6f42c1;
+        }
+        
+        .number {
+            color: #005cc5;
+        }
+        
+        .section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .section-title {
+            color: #4568dc;
+            margin-bottom: 20px;
+        }
+        
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+        
+        .active .arrow {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Python ve PyTorch Eğitimi</h1>
+        <div class="subtitle">Temel Python kavramlarından PyTorch ile derin öğrenmeye</div>
+    </header>
+    
+    <div class="section">
+        <h2 class="section-title">Python Temelleri</h2>
+        
+        <!-- Python Veri Yapıları Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Python Veri Yapıları (Containerlar)
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Listeler (Lists)</h3>
+                    <p>Listeler, Python'da en çok kullanılan veri yapılarından biridir. Değiştirilebilir, sıralı ve farklı veri tiplerini içerebilen koleksiyonlardır.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Liste tanımlama</span><br>
+                        <span class="variable">meyveler</span> = [<span class="string">'elma'</span>, <span class="string">'armut'</span>, <span class="string">'muz'</span>, <span class="string">'çilek'</span>]<br>
+                        <span class="variable">karışık_liste</span> = [<span class="number">1</span>, <span class="string">'python'</span>, <span class="number">3.14</span>, <span class="keyword">True</span>]<br><br>
+                        
+                        <span class="comment"># Liste elemanlarına erişim</span><br>
+                        <span class="keyword">print</span>(<span class="variable">meyveler</span>[<span class="number">0</span>])  <span class="comment"># 'elma'</span><br>
+                        <span class="keyword">print</span>(<span class="variable">meyveler</span>[<span class="number">-1</span>]) <span class="comment"># 'çilek' - son eleman</span><br><br>
+                        
+                        <span class="comment"># Liste dilimleme (slicing)</span><br>
+                        <span class="keyword">print</span>(<span class="variable">meyveler</span>[<span class="number">1</span>:<span class="number">3</span>]) <span class="comment"># ['armut', 'muz']</span><br><br>
+                        
+                        <span class="comment"># Liste metodları</span><br>
+                        <span class="variable">meyveler</span>.<span class="function">append</span>(<span class="string">'kivi'</span>)  <span class="comment"># Listeye eleman ekleme</span><br>
+                        <span class="variable">meyveler</span>.<span class="function">remove</span>(<span class="string">'armut'</span>) <span class="comment"># Listeden eleman çıkarma</span><br>
+                        <span class="variable">meyveler</span>.<span class="function">sort</span>()          <span class="comment"># Listeyi sıralama</span><br>
+                    </div>
+                    
+                    <h3>Sözlükler (Dictionaries)</h3>
+                    <p>Sözlükler, anahtar-değer çiftlerini saklayan koleksiyonlardır. Anahtarlar benzersiz olmalıdır.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Sözlük tanımlama</span><br>
+                        <span class="variable">öğrenci</span> = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'ad'</span>: <span class="string">'Ahmet'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'yaş'</span>: <span class="number">20</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'dersler'</span>: [<span class="string">'Matematik'</span>, <span class="string">'Fizik'</span>, <span class="string">'Programlama'</span>]<br>
+                        }<br><br>
+                        
+                        <span class="comment"># Sözlük elemanlarına erişim</span><br>
+                        <span class="keyword">print</span>(<span class="variable">öğrenci</span>[<span class="string">'ad'</span>])      <span class="comment"># 'Ahmet'</span><br>
+                        <span class="keyword">print</span>(<span class="variable">öğrenci</span>.<span class="function">get</span>(<span class="string">'yaş'</span>))  <span class="comment"># 20</span><br><br>
+                        
+                        <span class="comment"># Sözlük metodları</span><br>
+                        <span class="keyword">print</span>(<span class="variable">öğrenci</span>.<span class="function">keys</span>())   <span class="comment"># Tüm anahtarları listele</span><br>
+                        <span class="keyword">print</span>(<span class="variable">öğrenci</span>.<span class="function">values</span>()) <span class="comment"># Tüm değerleri listele</span><br>
+                        <span class="variable">öğrenci</span>[<span class="string">'bölüm'</span>] = <span class="string">'Bilgisayar Mühendisliği'</span> <span class="comment"># Yeni anahtar-değer ekleme</span><br>
+                    </div>
+                    
+                    <h3>Demetler (Tuples)</h3>
+                    <p>Demetler, liste benzeri ancak değiştirilemeyen (immutable) koleksiyonlardır.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Demet tanımlama</span><br>
+                        <span class="variable">koordinat</span> = (<span class="number">10</span>, <span class="number">20</span>)<br>
+                        <span class="variable">RGB</span> = (<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>) <span class="comment"># Kırmızı renk</span><br><br>
+                        
+                        <span class="comment"># Demet elemanlarına erişim</span><br>
+                        <span class="keyword">print</span>(<span class="variable">koordinat</span>[<span class="number">0</span>]) <span class="comment"># 10</span><br><br>
+                        
+                        <span class="comment"># Demetler değiştirilemez</span><br>
+                        <span class="comment"># koordinat[0] = 15  # Bu hata verir!</span><br>
+                    </div>
+                    
+                    <h3>Kümeler (Sets)</h3>
+                    <p>Kümeler, sırasız ve benzersiz elemanlar içeren koleksiyonlardır.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Küme tanımlama</span><br>
+                        <span class="variable">meyveler</span> = {<span class="string">'elma'</span>, <span class="string">'armut'</span>, <span class="string">'muz'</span>, <span class="string">'elma'</span>} <span class="comment"># Tekrar eden 'elma' bir kez sayılır</span><br>
+                        <span class="keyword">print</span>(<span class="variable">meyveler</span>) <span class="comment"># {'elma', 'armut', 'muz'}</span><br><br>
+                        
+                        <span class="comment"># Küme işlemleri</span><br>
+                        <span class="variable">A</span> = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>}<br>
+                        <span class="variable">B</span> = {<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>}<br>
+                        <span class="keyword">print</span>(<span class="variable">A</span> | <span class="variable">B</span>) <span class="comment"># Birleşim: {1, 2, 3, 4, 5, 6}</span><br>
+                        <span class="keyword">print</span>(<span class="variable">A</span> & <span class="variable">B</span>) <span class="comment"># Kesişim: {3, 4}</span><br>
+                        <span class="keyword">print</span>(<span class="variable">A</span> - <span class="variable">B</span>) <span class="comment"># Fark: {1, 2}</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Döngüler, İteratorlar ve Generator'lar Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Döngüler, İteratorlar ve Generator'lar
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>For Döngüsü</h3>
+                    <p>Python'da for döngüsü, bir koleksiyon üzerinde yineleme yapmak için kullanılır.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Liste üzerinde for döngüsü</span><br>
+                        <span class="variable">meyveler</span> = [<span class="string">'elma'</span>, <span class="string">'armut'</span>, <span class="string">'muz'</span>]<br>
+                        <span class="keyword">for</span> <span class="variable">meyve</span> <span class="keyword">in</span> <span class="variable">meyveler</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">meyve</span>)<br><br>
+                        
+                        <span class="comment"># range() ile for döngüsü</span><br>
+                        <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">i</span>) <span class="comment"># 0, 1, 2, 3, 4</span><br><br>
+                        
+                        <span class="comment"># enumerate() ile for döngüsü - indeks ve değer alma</span><br>
+                        <span class="keyword">for</span> <span class="variable">i</span>, <span class="variable">meyve</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">meyveler</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"{i}. indeks: {meyve}"</span>)<br>
+                    </div>
+                    
+                    <h3>While Döngüsü</h3>
+                    <p>While döngüsü, belirli bir koşul doğru olduğu sürece çalışır.</p>
+                    
+                    <div class="code-block">
+                        <span class="variable">sayac</span> = <span class="number">0</span><br>
+                        <span class="keyword">while</span> <span class="variable">sayac</span> < <span class="number">5</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">sayac</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">sayac</span> += <span class="number">1</span> <span class="comment"># Sayacı artır, aksi halde sonsuz döngü oluşur</span><br>
+                    </div>
+                    
+                    <h3>İteratorlar</h3>
+                    <p>İteratorlar, bir koleksiyonun elemanlarını tek tek elde etmeyi sağlayan nesnelerdir.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Iterator oluşturma</span><br>
+                        <span class="variable">meyveler</span> = [<span class="string">'elma'</span>, <span class="string">'armut'</span>, <span class="string">'muz'</span>]<br>
+                        <span class="variable">iter_meyveler</span> = <span class="function">iter</span>(<span class="variable">meyveler</span>)<br><br>
+                        
+                        <span class="comment"># next() ile tek tek elemanlara erişim</span><br>
+                        <span class="keyword">print</span>(<span class="function">next</span>(<span class="variable">iter_meyveler</span>)) <span class="comment"># 'elma'</span><br>
+                        <span class="keyword">print</span>(<span class="function">next</span>(<span class="variable">iter_meyveler</span>)) <span class="comment"># 'armut'</span><br>
+                        <span class="keyword">print</span>(<span class="function">next</span>(<span class="variable">iter_meyveler</span>)) <span class="comment"># 'muz'</span><br>
+                        <span class="comment"># print(next(iter_meyveler)) # StopIteration hatası!</span><br>
+                    </div>
+                    
+                    <h3>Generator'lar</h3>
+                    <p>Generator'lar, büyük veri kümeleri için bellek verimli şekilde çalışan özel bir iterator türüdür.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Generator fonksiyonu tanımlama</span><br>
+                        <span class="keyword">def</span> <span class="function">sayı_üret</span>(<span class="variable">n</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="variable">n</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">yield</span> <span class="variable">i</span> * <span class="variable">i</span> <span class="comment"># yield ile değer döndürme</span><br><br>
+                        
+                        <span class="comment"># Generator kullanımı</span><br>
+                        <span class="keyword">for</span> <span class="variable">sayı</span> <span class="keyword">in</span> <span class="function">sayı_üret</span>(<span class="number">5</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">sayı</span>) <span class="comment"># 0, 1, 4, 9, 16</span><br><br>
+                        
+                        <span class="comment"># Generator ifadesi (expression)</span><br>
+                        <span class="variable">kareler</span> = (<span class="variable">x</span>**<span class="number">2</span> <span class="keyword">for</span> <span class="variable">x</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>))<br>
+                        <span class="keyword">print</span>(<span class="function">list</span>(<span class="variable">kareler</span>)) <span class="comment"># [0, 1, 4, 9, 16]</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fonksiyonlar Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Fonksiyonlar
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Fonksiyon Tanımlama ve Çağırma</h3>
+                    <p>Fonksiyonlar, tekrar kullanılabilir kod blokları oluşturmanızı sağlar.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Basit fonksiyon tanımlama</span><br>
+                        <span class="keyword">def</span> <span class="function">selamla</span>(<span class="variable">isim</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">f</span><span class="string">"Merhaba, {isim}!"</span><br><br>
+                        
+                        <span class="comment"># Fonksiyon çağırma</span><br>
+                        <span class="variable">mesaj</span> = <span class="function">selamla</span>(<span class="string">"Ahmet"</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">mesaj</span>) <span class="comment"># "Merhaba, Ahmet!"</span><br>
+                    </div>
+                    
+                    <h3>Parametreler ve Argümanlar</h3>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Varsayılan parametre değerleri</span><br>
+                        <span class="keyword">def</span> <span class="function">güç_hesapla</span>(<span class="variable">taban</span>, <span class="variable">üs</span>=<span class="number">2</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">taban</span> ** <span class="variable">üs</span><br><br>
+                        
+                        <span class="keyword">print</span>(<span class="function">güç_hesapla</span>(<span class="number">3</span>))    <span class="comment"># 9 (3^2)</span><br>
+                        <span class="keyword">print</span>(<span class="function">güç_hesapla</span>(<span class="number">3</span>, <span class="number">3</span>)) <span class="comment"># 27 (3^3)</span><br><br>
+                        
+                        <span class="comment"># İsimlendirilerek argüman geçme</span><br>
+                        <span class="keyword">print</span>(<span class="function">güç_hesapla</span>(<span class="variable">üs</span>=<span class="number">3</span>, <span class="variable">taban</span>=<span class="number">2</span>)) <span class="comment"># 8 (2^3)</span><br>
+                    </div>
+                    
+                    <h3>*args ve **kwargs</h3>
+                    <p>*args değişken sayıda konumsal argümanı, **kwargs ise değişken sayıda anahtar-değer argümanını kabul eder.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">def</span> <span class="function">örnek_fonksiyon</span>(*<span class="variable">args</span>, **<span class="variable">kwargs</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Konumsal argümanlar:"</span>, <span class="variable">args</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Anahtar-değer argümanları:"</span>, <span class="variable">kwargs</span>)<br><br>
+                        
+                        <span class="function">örnek_fonksiyon</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="variable">ad</span>=<span class="string">"Ahmet"</span>, <span class="variable">yaş</span>=<span class="number">25</span>)<br>
+                        <span class="comment"># Çıktı:</span><br>
+                        <span class="comment"># Konumsal argümanlar: (1, 2, 3)</span><br>
+                        <span class="comment"># Anahtar-değer argümanları: {'ad': 'Ahmet', 'yaş': 25}</span><br>
+                    </div>
+                    
+                    <h3>Lambda Fonksiyonları</h3>
+                    <p>Lambda fonksiyonları, tek satırda tanımlanabilen isimsiz fonksiyonlardır.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Lambda fonksiyonu</span><br>
+                        <span class="variable">kare_al</span> = <span class="keyword">lambda</span> <span class="variable">x</span>: <span class="variable">x</span> * <span class="variable">x</span><br>
+                        <span class="keyword">print</span>(<span class="variable">kare_al</span>(<span class="number">5</span>)) <span class="comment"># 25</span><br><br>
+                        
+                        <span class="comment"># Sıralama işleminde lambda kullanımı</span><br>
+                        <span class="variable">öğrenciler</span> = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">'ad'</span>: <span class="string">'Ali'</span>, <span class="string">'not'</span>: <span class="number">85</span>},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">'ad'</span>: <span class="string">'Ayşe'</span>, <span class="string">'not'</span>: <span class="number">92</span>},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<span class="string">'ad'</span>: <span class="string">'Mehmet'</span>, <span class="string">'not'</span>: <span class="number">78</span>}<br>
+                        ]<br><br>
+                        
+                        <span class="variable">sıralı_öğrenciler</span> = <span class="function">sorted</span>(<span class="variable">öğrenciler</span>, <span class="variable">key</span>=<span class="keyword">lambda</span> <span class="variable">x</span>: <span class="variable">x</span>[<span class="string">'not'</span>], <span class="variable">reverse</span>=<span class="keyword">True</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">sıralı_öğrenciler</span>) <span class="comment"># Nota göre azalan sırada</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sınıflar (OOP) Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Sınıflar ve Nesne Yönelimli Programlama
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Sınıf Tanımlama</h3>
+                    <p>Sınıflar, veri ve davranışı bir arada tutan yapılardır.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">class</span> <span class="function">Araba</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Constructor (yapıcı metod)</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">marka</span>, <span class="variable">model</span>, <span class="variable">yıl</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">marka</span> = <span class="variable">marka</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">model</span> = <span class="variable">model</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">yıl</span> = <span class="variable">yıl</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">km</span> = <span class="number">0</span><br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Instance metodu</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">bilgi_göster</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">f</span><span class="string">"{self.yıl} {self.marka} {self.model}, {self.km} km"</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">sür</span>(<span class="variable">self</span>, <span class="variable">mesafe</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">km</span> += <span class="variable">mesafe</span><br><br>
+                        
+                        <span class="comment"># Nesne oluşturma ve kullanma</span><br>
+                        <span class="variable">araba1</span> = <span class="function">Araba</span>(<span class="string">"Toyota"</span>, <span class="string">"Corolla"</span>, <span class="number">2020</span>)<br>
+                        <span class="variable">araba1</span>.<span class="function">sür</span>(<span class="number">150</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">araba1</span>.<span class="function">bilgi_göster</span>()) <span class="comment"># "2020 Toyota Corolla, 150 km"</span><br>
+                    </div>
+                    
+                    <h3>Kalıtım (Inheritance)</h3>
+                    <p>Kalıtım, bir sınıfın başka bir sınıftan özellik ve davranış miras almasını sağlar.</p>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Temel sınıf</span><br>
+                        <span class="keyword">class</span> <span class="function">Shape</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">color</span>=<span class="string">"black"</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">color</span> = <span class="variable">color</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_area</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">pass</span> <span class="comment"># Soyut metod, alt sınıflar tarafından uygulanacak</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_color</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">self</span>.<span class="variable">color</span><br><br>
+                        
+                        <span class="comment"># Alt sınıf (Circle)</span><br>
+                        <span class="keyword">class</span> <span class="function">Circle</span>(<span class="function">Shape</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">radius</span>, <span class="variable">color</span>=<span class="string">"red"</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">super</span>().<span class="function">__init__</span>(<span class="variable">color</span>) <span class="comment"># Üst sınıfın constructor'ını çağırma</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">radius</span> = <span class="variable">radius</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_area</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">import</span> <span class="variable">math</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">math</span>.<span class="variable">pi</span> * <span class="variable">self</span>.<span class="variable">radius</span> ** <span class="number">2</span><br><br>
+                        
+                        <span class="comment"># Alt sınıfları kullanma</span><br>
+                        <span class="variable">daire</span> = <span class="function">Circle</span>(<span class="number">5</span>)<br>
+                        <span class="keyword">print</span>(<span class="function">f</span><span class="string">"Dairenin rengi: {daire.get_color()}"</span>) <span class="comment"># "Dairenin rengi: red"</span><br>
+                        <span class="keyword">print</span>(<span class="function">f</span><span class="string">"Dairenin alanı: {daire.get_area():.2f}"</span>) <span class="comment"># "Dairenin alanı: 78.54"</span><br>
+                    </div>
+                    
+                    <h3>Özel Metodlar (Magic Methods)</h3>
+                    <p>Python sınıflarında, özel davranışlar tanımlamak için "__" ile başlayan ve biten metotlar kullanılır.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">class</span> <span class="function">Nokta</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">x</span>, <span class="variable">y</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">x</span> = <span class="variable">x</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">y</span> = <span class="variable">y</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__str__</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">f</span><span class="string">"Nokta({self.x}, {self.y})"</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__add__</span>(<span class="variable">self</span>, <span class="variable">other</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">Nokta</span>(<span class="variable">self</span>.<span class="variable">x</span> + <span class="variable">other</span>.<span class="variable">x</span>, <span class="variable">self</span>.<span class="variable">y</span> + <span class="variable">other</span>.<span class="variable">y</span>)<br><br>
+                        
+                        <span class="variable">p1</span> = <span class="function">Nokta</span>(<span class="number">1</span>, <span class="number">2</span>)<br>
+                        <span class="variable">p2</span> = <span class="function">Nokta</span>(<span class="number">3</span>, <span class="number">4</span>)<br>
+                        <span class="variable">p3</span> = <span class="variable">p1</span> + <span class="variable">p2</span> <span class="comment"># __add__ metodu çağrılır</span><br>
+                        <span class="keyword">print</span>(<span class="variable">p3</span>) <span class="comment"># __str__ metodu çağrılır - "Nokta(4, 6)"</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dosya İşlemleri Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Dosya İşlemleri
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Metin Dosyası Okuma ve Yazma</h3>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Dosya yazma</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'ornek.txt'</span>, <span class="string">'w'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">f</span>.<span class="function">write</span>(<span class="string">"Merhaba, Dünya!\n"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">f</span>.<span class="function">write</span>(<span class="string">"Python öğreniyorum."</span>)<br><br>
+                        
+                        <span class="comment"># Dosya okuma</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'ornek.txt'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">içerik</span> = <span class="variable">f</span>.<span class="function">read</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">içerik</span>)<br><br>
+                        
+                        <span class="comment"># Satır satır okuma</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'ornek.txt'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">satır</span> <span class="keyword">in</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">satır</span>.<span class="function">strip</span>())<br>
+                    </div>
+                    
+                    <h3>JSON Dosyası İşlemleri</h3>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">json</span><br><br>
+                        
+                        <span class="comment"># Python nesnesinden JSON'a dönüştürme ve dosyaya yazma</span><br>
+                        <span class="variable">veri</span> = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'ad'</span>: <span class="string">'Ahmet'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'yaş'</span>: <span class="number">25</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'dersler'</span>: [<span class="string">'Python'</span>, <span class="string">'Veri Bilimi'</span>, <span class="string">'Makine Öğrenimi'</span>]<br>
+                        }<br><br>
+                        
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'veri.json'</span>, <span class="string">'w'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">json</span>.<span class="function">dump</span>(<span class="variable">veri</span>, <span class="variable">f</span>, <span class="variable">ensure_ascii</span>=<span class="keyword">False</span>, <span class="variable">indent</span>=<span class="number">4</span>)<br><br>
+                        
+                        <span class="comment"># JSON dosyasını okuma ve Python nesnesine dönüştürme</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'veri.json'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">okunan_veri</span> = <span class="variable">json</span>.<span class="function">load</span>(<span class="variable">f</span>)<br><br>
+                        
+                        <span class="keyword">print</span>(<span class="variable">okunan_veri</span>[<span class="string">'ad'</span>]) <span class="comment"># 'Ahmet'</span><br>
+                    </div>
+                    
+                    <h3>CSV Dosyası İşlemleri</h3>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">csv</span><br><br>
+                        
+                        <span class="comment"># CSV dosyası yazma</span><br>
+                        <span class="variable">öğrenciler</span> = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Ad'</span>, <span class="string">'Soyad'</span>, <span class="string">'Not'</span>],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Ali'</span>, <span class="string">'Yılmaz'</span>, <span class="number">85</span>],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Ayşe'</span>, <span class="string">'Demir'</span>, <span class="number">92</span>],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'Mehmet'</span>, <span class="string">'Kaya'</span>, <span class="number">78</span>]<br>
+                        ]<br><br>
+                        
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'öğrenciler.csv'</span>, <span class="string">'w'</span>, <span class="variable">newline</span>=<span class="string">''</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">writer</span> = <span class="variable">csv</span>.<span class="function">writer</span>(<span class="variable">f</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">writer</span>.<span class="function">writerows</span>(<span class="variable">öğrenciler</span>)<br><br>
+                        
+                        <span class="comment"># CSV dosyası okuma</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'öğrenciler.csv'</span>, <span class="string">'r'</span>, <span class="variable">encoding</span>=<span class="string">'utf-8'</span>) <span class="keyword">as</span> <span class="variable">f</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">reader</span> = <span class="variable">csv</span>.<span class="function">reader</span>(<span class="variable">f</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">satır</span> <span class="keyword">in</span> <span class="variable">reader</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="variable">satır</span>)<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 class="section-title">PyTorch Temelleri</h2>
+        
+        <!-- PyTorch Dataset ve DataLoader Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                Dataset ve DataLoader
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>PyTorch Dataset Nedir?</h3>
+                    <p>Dataset, veri kümesini temsil eden ve veri erişimi sağlayan bir soyut sınıftır. PyTorch'ta özel veri kümeleri için <code>torch.utils.data.Dataset</code> sınıfından türetilir.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">torch</span><br>
+                        <span class="keyword">from</span> <span class="variable">torch.utils.data</span> <span class="keyword">import</span> <span class="variable">Dataset</span><br><br>
+                        
+                        <span class="keyword">class</span> <span class="function">CümleDataset</span>(<span class="variable">Dataset</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">cümleler</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">cümleler</span> = <span class="variable">cümleler</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__len__</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">len</span>(<span class="variable">self</span>.<span class="variable">cümleler</span>)<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__getitem__</span>(<span class="variable">self</span>, <span class="variable">idx</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">cümle</span> = <span class="variable">self</span>.<span class="variable">cümleler</span>[<span class="variable">idx</span>]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">cümle</span><br><br>
+                        
+                        <span class="comment"># Örnek veri kümesi oluşturma</span><br>
+                        <span class="variable">cümleler</span> = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"PyTorch ile derin öğrenme çok keyifli."</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Python programlama dili çok pratik."</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Yapay zeka geleceğin teknolojisi."</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Veri bilimi birçok alanda kullanılıyor."</span><br>
+                        ]<br><br>
+                        
+                        <span class="variable">dataset</span> = <span class="function">CümleDataset</span>(<span class="variable">cümleler</span>)<br>
+                        <span class="keyword">print</span>(<span class="function">len</span>(<span class="variable">dataset</span>)) <span class="comment"># 4</span><br>
+                        <span class="keyword">print</span>(<span class="variable">dataset</span>[<span class="number">0</span>]) <span class="comment"># "PyTorch ile derin öğrenme çok keyifli."</span><br>
+                    </div>
+                    
+                    <h3>DataLoader Nedir?</h3>
+                    <p>DataLoader, Dataset'ten verileri batch'ler halinde yükleyen bir yardımcı sınıftır. Ayrıca veri karıştırma, paralel yükleme gibi özellikleri de sağlar.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">from</span> <span class="variable">torch.utils.data</span> <span class="keyword">import</span> <span class="variable">DataLoader</span><br><br>
+                        
+                        <span class="comment"># DataLoader oluşturma (batch_size=2)</span><br>
+                        <span class="variable">dataloader</span> = <span class="function">DataLoader</span>(<span class="variable">dataset</span>, <span class="variable">batch_size</span>=<span class="number">2</span>, <span class="variable">shuffle</span>=<span class="keyword">True</span>)<br><br>
+                        
+                        <span class="comment"># Batch'leri yazdırma</span><br>
+                        <span class="keyword">for</span> <span class="variable">i</span>, <span class="variable">batch</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">dataloader</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"Batch {i+1}:"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">cümle</span> <span class="keyword">in</span> <span class="variable">batch</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"  - {cümle}"</span>)<br>
+                    </div>
+                    
+                    <h3>Custom Collate Function</h3>
+                    <p>Collate fonksiyonu, batch içindeki verilerin nasıl birleştirileceğini özelleştirmenizi sağlar.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">def</span> <span class="function">custom_collate_fn</span>(<span class="variable">batch</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Her cümlenin ilk 10 karakterini al</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">kısa_cümleler</span> = [<span class="variable">cümle</span>[:<span class="number">10</span>] + <span class="string">"..."</span> <span class="keyword">for</span> <span class="variable">cümle</span> <span class="keyword">in</span> <span class="variable">batch</span>]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">kısa_cümleler</span><br><br>
+                        
+                        <span class="comment"># Özel collate fonksiyonu ile DataLoader oluşturma</span><br>
+                        <span class="variable">custom_dataloader</span> = <span class="function">DataLoader</span>(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">dataset</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">batch_size</span>=<span class="number">2</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">shuffle</span>=<span class="keyword">True</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">collate_fn</span>=<span class="variable">custom_collate_fn</span><br>
+                        )<br><br>
+                        
+                        <span class="comment"># Özel formatlı batch'leri yazdırma</span><br>
+                        <span class="keyword">print</span>(<span class="string">"\nÖzel Collate Function ile:"</span>)<br>
+                        <span class="keyword">for</span> <span class="variable">i</span>, <span class="variable">batch</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">custom_dataloader</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"Batch {i+1}:"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">kısa_cümle</span> <span class="keyword">in</span> <span class="variable">batch</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="function">f</span><span class="string">"  - {kısa_cümle}"</span>)<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PyTorch Neural Network Accordion -->
+        <div class="accordion">
+            <div class="accordion-header">
+                PyTorch ile Sinir Ağları
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-content-inner">
+                    <h3>Yapay Sinir Ağı (ANN) Sınıfı Oluşturma</h3>
+                    <p>PyTorch'ta sinir ağları <code>torch.nn.Module</code> sınıfından türetilir.</p>
+                    
+                    <div class="code-block">
+                        <span class="keyword">import</span> <span class="variable">torch</span><br>
+                        <span class="keyword">import</span> <span class="variable">torch.nn</span> <span class="keyword">as</span> <span class="variable">nn</span><br>
+                        <span class="keyword">import</span> <span class="variable">torch.nn.functional</span> <span class="keyword">as</span> <span class="variable">F</span><br><br>
+                        
+                        <span class="keyword">class</span> <span class="function">SimpleANN</span>(<span class="variable">nn.Module</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>, <span class="variable">input_size</span>, <span class="variable">hidden_size</span>, <span class="variable">output_size</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">super</span>(<span class="function">SimpleANN</span>, <span class="variable">self</span>).<span class="function">__init__</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Katmanları tanımlama</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">fc1</span> = <span class="variable">nn</span>.<span class="function">Linear</span>(<span class="variable">input_size</span>, <span class="variable">hidden_size</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">fc2</span> = <span class="variable">nn</span>.<span class="function">Linear</span>(<span class="variable">hidden_size</span>, <span class="variable">output_size</span>)<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">forward</span>(<span class="variable">self</span>, <span class="variable">x</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># İleri yayılım (forward propagation)</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">x</span> = <span class="variable">F</span>.<span class="function">relu</span>(<span class="variable">self</span>.<span class="variable">fc1</span>(<span class="variable">x</span>))  <span class="comment"># İlk katmandan çıkışı ReLU aktivasyonu uygula</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">x</span> = <span class="variable">self</span>.<span class="variable">fc2</span>(<span class="variable">x</span>)         <span class="comment"># Çıkış katmanı</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">x</span><br><br>
+                        
+                        <span class="comment"># Örnek sinir ağı kullanımı</span><br>
+                        <span class="variable">input_size</span> = <span class="number">10</span>   <span class="comment"># Giriş boyutu</span><br>
+                        <span class="variable">hidden_size</span> = <span class="number">20</span>  <span class="comment"># Gizli katman boyutu</span><br>
+                        <span class="variable">output_size</span> = <span class="number">2</span>   <span class="comment"># Çıkış boyutu</span><br><br>
+                        
+                        <span class="variable">model</span> = <span class="function">SimpleANN</span>(<span class="variable">input_size</span>, <span class="variable">hidden_size</span>, <span class="variable">output_size</span>)<br>
+                        <span class="keyword">print</span>(<span class="variable">model</span>)<br><br>
+                        
+                        <span class="comment"># Örnek bir girdi ile forward işlemi</span><br>
+                        <span class="variable">dummy_input</span> = <span class="variable">torch</span>.<span class="function">randn</span>(<span class="number">1</span>, <span class="variable">input_size</span>)<br>
+                        <span class="variable">output</span> = <span class="variable">model</span>(<span class="variable">dummy_input</span>)<br>
+                        <span class="keyword">print</span>(<span class="function">f</span><span class="string">"Çıktı boyutu: {output.shape}"</span>)<br>
+                    </div>
+                    
+                    <h3>Forward Fonksiyonu ve Çalışma Mantığı</h3>
+                    <p>Forward fonksiyonu, sinir ağının ileri yayılım işlemini tanımlar. Veriler ağ üzerinden geçirilirken nasıl işleneceğini belirler.</p>
+                    
+                    <div class="note">
+                        <strong>Not:</strong> <code>forward()</code> fonksiyonu, <code>module(input)</code> şeklinde çağrı yapıldığında otomatik olarak çağrılır. Yani <code>model(x)</code> çağrısı, aslında <code>model.forward(x)</code> çağrısıdır.
+                    </div>
+                    
+                    <p>Forward fonksiyonunun çalışma adımları:</p>
+                    <ol>
+                        <li>Girdi verileri ilk katmana verilir: <code>self.fc1(x)</code></li>
+                        <li>Doğrusal dönüşüm sonucuna aktivasyon fonksiyonu uygulanır: <code>F.relu(...)</code></li>
+                        <li>Ara katman çıktısı bir sonraki katmana iletilir</li>
+                        <li>Son katmandan çıkan sonuç döndürülür</li>
+                    </ol>
+                    
+                    <p>PyTorch'un otomatik diferansiyel özelliği sayesinde, forward işlemi sırasında hesaplama grafiği oluşturulur ve backpropagation (geri yayılım) için kullanılır.</p>
+                    
+                    <h3>PyTorch Module Sınıfı ve Kalıtım</h3>
+                    <p>PyTorch'ta tüm sinir ağı modellerimiz <code>nn.Module</code> sınıfından türetilir. Bu kalıtım sayesinde:</p>
+                    
+                    <ul>
+                        <li>Modelleri iç içe kullanabilme</li>
+                        <li>Ağırlıkları otomatik takip edebilme</li>
+                        <li>GPU'ya taşıma ve model kaydetme gibi işlemleri kolayca yapabilme</li>
+                        <li>Diğer faydalı metodlara erişim</li>
+                    </ul>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Daha karmaşık bir model örneği</span><br>
+                        <span class="keyword">class</span> <span class="function">ComplexNN</span>(<span class="variable">nn</span>.<span class="function">Module</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">super</span>().<span class="function">__init__</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Alt modüller tanımlama</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">feature_extractor</span> = <span class="variable">nn</span>.<span class="function">Sequential</span>(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">Linear</span>(<span class="number">784</span>, <span class="number">256</span>),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">ReLU</span>(),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">Linear</span>(<span class="number">256</span>, <span class="number">64</span>),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">nn</span>.<span class="function">ReLU</span>()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">self</span>.<span class="variable">classifier</span> = <span class="variable">nn</span>.<span class="function">Linear</span>(<span class="number">64</span>, <span class="number">10</span>)<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">forward</span>(<span class="variable">self</span>, <span class="variable">x</span>):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">features</span> = <span class="variable">self</span>.<span class="variable">feature_extractor</span>(<span class="variable">x</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">output</span> = <span class="variable">self</span>.<span class="variable">classifier</span>(<span class="variable">features</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="variable">output</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        Python ve PyTorch Eğitim Sitesi &copy; 2023
+    </footer>
+    
+    <script>
+        // Akordion işlevselliği
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    
+                    const content = this.nextElementSibling;
+                    if (this.classList.contains('active')) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    } else {
+                        content.style.maxHeight = '0';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
